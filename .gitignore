@@ -1,0 +1,19 @@
+node_modules/
+.qa/
+.qa-*/
+playwright-report/
+test-results/
+coverage/
+dist/
+*.tgz
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+.codex/
+.agents/
+.*-qa.*
+*.log
+# Original local reference snapshot, not a second public catalog.
+design-system (1).html

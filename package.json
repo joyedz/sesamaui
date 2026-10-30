@@ -1,0 +1,22 @@
+{
+  "name": "sesamaui-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Sesama UI source, documentation, application examples and agent skill. Pre-release workspace.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joyedz/sesamaui.git"
+  },
+  "homepage": "https://github.com/joyedz/sesamaui#readme",
+  "bugs": {
+    "url": "https://github.com/joyedz/sesamaui/issues"
+  },
+  "scripts": {
+    "dev": "node tools/serve.mjs",
+    "check": "node tools/check-syntax.cjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT"
+}
