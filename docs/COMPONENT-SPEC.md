@@ -225,7 +225,7 @@ Use small component-scoped JS modules for state and behavior. Keep form helpers 
 
 Keep catalog metadata and live examples synchronized. Usage code must include required stylesheet/script dependencies and must not advertise unimplemented React components. Existing draft API tables can remain only if clearly labeled Proposed API — deferred. The API phase begins after the UI scope below is complete.
 
-Update demos/Login.html to use shared Input/Field/Button without changing authentication scope. Create one generic local demo combining filtering, Table, Pagination, Empty/Skeleton and Modal to exercise composition. Keep demos/Requirements dashboard.html usable and adopt shared fixes only where appropriate. Canvas and Wire stay available; do not add domain semantics to generic components.
+Update demos/Login.html to use shared Input/Field/Button without changing authentication scope. Create one generic local demo combining filtering, Table, Pagination, Empty/Skeleton and Modal to exercise composition. Canvas and Wire stay available; do not add domain semantics to generic components.
 
 ## Completion and regression gates
 

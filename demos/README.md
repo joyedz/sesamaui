@@ -14,6 +14,5 @@ Run `npm run dev` from the repository root, then open:
 - [Component API preview](Component%20API.html)
 - [Workspace](Workspace%20demo.html)
 - [Sales reporting](Sales%20reporting.html)
-- [Requirements dashboard](Requirements%20dashboard.html)
 
 Shared code is under `src/`; the component catalog and marketing landing remain at the repository root. The module API preview requires the local HTTP server.
