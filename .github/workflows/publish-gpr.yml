@@ -1,0 +1,35 @@
+name: Publish GitHub Packages
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish-gpr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Stage scoped package copy
+        env:
+          SCOPE: ${{ github.repository_owner }}
+        run: |
+          mkdir -p ../gpr
+          cp -r src assets README.md LICENSE NOTICE package.json ../gpr/
+          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('../gpr/package.json','utf8'));p.name='@'+process.env.SCOPE.toLowerCase()+'/sesama-ui';delete p.publishConfig;fs.writeFileSync('../gpr/package.json',JSON.stringify(p,null,2))"
+      - name: Publish to GitHub Packages
+        working-directory: ../gpr
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm publish

@@ -1,6 +1,6 @@
 # Component API contract
 
-Sesama UI ships 48 component families and 20 structural blocks as pure ES Module builders with TypeScript declarations. This is an alpha: **the API may change before beta**, it is not yet published to npm/CDN, and manual screen-reader review is tracked separately in the [accessibility report](ACCESSIBILITY-REPORT.md).
+Sesama UI ships 48 component families and 20 structural blocks as pure ES Module builders with TypeScript declarations. This is an alpha: **the API may change before beta**, and manual screen-reader review is tracked separately in the [accessibility report](ACCESSIBILITY-REPORT.md).
 
 ## Maturity
 
@@ -110,6 +110,6 @@ Everything else — labels, values, names, placeholders, helpers, errors, option
 
 ## Roadmap to beta
 
-1. npm registry release and CDN bundle.
+1. ~~npm registry release~~ — done: [sesama-ui on npm](https://www.npmjs.com/package/sesama-ui), mirrored on [GitHub Packages](https://github.com/joyedz/sesamaui/pkgs/npm/%40joyedz%2Fsesama-ui).
 2. Manual screen-reader review (NVDA, VoiceOver) and Safari verification, as described in the [accessibility report](ACCESSIBILITY-REPORT.md).
 3. Component documentation beyond the catalog page.

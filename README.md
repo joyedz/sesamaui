@@ -4,7 +4,7 @@ A shared UI language for dashboards, AI workspaces, and everyday tools.
 
 Sesama UI is a dependency-free vanilla HTML/CSS/JavaScript design system. Every component is a pure ES Module builder that renders accessible, semantic HTML strings — in the browser, in Node.js, or at build time — and hydrates through a single `mount()` runtime with real lifecycles.
 
-> **Status: alpha (`0.1.0-alpha.1`).** The API may change before beta, and the package is not yet published to npm/CDN. See [CHANGELOG.md](CHANGELOG.md).
+> **Status: alpha (`0.1.0-alpha.2`).** The API may change before beta. See [CHANGELOG.md](CHANGELOG.md).
 
 ![Sesama UI dashboard in light theme](docs/img/dashboard-light.png)
 
@@ -24,10 +24,10 @@ Sesama UI is a dependency-free vanilla HTML/CSS/JavaScript design system. Every 
 ## Installation
 
 ```sh
-npm install github:joyedz/sesamaui
+npm install sesama-ui
 ```
 
-An npm registry release will follow the beta. Until then, install directly from this repository.
+Published on [npm](https://www.npmjs.com/package/sesama-ui) and mirrored on [GitHub Packages](https://github.com/joyedz/sesamaui/pkgs/npm/%40joyedz%2Fsesama-ui) (`@joyedz/sesama-ui`). During the alpha, pin the `alpha` dist-tag if you want to opt in explicitly: `npm install sesama-ui@alpha`.
 
 ## Quick start
 
