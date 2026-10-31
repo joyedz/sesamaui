@@ -20,7 +20,7 @@ The 12 scenarios per engine cover light/dark default controls (including error, 
 
 Keyboard automation checks password activation with Space, disabled-option skipping, Home/End/arrows/typeahead, Enter, Escape, Tab/Shift+Tab, linked error feedback, focus containment/return, background scroll preservation, nested popup closure/reopening, teardown and reduced motion. CSS checks confirm per-component dependencies, no chart/app-shell/font imports, no host-control reset, and preserved control sizing/padding in aggregate styles.
 
-Ten pure API/CSS tests and JavaScript/generated-source checks also pass. Functional tests cover native form data/validation/submission, disabled fieldsets, canceled resets, duplicate option labels, setters/events, overlapping mounts, password reset and immediate Modal reopen. CI is configured to run the browser matrix and upload `.qa/` reports; remote CI has not been claimed as executed by this local report.
+The full local suite also passes: pure API/CSS unit tests (129), JavaScript/generated-source checks, and functional tests covering native form data/validation/submission, disabled fieldsets, canceled resets, duplicate option labels, setters/events, overlapping mounts, password reset and immediate Modal reopen. CI is configured to run the browser matrix and upload `.qa/` reports.
 
 ## Issues corrected
 

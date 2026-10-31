@@ -113,7 +113,7 @@ More examples are indexed in [demos/README.md](demos/README.md). Authentication,
 ## Documentation
 
 - [Alpha release guide](docs/ALPHA-RELEASE.md) — component inventory and architecture
-- [Component API preview contract](docs/COMPONENT-API-PREVIEW.md)
+- [Component API contract](docs/COMPONENT-API-PREVIEW.md)
 - [Accessibility report](docs/ACCESSIBILITY-REPORT.md)
 - [Changelog](CHANGELOG.md)
 

@@ -1,12 +1,12 @@
 # Sesama — Component specification
 
-Status: specification ready for UI implementation. API implementation follows after UI acceptance.
+Status: implemented in the 0.1.0-alpha.1 ESM library; this document records the design contract each component honors. See the [alpha release guide](ALPHA-RELEASE.md) for the shipped inventory.
 
 ## Scope and source of truth
 
 This specification covers 14 new components and 9 existing component areas identified in the Kumo comparison. Sesama tokens, existing controls, and the user decisions below are authoritative. Kumo is a reference for completeness and interaction patterns, not a replacement visual system.
 
-Current implementation: static HTML, CSS, and JavaScript. Deliver interactive local examples and actual HTML usage snippets. Do not present proposed React imports or prop tables as implemented functionality. Public component APIs, React wrappers, package exports, backend services, authentication, and data fetching are deferred. Local state and event handlers required to demonstrate the UI are in scope.
+Current implementation: dependency-free HTML, CSS, and JavaScript as pure ES Module builders with an opt-in hydration runtime. Component APIs and package exports are defined in the [API contract](COMPONENT-API-PREVIEW.md); framework wrappers (React), backend services, authentication, and data fetching remain out of scope. Local state and event handlers required to demonstrate the UI are in scope.
 
 ## Visual contract
 
