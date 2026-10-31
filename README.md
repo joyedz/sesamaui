@@ -2,24 +2,104 @@
 
 A shared UI language for dashboards, AI workspaces, and everyday tools.
 
-**Status: pre-release.** This repository contains the working vanilla HTML/CSS/JavaScript system, its catalog, application examples, and an agent skill. Modular packages and the stable public API are being prepared. There is no published npm/CDN release yet.
+Sesama UI is a dependency-free vanilla HTML/CSS/JavaScript design system. Every component is a pure ES Module builder that renders accessible, semantic HTML strings — in the browser, in Node.js, or at build time — and hydrates through a single `mount()` runtime with real lifecycles.
 
-## Run locally
+> **Status: alpha (`0.1.0-alpha.1`).** The API is stable for evaluation and internal use, but the package is not yet published to npm/CDN. See [CHANGELOG.md](CHANGELOG.md).
 
-Requires Node.js 22 or later. No dependency installation is needed for the current static demo server.
+## Features
+
+- **Pure ESM builders** — every component and layout block is a tree-shakeable module; import only what you use.
+- **TypeScript-ready** — complete `.d.mts` declarations for autocomplete in VS Code, Cursor, and WebStorm.
+- **Render anywhere** — builders are side-effect-free and run without a DOM (SSR, SSG, build-time).
+- **One hydration runtime** — `mount(root)` attaches controllers with `refresh()` and `destroy()` lifecycles.
+- **Scoped CSS** — all styles are isolated under `:where(.sui-root)`, so they do not leak into or out of your application.
+- **Accessible by default** — keyboard navigation, focus management, native popovers and dialogs, reduced-motion and forced-colors support; checked with axe across 12 states.
+- **Light and dark themes** — semantic tokens built on `light-dark()`.
+- **No runtime dependencies** — Inter is the only external font, and it is optional.
+
+## Installation
 
 ```sh
-npm run dev
+npm install github:joyedz/sesamaui
 ```
 
-Open http://127.0.0.1:4173. Use the local server for asset loading and browser integrations rather than opening HTML files directly.
+An npm registry release will follow the beta. Until then, install directly from this repository.
 
-## Explore
+## Quick start
+
+Link the stylesheets and opt your application root into the system:
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="node_modules/sesama-ui/src/styles/fonts.css">
+  <link rel="stylesheet" href="node_modules/sesama-ui/src/styles/components.css">
+  <link rel="stylesheet" href="node_modules/sesama-ui/src/styles/blocks.css">
+</head>
+<body class="sui-root">
+  <div id="app"></div>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
+```
+
+Compose components as data, then hydrate once:
+
+```js
+import { appShell, workspaceSidebar, pageHeader, pageLayout, table, mount } from 'sesama-ui';
+
+document.getElementById('app').innerHTML = appShell({
+  sidebar: workspaceSidebar({
+    workspace: 'Acme workspace',
+    navigation: [{ label: 'Overview', icon: 'home', active: true }]
+  }),
+  header: pageHeader({ title: 'Overview', icon: 'grid-3x3' }),
+  content: pageLayout(table({
+    columns: [
+      { key: 'name', header: 'Name' },
+      { key: 'status', header: 'Status' }
+    ],
+    rows: [{ id: 1, name: 'First record', status: 'Active' }]
+  }), { variant: 'data' })
+});
+
+mount(document.body);
+```
+
+Import subpaths to keep bundles small:
+
+```js
+import { datePicker } from 'sesama-ui/date-picker';
+import { dataSection } from 'sesama-ui/blocks';
+import 'sesama-ui/css/components.css';
+```
+
+## Components
+
+**48 component families** across six groups:
+
+| Group | Components |
+| --- | --- |
+| Actions | Button, Icon Button, Link Button, Social Button, Button Group |
+| Forms | Input Field, Select, Textarea, Checkbox, Radio, Switch, Combobox, Date Picker, Tag Input, Label |
+| Overlays | Modal, Menu, Menu Item, Popover, Dropdown Menu, Tooltip, Toast, Command Palette |
+| Display | Badge, Status Dot, Avatar, Divider, Card, Banner, Empty State, Loader, Skeleton, Chip |
+| Navigation | Tabs, Breadcrumbs, Tree, List Row, Toolbar, Collapsible, Pagination |
+| Data and AI | Table, Chart, Wire, Canvas, File Card, Message, Tool Call, Agent Run, Composer |
+
+**20 structural blocks** compose them into application layouts: `appShell`, `workspaceSidebar`, `pageHeader`, `pageLayout`, `pageGrid`, `contentSection`, `dataSection`, `metricCard`, `peopleList`, `activityFeed`, `chartSection`, plus domain recipes for dashboards, reports, and dialogs.
+
+Browse every component, variant, and state in the [component catalog](Design%20system.html), or try the [Component API preview](demos/Component%20API.html).
+
+## Demos
+
+Standalone application examples built with the library:
 
 | Page | Source |
 | --- | --- |
 | Landing | [Sesama landing.html](Sesama%20landing.html) |
-| Component catalog | [Design system.html](Design%20system.html) |
 | Login | [demos/Login.html](demos/Login.html) |
 | Dashboard | [demos/Dashboard overview.html](demos/Dashboard%20overview.html) |
 | Revenue | [demos/Revenue report.html](demos/Revenue%20report.html) |
@@ -28,75 +108,41 @@ Open http://127.0.0.1:4173. Use the local server for asset loading and browser i
 | AI workspace | [demos/AI agents demo.html](demos/AI%20agents%20demo.html) |
 | Issue workspace | [demos/Issue workspace.html](demos/Issue%20workspace.html) |
 
-Example authentication, model responses and agent execution are local demonstrations, not connected backend services.
+More examples are indexed in [demos/README.md](demos/README.md). Authentication, model responses, and agent execution in the demos are local simulations, not connected services.
 
-## Source map
+## Documentation
 
-- `src/styles/sesama-ui.css`: design tokens and primitive styles.
-- `src/legacy/library.js` / `src/styles/library.css`: shared component builders, variants and behavior.
-- `src/components/`: shared pure builders and opt-in component modules.
-- `src/blocks/`: structural layout blocks (app shell, sidebar, page grid, data sections).
-- `src/icons/`: Rune icon library and licensing.
-- `src/runtime.mjs`: mount/hydration runtime with lifecycle controllers.
-- `src/legacy/`: classic-script compatibility runtime and catalog examples.
-- `src/styles/`: existing central styles, including forms, blocks and charts.
-- `src/legacy/rune-icons.js` / `assets/rune-icons`: icon library and licensing.
-- `skills/sesama-ui`: repository copy of the agent skill.
-- `demos/`: standalone application examples and their page-specific assets.
-- `docs/`: release plans, specifications and design audits.
+- [Alpha release guide](docs/ALPHA-RELEASE.md) — component inventory and architecture
+- [Component API preview contract](docs/COMPONENT-API-PREVIEW.md)
+- [Accessibility report](docs/ACCESSIBILITY-REPORT.md)
+- [Changelog](CHANGELOG.md)
 
-This is the current source layout, not the final package API. Some examples and skill instructions still have legacy assumptions; see the release plan before integrating into another application.
+## Development
 
-## Component library (ESM)
-
-The full migration is complete: 48 component families and 20 structural blocks ship as pure ESM builders with `.d.mts` type declarations — see the [alpha release guide](docs/ALPHA-RELEASE.md) for the full inventory and [usage examples](demos/README.md).
-
-```js
-import { appShell, table, mount } from 'sesama-ui';
-import { datePicker } from 'sesama-ui/date-picker';
-import 'sesama-ui/css/components.css';
-```
-
-Every builder renders server-side without a DOM, and `mount(root)` attaches controllers with `refresh()`/`destroy()` lifecycle. Input Field and Select participate in native form validation with controller setters, disabled/required state and reset.
-
-Try [Component API](demos/Component%20API.html), read the [preview contract](docs/COMPONENT-API-PREVIEW.md), and see the [accessibility report](docs/ACCESSIBILITY-REPORT.md). The API is stable for this alpha but not yet published to npm/CDN.
-
-Run `npm run build` after changing shared builders or `src/styles/components/*.css`; generated legacy bridges are checked by CI. Any component stylesheet under `src/styles/components/` (e.g. `button.css`, `field.css`) can be used independently inside a `.sui-root` wrapper; `src/styles/components.css` and `src/styles/blocks.css` are the aggregates, and fonts are optional.
-
-## Migration & audit
-
-The repository completed its migration from the legacy monolith (global `window.SESAMA_*` runtimes loaded via sequential `<script>` tags) to the current modular ESM system. Per-change details live in the [changelog](CHANGELOG.md); the phased component inventory is in the [alpha release guide](docs/ALPHA-RELEASE.md).
-
-All application demos were rebuilt on the public ESM builders and audited against the preserved `demos-legacy/` reference (2026-10-31):
-
-- **Visual parity** — computed styles (typography, spacing, colors, gaps) and rendered geometry compared per component across all 10 demo pages; page heights identical, fonts loading identically.
-- **Responsive** — no horizontal overflow at 390, 600, 760, 761, 1000, 1100, 1101, or 1440px on any page.
-- **Runtime** — zero page or console errors across every demo.
-- **Intentional deviations** from legacy values, kept for WCAG AA contrast and enforced by the axe suite: `--text-placeholder` at alpha `.59` and `--color-danger-text` for form errors. Message and Composer content also uses the new 14px/22px body size.
-- **Focus/overlay correctness** — composer focus ring renders on the card (not the textarea), and every popup (select, menu, popover, dropdown, date picker, combobox, composer attach) is positioned by its controller with flip and dismissal handling.
-
-## Checks and roadmap
+Requires Node.js 22 or later.
 
 ```sh
-npm ci
-npm run check
-npm test
+npm install
+npm run dev               # static server at http://127.0.0.1:4173
+npm run check             # syntax and generated-source consistency
+npm test                  # unit: API contract, CSS scoping, consumer, packaging
+npx playwright install chromium firefox webkit
+npm run test:browser      # cross-engine smoke tests
+npm run test:a11y         # axe across 12 states (light/dark, reflow, forced colors)
+npm run test:keyboard     # keyboard navigation
+npm run test:functional   # interaction suites
 ```
 
-`check` verifies JavaScript syntax and generated-source consistency; `test` covers the pure API contract and CSS dependency/scope checks. The legacy `tools/verify-components.cjs` is retained for migration and is not the release test suite.
+Project layout: `src/components/` (component builders), `src/blocks/` (layout blocks), `src/icons/` (icon library), `src/runtime.mjs` (mount runtime), `src/styles/` (tokens, base, component and block stylesheets), `demos/` (application examples), `skills/sesama-ui/` (agent skill).
 
-Install test browsers with `npx playwright install chromium firefox webkit`. Run `npm run test:functional`, `npm run test:browser`, `npm run test:keyboard` and `npm run test:a11y`; set `BROWSER` to `chromium`, `firefox` or `webkit`. CI runs the same matrix. These checks do not constitute a screen-reader or accessibility certification.
+Automated checks cover structure, contrast, and interaction. Manual screen-reader review is planned for the beta and is not claimed by these suites.
 
-- [Open-source release plan](docs/OPEN-SOURCE-RELEASE-PLAN.md)
-- [Component API implementation plan](docs/COMPONENT-API-IMPLEMENTATION-PLAN.md)
-- [Per-component migration tracker](docs/COMPONENT-API-MIGRATION.json)
-- [Current catalog inventory](docs/OSS-INVENTORY.json)
-- [Contributing](CONTRIBUTING.md)
-- [Security](SECURITY.md)
-- [Third-party notices and asset review](THIRD_PARTY_NOTICES.md)
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). To report a security issue, see [SECURITY.md](SECURITY.md).
 
 ## License
 
-Original Sesama code and documentation are licensed under [MIT](LICENSE). Third-party icons and trademarks retain their own terms; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The MIT license does not relicense third-party brand artwork.
+Original Sesama code and documentation are licensed under [MIT](LICENSE). Third-party icons and trademarks retain their own terms; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [NOTICE](NOTICE).
 
 Designed by [zihni.design](https://zihni.design).
