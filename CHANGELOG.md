@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Design system catalog now renders a "Canonical (ESM)" example for every component and block page (legacy examples remain for comparison); see `site/canonical-examples.mjs`.
+
 ### Fixed
 - Input fields no longer render a double focus outline (stacked inset ring + outer outline); a single inset focus ring remains.
+- Message action icons use compact 20px hit areas with 14px icons and sit 8px below the message text instead of 16px.
+- Recipes now use real builder signatures: badge `tone`, `statusDot({ tone, label })`, avatar initials from `name`, list row `description`, table column `header`, Select `name`/`ariaLabel`, and card `classes` (removing duplicate `class` attributes); Card gains a `classes` option.
 - Removed native browser tooltips (`title` attributes) from Sidebar, Composer, Message and File Card controls; accessible names remain via `aria-label`.
 - People List rows use the plain appearance (no card background inside bordered sections).
 - Chart hover info is placed beside the hovered point, bar top or donut segment instead of covering it; donut segments highlight on hover.

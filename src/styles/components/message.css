@@ -52,6 +52,7 @@
 :where(.sui-root) .sx-agent-message > .bubble {
   background: transparent;
   padding-inline: 0;
+  padding-bottom: 0;
 }
 
 :where(.sui-root) .sx-message-quote {
@@ -138,4 +139,15 @@
   display: flex;
   align-items: center;
   gap: var(--space-4);
+}
+
+/* Compact inline action icons that hug the message text. */
+:where(.sui-root) .sx-message-actions .ibtn {
+  width: 20px;
+  height: 20px;
+}
+
+:where(.sui-root) .sx-message-actions .ibtn > svg {
+  width: 14px;
+  height: 14px;
 }

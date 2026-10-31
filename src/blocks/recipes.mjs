@@ -24,7 +24,7 @@ import { activityFeed } from './activity-feed.mjs';
 
 /**
  * 1. Requirement Group Recipe
- * Domain recipe using Card and List Row / Tree semantics.
+ * Domain recipe using Card and List Row semantics.
  */
 export function requirementGroupRecipe(options = {}) {
   const {
@@ -45,18 +45,16 @@ export function requirementGroupRecipe(options = {}) {
       }
       const itemTitle = req.title || `Requirement ${idx + 1}`;
       const itemSubtitle = req.description || req.id || '';
-      const itemStatus = req.status ? badge({ label: req.status, variant: req.status === 'done' || req.status === 'completed' ? 'green' : 'gray' }) : '';
+      const itemStatus = req.status ? badge({ label: req.status, tone: req.status === 'done' || req.status === 'completed' ? 'success' : 'neutral' }) : '';
+      const trailingParts = [itemStatus || req.trailing || '', req.priority ? badge({ label: req.priority, tone: 'informative' }) : ''];
       return listRow({
         id: req.id,
         title: itemTitle,
-        subtitle: itemSubtitle,
-        trailing: itemStatus || req.trailing || '',
-        meta: req.priority ? badge({ label: req.priority, variant: 'blue' }) : '',
+        description: itemSubtitle,
+        trailing: trailingParts.filter(Boolean).join(''),
       });
     }).join('')}</div>`;
   }
-
-  const classList = ['sb-requirement-group', 'sx-requirement-group', classes].filter(Boolean).join(' ');
 
   return card({
     id,
@@ -65,7 +63,8 @@ export function requirementGroupRecipe(options = {}) {
     content: contentHTML,
     actions,
     variant,
-    attributes: `class="${classList}" data-sui-requirement-group`,
+    classes: 'sb-requirement-group sx-requirement-group',
+    attributes: 'data-sui-requirement-group',
   });
 }
 
@@ -81,11 +80,11 @@ export function resourceListRecipe(options = {}) {
     resources = [],
     layout = 'table', // 'table' | 'list'
     columns = [
-      { key: 'name', label: 'Resource' },
-      { key: 'type', label: 'Type' },
-      { key: 'size', label: 'Size' },
-      { key: 'updated', label: 'Last Modified' },
-      { key: 'actions', label: '', align: 'right' },
+      { key: 'name', header: 'Resource' },
+      { key: 'type', header: 'Type' },
+      { key: 'size', header: 'Size' },
+      { key: 'updated', header: 'Last Modified' },
+      { key: 'actions', header: '', align: 'right' },
     ],
     actions = '',
     toolbar: toolbarMarkup = '',
@@ -102,17 +101,19 @@ export function resourceListRecipe(options = {}) {
   } else {
     dataMarkup = `<div class="sb-resource-rows">${resources.map(res => {
       if (typeof res === 'string') return res;
+      const subtitleParts = [res.type, res.size].filter(Boolean).join(' • ');
+      const trailingParts = [
+        res.updated ? `<span class="sx-help">${escapeHTML(res.updated)}</span>` : '',
+        res.actions || '',
+      ];
       return listRow({
         id: res.id,
         title: res.name || res.title,
-        subtitle: res.type ? `${res.type}${res.size ? ` • ${res.size}` : ''}` : res.description,
-        meta: res.updated || '',
-        trailing: res.actions || '',
+        description: subtitleParts || res.description || '',
+        trailing: trailingParts.filter(Boolean).join(''),
       });
     }).join('')}</div>`;
   }
-
-  const classList = ['sb-resource-list', 'sx-resource-list', classes].filter(Boolean).join(' ');
 
   return dataSection({
     id,
@@ -122,7 +123,7 @@ export function resourceListRecipe(options = {}) {
     toolbar: toolbarMarkup,
     data: dataMarkup,
     pagination: paginationMarkup,
-    classes: classList,
+    classes: ['sb-resource-list', 'sx-resource-list', classes].filter(Boolean).join(' '),
   });
 }
 
@@ -145,18 +146,22 @@ export function agentCardRecipe(options = {}) {
     classes = '',
   } = options;
 
+  const statusTone = status === 'online' ? 'success' : status === 'offline' ? 'neutral' : 'warning';
+  const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
+
   const avatarMarkup = avatar({
+    name,
+    initials: name.slice(0, 2).toUpperCase(),
     size: 'lg',
-    fallback: name.slice(0, 2).toUpperCase(),
     ...avatarOpts,
   });
 
-  const statusMarkup = statusDot({ status });
-  const modelMarkup = model ? badge({ label: model, variant: 'gray' }) : '';
-  
+  const statusMarkup = statusDot({ tone: statusTone, label: statusLabel });
+  const modelMarkup = model ? badge({ label: model, tone: 'neutral' }) : '';
+
   let capsMarkup = '';
   if (Array.isArray(capabilities) && capabilities.length > 0) {
-    capsMarkup = `<div class="sb-agent-capabilities">${capabilities.map(cap => badge({ label: cap, variant: 'blue' })).join(' ')}</div>`;
+    capsMarkup = `<div class="sb-agent-capabilities">${capabilities.map(cap => badge({ label: cap, tone: 'informative' })).join(' ')}</div>`;
   }
 
   const headerMarkup = `
@@ -177,15 +182,14 @@ export function agentCardRecipe(options = {}) {
     ${capsMarkup}
   `;
 
-  const classList = ['sb-agent-card', 'sx-agent-card', classes].filter(Boolean).join(' ');
-
   return card({
     id,
     header: headerMarkup,
     content: bodyMarkup,
     footer: actions,
     variant,
-    attributes: `class="${classList}" data-sui-agent-card`,
+    classes: 'sb-agent-card sx-agent-card',
+    attributes: 'data-sui-agent-card',
   });
 }
 
@@ -217,6 +221,7 @@ export function createSkillDialogRecipe(options = {}) {
 
   const nameInput = inputField({
     id: nameId,
+    name: nameId,
     label: nameLabel,
     placeholder: namePlaceholder,
     required: true,
@@ -224,16 +229,17 @@ export function createSkillDialogRecipe(options = {}) {
 
   const descInput = textarea({
     id: descId,
+    name: descId,
     label: descLabel,
     placeholder: descPlaceholder,
     rows: 3,
   });
 
   const runtimeSelect = `
-    <div class="sui-field-group sb-recipe-field">
-      <label class="sui-label" for="${escapeHTML(runtimeId)}">${escapeHTML(runtimeLabel)}</label>
+    <div class="sb-recipe-field">
       ${select({
-        id: runtimeId,
+        name: runtimeId,
+        ariaLabel: runtimeLabel,
         options: runtimeOptions,
       })}
     </div>
@@ -248,7 +254,7 @@ export function createSkillDialogRecipe(options = {}) {
   `;
 
   const actions = `
-    ${button({ label: cancelLabel, variant: 'outline', attributes: 'data-sui-modal-close' })}
+    ${button({ label: cancelLabel, variant: 'outline', attributes: 'data-sui-modal-close data-modal-close' })}
     ${button({ label: submitLabel, variant: 'primary', type: 'submit' })}
   `;
 
@@ -289,6 +295,7 @@ export function deleteResourceRecipe(options = {}) {
         <p class="sb-delete-confirm-prompt">Please type <strong>${escapeHTML(keyword)}</strong> to confirm:</p>
         ${inputField({
           id: `${id}-keyword-input`,
+          name: `${id}-keyword`,
           placeholder: keyword,
         })}
       </div>
@@ -303,7 +310,7 @@ export function deleteResourceRecipe(options = {}) {
   `;
 
   const actions = `
-    ${button({ label: cancelLabel, variant: 'outline', attributes: 'data-sui-modal-close' })}
+    ${button({ label: cancelLabel, variant: 'outline', attributes: 'data-sui-modal-close data-modal-close' })}
     ${button({ label: confirmLabel, variant: 'danger', type: 'button', attributes: 'data-sui-confirm-delete' })}
   `;
 
@@ -437,7 +444,7 @@ export function dataWorkspaceRecipe(options = {}) {
   const dataSec = dataSection({
     toolbar: customToolbar || toolbar({
       items: [
-        `<input type="search" class="sui-input sx-search" placeholder="Filter datasets..." style="max-width:240px;" />`,
+        `<input type="search" class="field" placeholder="Filter datasets..." aria-label="Filter datasets" style="max-width:240px;" />`,
         button({ label: 'Export CSV', variant: 'outline', size: 'sm' }),
         button({ label: 'New Dataset', variant: 'primary', size: 'sm' }),
       ],

@@ -13,6 +13,7 @@ export function card(options = {}) {
     variant = 'default',
     selected = false,
     attributes = '',
+    classes = '',
   } = options;
 
   if (variant && !VALID_VARIANTS.includes(variant)) {
@@ -20,17 +21,18 @@ export function card(options = {}) {
   }
 
   const isBare = !header;
-  const classes = [
+  const classList = [
     'card',
     'sx-card',
     `variant-${variant}`,
     selected ? 'on' : '',
     isBare ? 'bare' : '',
+    classes,
   ].filter(Boolean).join(' ');
 
   const attrs = [
     'data-sui-card',
-    `class="${classes}"`,
+    `class="${classList}"`,
     attributes,
   ].filter(Boolean).join(' ');
 

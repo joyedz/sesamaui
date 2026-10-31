@@ -9,6 +9,8 @@
 <link rel="stylesheet" href="../src/styles/forms.css">
 <link rel="stylesheet" href="../src/styles/dashboard-components.css">
 <link rel="stylesheet" href="../src/styles/library.css">
+<link rel="stylesheet" href="../src/styles/components.css">
+<link rel="stylesheet" href="../src/styles/blocks.css">
 <script src="../src/legacy/dashboard-components.js" defer></script>
 <script src="../src/legacy/primitives.js" defer></script>
 <script src="../src/legacy/forms.js" defer></script>
@@ -354,5 +356,6 @@ C.filter(x=>x[0]==='Components').forEach(x=>{if(genericMetadata[x[1]])x[3]=gener
 paint();
 if(document.documentElement.dataset.embed==='hero')parent.postMessage({type:'sesama:catalog-summary',counts:{components:new Set(C.filter(item=>item[0]==='Components').map(item=>item[1])).size,blocks:new Set(C.filter(item=>item[0]==='Blocks').map(item=>item[1])).size,icons:RUNE_ICONS.length,foundations:foundationNames.length}},'*');
 </script>
+<script type="module" src="./canonical-examples.mjs"></script>
 </body>
 </html>
