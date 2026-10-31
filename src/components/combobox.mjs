@@ -144,7 +144,7 @@ export function initCombobox(element) {
         const items = filtered.filter(o => (o.group || '') === grp);
         const itemsHtml = items.map((opt, i) => {
           const isSelected = currentValue === opt.value;
-          const optId = `${list.id}-${grp ? grp.replace(/\s+/g, '-') + '-' : ''}${i}`;
+          const optId = `${escapeHTML(list.id)}-${grp ? escapeHTML(grp.replace(/\s+/g, '-')) + '-' : ''}${i}`;
           return `<div role="option" id="${optId}" class="sx-menu-item" aria-selected="${isSelected}" aria-disabled="${Boolean(opt.disabled)}" data-combo-value="${escapeHTML(opt.value)}" data-combo-label="${escapeHTML(opt.label)}">${escapeHTML(opt.label)}</div>`;
         }).join('');
         if (grp) {
@@ -155,7 +155,7 @@ export function initCombobox(element) {
     } else {
       list.innerHTML = filtered.map((opt, i) => {
         const isSelected = currentValue === opt.value;
-        const optId = `${list.id}-${i}`;
+        const optId = `${escapeHTML(list.id)}-${i}`;
         return `<div role="option" id="${optId}" class="sx-menu-item" aria-selected="${isSelected}" aria-disabled="${Boolean(opt.disabled)}" data-combo-value="${escapeHTML(opt.value)}" data-combo-label="${escapeHTML(opt.label)}">${escapeHTML(opt.label)}</div>`;
       }).join('');
     }

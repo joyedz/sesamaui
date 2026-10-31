@@ -142,11 +142,11 @@ export function renderChartSVG(config, width = 480) {
         const points = data.map((row, i) => [getX(i), getY(getVal(row, s.key))]);
         const path = points.map(([xx, yy], i) => (i ? 'L' : 'M') + xx + ' ' + yy).join(' ');
         if (c.type === 'area') {
-          svg += `<path d="${path} L${getX(data.length - 1)} ${getY(0)} L${getX(0)} ${getY(0)} Z" fill="${s.color}" opacity="0.12"/>`;
+          svg += `<path d="${path} L${getX(data.length - 1)} ${getY(0)} L${getX(0)} ${getY(0)} Z" fill="${escapeHTML(s.color)}" opacity="0.12"/>`;
         }
-        svg += `<path d="${path}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round"/>`;
+        svg += `<path d="${path}" fill="none" stroke="${escapeHTML(s.color)}" stroke-width="2" stroke-linejoin="round"/>`;
         if (data.length === 1) {
-          svg += `<circle cx="${points[0][0]}" cy="${points[0][1]}" r="3" fill="${s.color}"/>`;
+          svg += `<circle cx="${points[0][0]}" cy="${points[0][1]}" r="3" fill="${escapeHTML(s.color)}"/>`;
         }
       });
     } else {
@@ -162,7 +162,7 @@ export function renderChartSVG(config, width = 480) {
           const xx = L + group * (i + 0.5) + (c.type === 'stacked bar' ? 0 : (j - (allSeries.length - 1) / 2) * bw) - bw / 2 + 1;
           const yy = getY(c.type === 'stacked bar' ? base + n : n);
           const barHeight = Math.max(0, (n / max) * ph);
-          svg += `<rect data-sc-index="${i}" data-sc-series="${escapeHTML(s.key)}" x="${xx}" y="${yy}" width="${Math.max(1, bw - 2)}" height="${barHeight}" rx="${isThin ? 5 : 2}" fill="${s.color}"/>`;
+          svg += `<rect data-sc-index="${i}" data-sc-series="${escapeHTML(s.key)}" x="${xx}" y="${yy}" width="${Math.max(1, bw - 2)}" height="${barHeight}" rx="${isThin ? 5 : 2}" fill="${escapeHTML(s.color)}"/>`;
           base += n;
         });
       });
@@ -170,7 +170,7 @@ export function renderChartSVG(config, width = 480) {
 
     if (['line', 'area'].includes(c.type)) {
       svg += '<g class="sc-hover-dots">' + data.map((row, i) => allSeries.map(s =>
-        `<circle data-sc-dot="${i}" cx="${getX(i)}" cy="${getY(getVal(row, s.key))}" r="4" fill="${s.color}" stroke="var(--color-base)" stroke-width="2" visibility="hidden"/>`
+        `<circle data-sc-dot="${i}" cx="${getX(i)}" cy="${getY(getVal(row, s.key))}" r="4" fill="${escapeHTML(s.color)}" stroke="var(--color-base)" stroke-width="2" visibility="hidden"/>`
       ).join('')).join('') + '</g>';
     }
   }
@@ -201,7 +201,7 @@ function buildChartExtras(config, hidden) {
     });
   } else {
     allSeries.forEach(s => {
-      legend += `<button type="button" class="sc-legend-toggle" aria-pressed="${hidden.has(s.key) ? 'false' : 'true'}" data-legend-key="${escapeHTML(s.key)}"><i style="background:${s.color}"></i>${escapeHTML(s.label || s.key)}</button>`;
+      legend += `<button type="button" class="sc-legend-toggle" aria-pressed="${hidden.has(s.key) ? 'false' : 'true'}" data-legend-key="${escapeHTML(s.key)}"><i style="background:${escapeHTML(s.color)}"></i>${escapeHTML(s.label || s.key)}</button>`;
     });
   }
   legend += '</div>';
@@ -342,7 +342,7 @@ export function initChart(element) {
         });
 
         tip.innerHTML = `<strong>${escapeHTML(row.label)}</strong>` + values.map(v =>
-          `<span><i style="background:${v.color}"></i>${escapeHTML(v.label)}<b>${escapeHTML(formatVal(config, v.value))}</b></span>`
+          `<span><i style="background:${escapeHTML(v.color)}"></i>${escapeHTML(v.label)}<b>${escapeHTML(formatVal(config, v.value))}</b></span>`
         ).join('');
 
         tip.hidden = false;

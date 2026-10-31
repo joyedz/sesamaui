@@ -4,7 +4,11 @@ A shared UI language for dashboards, AI workspaces, and everyday tools.
 
 Sesama UI is a dependency-free vanilla HTML/CSS/JavaScript design system. Every component is a pure ES Module builder that renders accessible, semantic HTML strings — in the browser, in Node.js, or at build time — and hydrates through a single `mount()` runtime with real lifecycles.
 
-> **Status: alpha (`0.1.0-alpha.1`).** The API is stable for evaluation and internal use, but the package is not yet published to npm/CDN. See [CHANGELOG.md](CHANGELOG.md).
+> **Status: alpha (`0.1.0-alpha.1`).** The API may change before beta, and the package is not yet published to npm/CDN. See [CHANGELOG.md](CHANGELOG.md).
+
+![Sesama UI dashboard in light theme](docs/img/dashboard-light.png)
+
+![Sesama UI dashboard in dark theme](docs/img/dashboard-dark.png)
 
 ## Features
 
@@ -15,7 +19,7 @@ Sesama UI is a dependency-free vanilla HTML/CSS/JavaScript design system. Every 
 - **Scoped CSS** — all styles are isolated under `:where(.sui-root)`, so they do not leak into or out of your application.
 - **Accessible by default** — keyboard navigation, focus management, native popovers and dialogs, reduced-motion and forced-colors support; checked with axe across 12 states.
 - **Light and dark themes** — semantic tokens built on `light-dark()`.
-- **No runtime dependencies** — Inter is the only external font, and it is optional.
+- **No runtime dependencies** — Inter ships self-hosted (OFL) and is optional.
 
 ## Installation
 
@@ -90,6 +94,8 @@ import 'sesama-ui/css/components.css';
 | Data and AI | Table, Chart, Wire, Canvas, File Card, Message, Tool Call, Agent Run, Composer |
 
 **20 structural blocks** compose them into application layouts: `appShell`, `workspaceSidebar`, `pageHeader`, `pageLayout`, `pageGrid`, `contentSection`, `dataSection`, `metricCard`, `peopleList`, `activityFeed`, `chartSection`, plus domain recipes for dashboards, reports, and dialogs.
+
+Complex widgets — Combobox, Date Picker, Command Palette, Tree, Tag Input — are labeled **experimental** and are prioritized for manual screen-reader review; the rest are stable within the alpha. Maturity details live in the [API contract](docs/COMPONENT-API-PREVIEW.md).
 
 Browse every component, variant, and state in the [component catalog](site/Design%20system.html), or try the [Component API preview](demos/Component%20API.html).
 

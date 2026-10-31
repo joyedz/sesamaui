@@ -1,5 +1,6 @@
 import { contentSection } from './content-section.mjs';
 import { metricCard } from './metric-card.mjs';
+import { escapeHTML } from '../components/shared.mjs';
 
 /**
  * Pure functional builder for Chart Section block.
@@ -29,7 +30,7 @@ export function chartSection(options = {}) {
     metricsHTML = `<div class="sb-chart-metrics">${metrics}</div>`;
   }
 
-  const summaryHTML = summary ? `<div class="sb-chart-summary">${summary}</div>` : '';
+  const summaryHTML = summary ? `<div class="sb-chart-summary">${escapeHTML(summary)}</div>` : '';
   const chartBody = `${metricsHTML}${summaryHTML}<div class="sb-chart-content">${chart}</div>`;
 
   const classList = ['sb-chart-section', 'sx-chart-section', classes].filter(Boolean).join(' ');

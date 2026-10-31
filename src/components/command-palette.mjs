@@ -58,7 +58,7 @@ export function commandPalette(options = {}) {
     return groupNames.map(group => {
       const items = cmdList.filter(c => c.group === group);
       const itemsMarkup = items.map((c, i) => {
-        const optionId = `${id}-${c.id || i}`;
+        const optionId = `${escapeHTML(id)}-${escapeHTML(c.id || i)}`;
         const iconSlot = c.icon ? controlIcon(c.icon, 16) : '';
         const shortcutSlot = c.shortcut ? `<kbd>${escapeHTML(c.shortcut)}</kbd>` : '';
         const disabledAttr = c.disabled ? ' aria-disabled="true"' : '';
@@ -139,7 +139,7 @@ export function initCommandPalette(dialog) {
     resultsContainer.innerHTML = groupNames.map(group => {
       const items = found.filter(c => c.group === group);
       const itemsMarkup = items.map((c, i) => {
-        const optionId = `${dialog.id}-${c.id || group.replace(/\s+/g, '-')}-${i}`;
+        const optionId = `${escapeHTML(dialog.id)}-${escapeHTML(c.id || group.replace(/\s+/g, '-'))}-${i}`;
         const iconSlot = c.icon ? controlIcon(c.icon, 16) : '';
         const shortcutSlot = c.shortcut ? `<kbd>${escapeHTML(c.shortcut)}</kbd>` : '';
         const disabledAttr = c.disabled ? ' aria-disabled="true"' : '';

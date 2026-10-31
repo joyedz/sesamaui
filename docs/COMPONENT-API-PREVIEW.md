@@ -1,6 +1,18 @@
 # Component API contract
 
-Sesama UI ships 48 component families and 20 structural blocks as pure ES Module builders with TypeScript declarations. The API is stable for this alpha; it is not yet published to npm/CDN, and manual screen-reader review is tracked separately in the [accessibility report](ACCESSIBILITY-REPORT.md).
+Sesama UI ships 48 component families and 20 structural blocks as pure ES Module builders with TypeScript declarations. This is an alpha: **the API may change before beta**, it is not yet published to npm/CDN, and manual screen-reader review is tracked separately in the [accessibility report](ACCESSIBILITY-REPORT.md).
+
+## Maturity
+
+All families pass the automated suites (unit, axe, keyboard, functional). Complexity varies, and the following are labeled **experimental** — expect refinements and prioritize them in manual screen-reader review:
+
+- **Combobox** — editable query + listbox, async loading
+- **Date Picker** — calendar grid, range mode
+- **Command Palette** — modal listbox with dynamic filtering
+- **Tree** — nested roving tabindex, folder state
+- **Tag Input** — composite field with tag list
+
+The remaining families follow simpler, well-understood contracts and are considered **stable within the alpha**; their markup and options may still change before beta.
 
 Run `npm run dev` and open [`/demos/Component%20API.html`](../demos/Component%20API.html) to try it.
 
@@ -72,6 +84,29 @@ team.setCustomValidity('');     // Clear a business/server validation error.
 Programmatic `setValue` emits no user event; user interaction emits a bubbling `sui:change` with `{name, value, previousValue}`. Form reset restores native defaults, clears custom validity and generated feedback, and closes open popups.
 
 Runtime attributes use the `data-sui-*` prefix. Shared class names (`.btn`, `.field`, `.sx-*`) are styling hooks, not frozen public selectors.
+
+## Trusted HTML slots
+
+Builders escape every text option by default (`escapeHTML` covers `& < > " '`). A small set of options is **trusted application HTML** and is rendered verbatim — only pass markup you control there, never untrusted user input:
+
+| Builder | Trusted options |
+| --- | --- |
+| `modal` | `content`, `actions` |
+| `message` | `content`, `attachments`, `actions` |
+| `card` | `header`, `content`, `footer`, `actions` |
+| `banner`, `emptyState` | `actions` |
+| `toolbar` | string items, `item.html` |
+| `collapsible` | `content`, `trigger` (when HTML) |
+| `tabs` | `tabs[].content` |
+| `scrollArea`, `canvas`, `popover`, `tooltip` | `content` |
+| `tree` | `actions` |
+| `table` | `columns[].render()` output |
+| `composer` | `attachments` (file-card markup) |
+| `fileCard` | `preview` (when an HTML string), `actions` (string) |
+| section blocks | `content`, `actions`, `footer`, `data`, `pagination`, `filters`, `toolbar` |
+| icon options (`badge`, `label`, `chip`, `emptyState`, `banner`) | `icon` when it begins with `<svg` |
+
+Everything else — labels, values, names, placeholders, helpers, errors, option lists, attribute values — is escaped and safe for untrusted strings. This contract is enforced by `tests/xss.test.mjs`.
 
 ## Roadmap to beta
 

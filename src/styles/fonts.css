@@ -1,2 +1,8 @@
-/* Optional external font. Consumers may supply their own Inter asset. */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;420;500&display=swap");
+/* Self-hosted Inter (SIL OFL 1.1, see NOTICE). Consumers may supply their own Inter asset. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../../assets/fonts/InterVariable.woff2") format("woff2");
+}

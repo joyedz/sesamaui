@@ -14,7 +14,7 @@ Google, GitHub, OpenAI, Anthropic/Claude, Google/Gemini, Copilot, Grok and other
 
 ## Typography
 
-The current stylesheet references Google Fonts for Inter. The release plan removes the automatic network import and requires explicit font distribution/licensing instructions. System-font fallback is already available.
+Inter is self-hosted: `src/styles/fonts.css` declares a local `@font-face` over `assets/fonts/InterVariable.woff2` (SIL Open Font License 1.1, see NOTICE). No request is made to a third-party font CDN; the system-font stack remains the fallback when the stylesheet is omitted.
 
 ## Publication scope
 

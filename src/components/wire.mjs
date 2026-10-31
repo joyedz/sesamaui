@@ -4,6 +4,7 @@
  * @param {string|object} [options]
  * @returns {string} SVG string
  */
+import { escapeHTML } from './shared.mjs';
 export function wire(options = {}) {
   let config = {};
   if (typeof options === 'string') {
@@ -47,8 +48,8 @@ export function wire(options = {}) {
   const isDashed = validVariant === 'dashed';
   const classes = ['wires', 'sx-wire', isDashed ? 'dashed' : ''].filter(Boolean).join(' ');
 
-  const strokeAttr = color ? ` stroke="${color}"` : '';
-  const strokeWidthAttr = strokeWidth !== 1 ? ` stroke-width="${strokeWidth}"` : '';
+  const strokeAttr = color ? ` stroke="${escapeHTML(color)}"` : '';
+  const strokeWidthAttr = strokeWidth !== 1 ? ` stroke-width="${Number(strokeWidth) || 1}"` : '';
 
   let endpointsHtml = '';
   if (showEndpoints) {
