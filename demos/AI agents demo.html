@@ -229,6 +229,12 @@
       if (toast) showToast(toast.dataset.toast, 'informative');
     });
 
+    document.addEventListener('sui:message:action', event => {
+      const action = event.detail?.action || '';
+      if (action === 'regenerate') showToast('Regenerate response · simulated demo.', 'informative');
+      if (action === 'helpful') showToast('Feedback recorded. Thank you!', 'success');
+    });
+
     const thread = document.getElementById('thread');
     const chat = document.getElementById('chat');
 
@@ -284,6 +290,7 @@
       const msgHTML = message({
         role: 'user',
         own: true,
+        status: 'sent',
         content: escapeHTML(text),
         attachments: attachmentsHTML
       });
@@ -308,7 +315,12 @@
 
       const msgHTML = message({
         role: 'agent',
-        content: runHTML + `<div data-message-content><p>${escapeHTML(text)}</p></div>`
+        content: runHTML + `<div data-message-content><p>${escapeHTML(text)}</p></div>`,
+        actions: [
+          { action: 'copy', icon: 'copy', label: 'Copy response' },
+          { action: 'regenerate', icon: 'refresh-cw', label: 'Regenerate response' },
+          { action: 'helpful', icon: 'thumbs-up', label: 'Helpful response' }
+        ]
       });
 
       const t = document.createElement('template');
