@@ -35,7 +35,10 @@ Example authentication, model responses and agent execution are local demonstrat
 - `src/styles/sesama-ui.css`: design tokens and primitive styles.
 - `src/legacy/library.js` / `src/styles/library.css`: shared component builders, variants and behavior.
 - `src/components/`: shared pure builders and opt-in component modules.
-- `src/legacy/`: classic-script runtime, blocks, charts and catalog examples.
+- `src/blocks/`: structural layout blocks (app shell, sidebar, page grid, data sections).
+- `src/icons/`: Rune icon library and licensing.
+- `src/runtime.mjs`: mount/hydration runtime with lifecycle controllers.
+- `src/legacy/`: classic-script compatibility runtime and catalog examples.
 - `src/styles/`: existing central styles, including forms, blocks and charts.
 - `src/legacy/rune-icons.js` / `assets/rune-icons`: icon library and licensing.
 - `skills/sesama-ui`: repository copy of the agent skill.
@@ -44,13 +47,21 @@ Example authentication, model responses and agent execution are local demonstrat
 
 This is the current source layout, not the final package API. Some examples and skill instructions still have legacy assumptions; see the release plan before integrating into another application.
 
-## Module API preview
+## Component library (ESM)
 
-The first four implementation groups cover five catalog entries: Button, Input, Input Field, Select and Modal. They share canonical markup/styles between classic compatibility and opt-in ESM imports, with remaining parity work tracked in the [implementation plan](docs/COMPONENT-API-IMPLEMENTATION-PLAN.md). Try [Component API](demos/Component%20API.html), read the [preview contract](docs/COMPONENT-API-PREVIEW.md), and see the [accessibility report](docs/ACCESSIBILITY-REPORT.md). This is not a frozen npm API.
+The full migration is complete: 48 component families and 20 structural blocks ship as pure ESM builders with `.d.mts` type declarations — see the [alpha release guide](docs/ALPHA-RELEASE.md) for the full inventory and [usage examples](demos/README.md).
 
-Current focus is working component APIs. Input and Select use native form validation/data, controller setters, disabled/required state and reset; mounts share ownership and can be torn down/remounted. Manual screen-reader review is deferred while this functional work proceeds.
+```js
+import { appShell, table, mount } from 'sesama-ui';
+import { datePicker } from 'sesama-ui/date-picker';
+import 'sesama-ui/css/components.css';
+```
 
-Run `npm run build` after changing shared builders or `src/styles/components/*.css`; generated legacy bridges are checked by CI. Use `src/styles/components/button.css`, `field.css`, `select.css` or `modal.css` inside a `.sui-root` wrapper for independent CSS. `src/styles/components.css` aggregates only these preview families; fonts are optional.
+Every builder renders server-side without a DOM, and `mount(root)` attaches controllers with `refresh()`/`destroy()` lifecycle. Input Field and Select participate in native form validation with controller setters, disabled/required state and reset.
+
+Try [Component API](demos/Component%20API.html), read the [preview contract](docs/COMPONENT-API-PREVIEW.md), and see the [accessibility report](docs/ACCESSIBILITY-REPORT.md). The API is stable for this alpha but not yet published to npm/CDN.
+
+Run `npm run build` after changing shared builders or `src/styles/components/*.css`; generated legacy bridges are checked by CI. Any component stylesheet under `src/styles/components/` (e.g. `button.css`, `field.css`) can be used independently inside a `.sui-root` wrapper; `src/styles/components.css` and `src/styles/blocks.css` are the aggregates, and fonts are optional.
 
 ## Checks and roadmap
 
