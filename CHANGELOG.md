@@ -5,6 +5,15 @@ All notable changes to the Sesama UI project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- Input fields no longer render a double focus outline (stacked inset ring + outer outline); a single inset focus ring remains.
+- Removed native browser tooltips (`title` attributes) from Sidebar, Composer, Message and File Card controls; accessible names remain via `aria-label`.
+- People List rows use the plain appearance (no card background inside bordered sections).
+- Chart hover info is placed beside the hovered point, bar top or donut segment instead of covering it; donut segments highlight on hover.
+- AI agents demo sidebar collapse keeps main content visible and animates like the dashboard app shell.
+
 ## [0.1.0-alpha.2] - 2026-10-31
 
 ### Changed

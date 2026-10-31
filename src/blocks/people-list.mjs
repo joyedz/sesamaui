@@ -59,7 +59,7 @@ export function peopleList(options = {}) {
       : statusDot({ tone: statusTone, label: status });
 
     const rowHTML = listRow({
-      appearance: 'plain',
+      variant: 'plain',
       title: name,
       leading: avatar({ name, initials, size: 28, src: person.avatar?.src || (typeof person.avatar === 'string' ? person.avatar : undefined) }),
       descriptionHTML: descHTML,

@@ -12,7 +12,6 @@
 :where(.sui-root) .field{min-height:var(--control-size-base)}
 :where(.sui-root) .field{box-shadow:inset 0 0 0 1px var(--color-control-edge)}
 :where(.sui-root) .field:focus-within{box-shadow:inset 0 0 0 1.5px var(--color-focus)}
-:where(.sui-root) .field:has(input:focus-visible){outline:2px solid var(--color-focus);outline-offset:2px}
 :where(.sui-root) .field input:focus-visible{outline:none}
 :where(.sui-root) .form-field{display:grid;gap:var(--space-6);width:100%;max-width:300px}
 :where(.sui-root) .form-label{font-weight:500;color:var(--text-default)}

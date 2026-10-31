@@ -95,7 +95,7 @@ export function workspaceSidebar(options = {}) {
   if (!profileHTML) {
     const avatarHTML = avatar({ name: profileName, initials, size: 24, color: 'auto' });
     const roleHTML = profileRole ? `<span class="sb-profile-role">${escapeHTML(profileRole)}</span>` : '';
-    profileHTML = `<footer class="sb-profile"><button type="button" class="sb-profile-trigger" aria-label="Profile menu for ${escapeHTML(profileName)}">${avatarHTML}<span class="sb-profile-info"><span class="sb-profile-name">${escapeHTML(profileName)}</span>${roleHTML}</span></button><button type="button" class="ibtn" data-shell-theme aria-label="Toggle theme" title="Toggle theme">${controlIcon('sun', 16)}</button><button type="button" class="ibtn" data-sidebar-notifications aria-label="Notifications" title="Notifications">${controlIcon('bell', 16)}</button></footer>`;
+    profileHTML = `<footer class="sb-profile"><button type="button" class="sb-profile-trigger" aria-label="Profile menu for ${escapeHTML(profileName)}">${avatarHTML}<span class="sb-profile-info"><span class="sb-profile-name">${escapeHTML(profileName)}</span>${roleHTML}</span></button><button type="button" class="ibtn" data-shell-theme aria-label="Toggle theme">${controlIcon('sun', 16)}</button><button type="button" class="ibtn" data-sidebar-notifications aria-label="Notifications">${controlIcon('bell', 16)}</button></footer>`;
   }
 
   const extraAttrs = [];
@@ -109,7 +109,7 @@ export function workspaceSidebar(options = {}) {
     }
   }
 
-  return `<aside class="${classList}" data-sui-workspace-sidebar id="${escapeHTML(id)}" ${extraAttrs.join(' ')}><div class="sb-sidebar-top">${brandHTML}${selectorHTML}<button type="button" class="ibtn" data-shell-toggle aria-expanded="true" aria-label="Hide sidebar" title="Hide sidebar">${controlIcon('panel-left', 16)}</button></div><nav class="sb-navigation sx-sidebar-nav" aria-label="Workspace navigation">${navHTML}${groupsHTML}</nav><div class="sb-projects sx-scroll-area"><button type="button" class="ibtn sb-projects-rail" aria-label="Projects" title="Projects">${controlIcon('kebab', 16)}</button>${projSectionHTML}</div>${profileHTML}</aside>`;
+  return `<aside class="${classList}" data-sui-workspace-sidebar id="${escapeHTML(id)}" ${extraAttrs.join(' ')}><div class="sb-sidebar-top">${brandHTML}${selectorHTML}<button type="button" class="ibtn" data-shell-toggle aria-expanded="true" aria-label="Hide sidebar">${controlIcon('panel-left', 16)}</button></div><nav class="sb-navigation sx-sidebar-nav" aria-label="Workspace navigation">${navHTML}${groupsHTML}</nav><div class="sb-projects sx-scroll-area"><button type="button" class="ibtn sb-projects-rail" aria-label="Projects">${controlIcon('kebab', 16)}</button>${projSectionHTML}</div>${profileHTML}</aside>`;
 }
 
 /**

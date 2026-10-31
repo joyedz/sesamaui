@@ -87,7 +87,7 @@ export function composer(options = {}) {
         }
       ]
     });
-    attachButtonHTML = `<div><button type="button" class="ibtn" popovertarget="${popupId}" aria-haspopup="menu" aria-expanded="false" aria-label="Add attachment" title="Add attachment" data-composer-attach-trigger>${controlIcon('plus', 16)}</button>${popupHTML}</div>`;
+    attachButtonHTML = `<div><button type="button" class="ibtn" popovertarget="${popupId}" aria-haspopup="menu" aria-expanded="false" aria-label="Add attachment" data-composer-attach-trigger>${controlIcon('plus', 16)}</button>${popupHTML}</div>`;
   }
 
   // Context select
@@ -116,15 +116,15 @@ export function composer(options = {}) {
 
   // Mic button
   const micButtonHTML = showMic
-    ? `<button type="button" class="ibtn" data-composer-mic aria-pressed="false" aria-label="Microphone" title="Microphone">${controlIcon('mic', 16)}</button>`
+    ? `<button type="button" class="ibtn" data-composer-mic aria-pressed="false" aria-label="Microphone">${controlIcon('mic', 16)}</button>`
     : '';
 
   // Send / Stop button
   let sendButtonHTML = '';
   if (isThinking) {
-    sendButtonHTML = `<button type="button" class="send" data-composer-stop aria-label="Stop response" title="Stop response"><span class="composer-stop-square" aria-hidden="true"></span></button>`;
+    sendButtonHTML = `<button type="button" class="send" data-composer-stop aria-label="Stop response"><span class="composer-stop-square" aria-hidden="true"></span></button>`;
   } else {
-    sendButtonHTML = `<button type="button" class="send" data-send ${canSend ? '' : 'disabled'} aria-label="Send comment" title="Send comment">${controlIcon('up', 14)}</button>`;
+    sendButtonHTML = `<button type="button" class="send" data-send ${canSend ? '' : 'disabled'} aria-label="Send comment">${controlIcon('up', 14)}</button>`;
   }
 
   const extraAttrs = [];

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../src/styles/fonts.css">
   <style>
     html, body { height: 100%; margin: 0; }
-    .agent-app { height: 100dvh; display: grid; grid-template-columns: 240px minmax(0,1fr); background: var(--color-canvas); padding: var(--space-8); gap: var(--space-8); box-sizing: border-box; }
+    .agent-app { height: 100dvh; display: grid; grid-template-columns: 240px minmax(0,1fr); background: var(--color-canvas); padding: var(--space-8); gap: var(--space-8); box-sizing: border-box; transition: grid-template-columns 320ms var(--ease-out); }
     .agent-app.has-details { grid-template-columns: 240px minmax(0,1fr) 300px; }
     .agent-sidebar { display: flex; flex-direction: column; gap: var(--space-16); padding: var(--space-8); background: none; min-height: 0; overflow-x: hidden; }
     .agent-brand { display: flex; align-items: center; gap: 8px; height: 28px; font-size: 12px; font-weight: 500; }
@@ -47,7 +47,8 @@
     @media(min-width:761px){
       .agent-app.sidebar-collapsed { grid-template-columns: 48px minmax(0,1fr); }
       .agent-app.sidebar-collapsed.has-details { grid-template-columns: 48px minmax(0,1fr) 300px; }
-      .sidebar-collapsed .agent-sidebar { position: fixed; left: 8px; top: 8px; bottom: 8px; width: 48px; z-index: 40; background: var(--color-canvas); border-radius: var(--radius-md); overflow: hidden; }
+      .agent-main { grid-column: 2; grid-row: 1; }
+      .sidebar-collapsed .agent-sidebar { position: fixed; left: 8px; top: 8px; bottom: 8px; width: 48px; z-index: 40; background: var(--color-canvas); border-radius: var(--radius-md); overflow: hidden; transition: width 320ms var(--ease-out); }
       .sidebar-collapsed .agent-sidebar.sidebar-hover-open { width: 240px; box-shadow: var(--shadow-float); }
       .sidebar-collapsed .agent-sidebar:not(.sidebar-hover-open) .agent-brand > [data-sui-select],
       .sidebar-collapsed .agent-sidebar:not(.sidebar-hover-open) .sx-tree-label,
@@ -62,7 +63,11 @@
 
     @media(max-width:1000px){
       .agent-app, .agent-app.has-details { grid-template-columns: 240px minmax(0,1fr); }
+      .agent-app.sidebar-collapsed, .agent-app.sidebar-collapsed.has-details { grid-template-columns: 48px minmax(0,1fr); }
       .agent-detail { position: fixed; top: var(--space-8); right: var(--space-8); bottom: var(--space-8); z-index: 30; box-shadow: var(--shadow-float); }
+    }
+    @media(prefers-reduced-motion:reduce){
+      .agent-app, .sidebar-collapsed .agent-sidebar { transition: none !important; }
     }
     @media(max-width:760px){
       .agent-app, .agent-app.has-details { grid-template-columns: minmax(0,1fr); }

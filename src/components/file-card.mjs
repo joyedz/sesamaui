@@ -69,14 +69,14 @@ export function fileCard(options = {}) {
 
   let actionHTML = '';
   if (removable) {
-    actionHTML = `<button type="button" class="ibtn sx-file-remove" data-file-remove data-composer-remove-file aria-label="Remove ${escapeHTML(name)}" title="Remove ${escapeHTML(name)}">${controlIcon('x', 14)}</button>`;
+    actionHTML = `<button type="button" class="ibtn sx-file-remove" data-file-remove data-composer-remove-file aria-label="Remove ${escapeHTML(name)}">${controlIcon('x', 14)}</button>`;
   } else if (typeof options.actions === 'string') {
     actionHTML = options.actions;
   } else if (Array.isArray(options.actions) && options.actions.length > 0) {
     const actionList = options.actions.map(a => typeof a === 'string' ? a : a.label || a.name).join(',');
-    actionHTML = `<button type="button" class="ibtn" data-menu="${escapeHTML(actionList)}" aria-label="File actions" title="File actions">${controlIcon('kebab', 16)}</button>`;
+    actionHTML = `<button type="button" class="ibtn" data-menu="${escapeHTML(actionList)}" aria-label="File actions">${controlIcon('kebab', 16)}</button>`;
   } else {
-    actionHTML = `<button type="button" class="ibtn" data-menu="Download,Copy link" aria-label="File actions" title="File actions">${controlIcon('kebab', 16)}</button>`;
+    actionHTML = `<button type="button" class="ibtn" data-menu="Download,Copy link" aria-label="File actions">${controlIcon('kebab', 16)}</button>`;
   }
 
   let previewHTML = '';
@@ -103,7 +103,7 @@ export function fileCard(options = {}) {
     }
   }
 
-  return `<div class="${classes}" data-sui-file-card id="${escapeHTML(id)}" data-file-id="${escapeHTML(id)}" ${src ? `data-file-src="${escapeHTML(src)}"` : ''} data-file-type="${escapeHTML(type)}" ${extraAttrs.join(' ')}><div class="fhead sx-file-head"><button type="button" class="sx-file-open" data-file-preview aria-expanded="${expanded}" aria-label="Preview ${escapeHTML(name)}" title="${escapeHTML(name)}">${controlIcon(iconName, 16)}<span class="sx-file-name">${escapeHTML(name)}</span>${size ? `<span class="sx-file-size sx-help">${escapeHTML(size)}</span>` : ''}</button>${actionHTML}</div><div class="fprev sx-file-preview" data-file-preview-body ${expanded ? '' : 'hidden'}>${previewHTML}</div></div>`;
+  return `<div class="${classes}" data-sui-file-card id="${escapeHTML(id)}" data-file-id="${escapeHTML(id)}" ${src ? `data-file-src="${escapeHTML(src)}"` : ''} data-file-type="${escapeHTML(type)}" ${extraAttrs.join(' ')}><div class="fhead sx-file-head"><button type="button" class="sx-file-open" data-file-preview aria-expanded="${expanded}" aria-label="Preview ${escapeHTML(name)}">${controlIcon(iconName, 16)}<span class="sx-file-name">${escapeHTML(name)}</span>${size ? `<span class="sx-file-size sx-help">${escapeHTML(size)}</span>` : ''}</button>${actionHTML}</div><div class="fprev sx-file-preview" data-file-preview-body ${expanded ? '' : 'hidden'}>${previewHTML}</div></div>`;
 }
 
 /**

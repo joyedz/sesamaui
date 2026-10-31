@@ -99,18 +99,18 @@ export function message(options = {}) {
           return `<button type="button" class="btn outline" data-message-action="retry">Retry</button>`;
         }
         if (action === 'reply') {
-          return `<button type="button" class="ibtn" data-message-action="reply" title="Reply" aria-label="Reply">${controlIcon('chat', 16)}</button>`;
+          return `<button type="button" class="ibtn" data-message-action="reply" aria-label="Reply">${controlIcon('chat', 16)}</button>`;
         }
         if (action === 'copy') {
-          return `<button type="button" class="ibtn" data-message-action="copy" title="Copy message" aria-label="Copy message">${controlIcon('copy', 16)}</button>`;
+          return `<button type="button" class="ibtn" data-message-action="copy" aria-label="Copy message">${controlIcon('copy', 16)}</button>`;
         }
         if (action === 'kebab') {
-          return `<button type="button" class="ibtn" data-menu="Edit,Delete" title="Message actions" aria-label="Message actions">${controlIcon('kebab', 16)}</button>`;
+          return `<button type="button" class="ibtn" data-menu="Edit,Delete" aria-label="Message actions">${controlIcon('kebab', 16)}</button>`;
         }
-        return `<button type="button" class="ibtn" data-message-action="${escapeHTML(action)}" title="${escapeHTML(action)}" aria-label="${escapeHTML(action)}">${escapeHTML(action)}</button>`;
+        return `<button type="button" class="ibtn" data-message-action="${escapeHTML(action)}" aria-label="${escapeHTML(action)}">${escapeHTML(action)}</button>`;
       }
       const icon = action.icon ? controlIcon(action.icon, 16) : '';
-      return `<button type="button" class="ibtn" data-message-action="${escapeHTML(action.action || action.label)}" title="${escapeHTML(action.label)}" aria-label="${escapeHTML(action.label)}">${icon}</button>`;
+      return `<button type="button" class="ibtn" data-message-action="${escapeHTML(action.action || action.label)}" aria-label="${escapeHTML(action.label)}">${icon}</button>`;
     }).join('');
     actionsHTML = `<div class="sx-row sx-message-actions">${actionButtons}</div>`;
   }

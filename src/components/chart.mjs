@@ -111,7 +111,7 @@ export function renderChartSVG(config, width = 480) {
       data.forEach((row, i) => {
         const n = getVal(row, s.key);
         const portion = (n / total) * C;
-        svg += `<path data-sc-segment="${i}" d="${arcPath(cx, cy, r, offset / C, (offset + portion) / C)}" fill="none" stroke="${PALETTE[i % PALETTE.length]}" stroke-width="24" pointer-events="stroke"><title>${escapeHTML(row.label)}: ${escapeHTML(formatVal(c, n))}</title></path>`;
+        svg += `<path data-sc-segment="${i}" d="${arcPath(cx, cy, r, offset / C, (offset + portion) / C)}" fill="none" stroke="${PALETTE[i % PALETTE.length]}" stroke-width="24" pointer-events="stroke"></path>`;
         offset += portion;
       });
       svg += `<circle cx="${cx}" cy="${cy}" r="${r - 24}" fill="var(--color-base)"/><text x="${cx}" y="${cy}" text-anchor="middle" class="sc-total">${escapeHTML(formatVal(c, total))}</text><text x="${cx}" y="${cy + 22}" text-anchor="middle">Total</text>`;
@@ -219,7 +219,7 @@ function buildChartExtras(config, hidden) {
  * Pure functional builder for Chart.
  *
  * @param {object} [options]
- * @returns {string} HTML string
+ * @returns {string} HTML markup
  */
 export function chart(options = {}) {
   const {
@@ -311,20 +311,69 @@ export function initChart(element) {
     const pw = Math.max(1, width - L - R);
     const ph = height - T - B;
 
+    const isDonut = config.type === 'donut';
+    const isBarType = ['bar', 'thin-bar', 'stacked bar'].includes(config.type);
+
+    // Donut hover anchors sit on the ring at each segment's mid-angle.
+    const donutAnchors = [];
+    if (isDonut && allSeries[0]) {
+      const r = Math.min(height / 2 - 24, width / 2 - 20);
+      const cx = width / 2;
+      const cy = height / 2;
+      const circumference = 2 * Math.PI * r;
+      const pointAt = t => [cx + Math.cos(t * Math.PI * 2 - Math.PI / 2) * r, cy + Math.sin(t * Math.PI * 2 - Math.PI / 2) * r];
+      const totalValue = data.reduce((n, row) => n + getVal(row, allSeries[0].key), 0);
+      let arc = 0;
+      data.forEach(row => {
+        const portion = totalValue ? (getVal(row, allSeries[0].key) / totalValue) * circumference : 0;
+        donutAnchors.push(pointAt(totalValue ? (arc + portion / 2) / circumference : 0));
+        arc += portion;
+      });
+    }
+
     data.forEach((row, index) => {
       const button = element.ownerDocument?.createElement('button');
       if (!button) return;
       button.type = 'button';
       button.className = 'sc-target';
 
-      const xPos = ['bar', 'thin-bar', 'stacked bar'].includes(config.type)
+      const xPos = isBarType
         ? L + (pw / data.length) * (index + 0.5)
         : L + (data.length === 1 ? pw / 2 : (index * pw) / (data.length - 1));
 
-      button.style.left = `${xPos}px`;
-      button.style.top = `${T + ph / 2}px`;
-      button.style.width = `${Math.max(20, pw / data.length)}px`;
-      button.style.height = `${ph}px`;
+      // Tooltip anchor: the hovered point, bar top or donut segment, so the
+      // info card can sit beside it instead of covering it.
+      let anchorX = xPos;
+      let anchorY = T + ph / 2;
+
+      if (isDonut) {
+        const [dx, dy] = donutAnchors[index] || [width / 2, height / 2];
+        anchorX = dx;
+        anchorY = dy;
+        button.style.left = `${dx}px`;
+        button.style.top = `${dy}px`;
+        button.style.width = '28px';
+        button.style.height = '28px';
+      } else {
+        button.style.left = `${xPos}px`;
+        button.style.top = `${T + ph / 2}px`;
+        button.style.width = `${Math.max(20, pw / data.length)}px`;
+        button.style.height = `${ph}px`;
+        if (isBarType) {
+          let barTop = null;
+          element.querySelectorAll(`rect[data-sc-index="${index}"]`).forEach(rect => {
+            const top = Number(rect.getAttribute('y'));
+            if (barTop === null || top < barTop) barTop = top;
+          });
+          if (barTop !== null) anchorY = barTop;
+        } else {
+          const dot = element.querySelector(`circle[data-sc-dot="${index}"]`);
+          if (dot) {
+            anchorX = Number(dot.getAttribute('cx'));
+            anchorY = Number(dot.getAttribute('cy'));
+          }
+        }
+      }
 
       const values = allSeries.map((s, j) => ({
         label: s.label || s.key,
@@ -333,21 +382,39 @@ export function initChart(element) {
       }));
 
       const show = () => {
-        // Highlight segments / dots / bars
+        // Highlight the hovered dot / bar / donut segment and dim the rest.
         element.querySelectorAll('[data-sc-dot]').forEach(d => {
           d.setAttribute('visibility', Number(d.dataset.scDot) === index ? 'visible' : 'hidden');
         });
         element.querySelectorAll('[data-sc-index]').forEach(b => {
           b.style.opacity = Number(b.dataset.scIndex) === index ? '1' : '0.25';
         });
+        element.querySelectorAll('[data-sc-segment]').forEach(seg => {
+          seg.style.opacity = Number(seg.dataset.scSegment) === index ? '1' : '0.25';
+        });
 
         tip.innerHTML = `<strong>${escapeHTML(row.label)}</strong>` + values.map(v =>
           `<span><i style="background:${escapeHTML(v.color)}"></i>${escapeHTML(v.label)}<b>${escapeHTML(formatVal(config, v.value))}</b></span>`
         ).join('');
 
+        // Place the tooltip beside the hovered point (right by default, flipped
+        // to the left near the right edge) so it never covers it.
         tip.hidden = false;
-        tip.style.left = `${Math.min(width - 150, Math.max(8, xPos - 70))}px`;
-        tip.style.top = `${Math.max(8, T)}px`;
+        const tipWidth = tip.offsetWidth || 150;
+        const tipHeight = tip.offsetHeight || 56;
+        const gap = 10;
+        let left = anchorX + gap;
+        if (left + tipWidth > width - 4) left = anchorX - tipWidth - gap;
+        left = Math.max(4, Math.min(left, width - tipWidth - 4));
+        let top = anchorY - tipHeight / 2;
+        if (left <= anchorX && anchorX <= left + tipWidth) {
+          // The anchor point sits behind the tooltip; prefer above, else below.
+          top = anchorY - tipHeight - gap;
+          if (top < 4) top = anchorY + gap;
+        }
+        top = Math.max(4, Math.min(top, height - tipHeight - 4));
+        tip.style.left = `${left}px`;
+        tip.style.top = `${top}px`;
 
         element.dispatchEvent(new view.CustomEvent('sui:chart:hover', {
           bubbles: true,
@@ -358,6 +425,7 @@ export function initChart(element) {
       const hide = () => {
         element.querySelectorAll('[data-sc-dot]').forEach(d => d.setAttribute('visibility', 'hidden'));
         element.querySelectorAll('[data-sc-index]').forEach(b => { b.style.opacity = '1'; });
+        element.querySelectorAll('[data-sc-segment]').forEach(seg => { seg.style.opacity = '1'; });
         tip.hidden = true;
       };
 
@@ -365,6 +433,12 @@ export function initChart(element) {
       button.addEventListener('focus', show);
       button.addEventListener('mouseleave', hide);
       button.addEventListener('blur', hide);
+      if (isDonut) {
+        // The whole arc is hoverable, not just the mid-angle target.
+        const segment = element.querySelector(`path[data-sc-segment="${index}"]`);
+        segment?.addEventListener('mouseenter', show);
+        segment?.addEventListener('mouseleave', hide);
+      }
       button.addEventListener('click', () => {
         element.dispatchEvent(new view.CustomEvent('sui:chart:select', {
           bubbles: true,
