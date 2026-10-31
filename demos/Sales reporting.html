@@ -1,6 +1,169 @@
-<!doctype html><html lang="id" data-mode="light"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reporting Penjualan · Sesama</title><link rel="stylesheet" href="../src/styles/sesama-ui.css"><link rel="stylesheet" href="../src/styles/forms.css"><link rel="stylesheet" href="../src/styles/dashboard-components.css"><link rel="stylesheet" href="../src/styles/library.css"><style>.channel{margin-top:var(--space-24)}.channel-line{display:flex;justify-content:space-between;gap:var(--space-8)}.track{height:6px;background:var(--color-recessed);border-radius:var(--radius-xs);margin-top:var(--space-8);overflow:hidden}.track i{display:block;height:100%;background:var(--color-brand)}.meta,.foot{font-size:var(--font-meta-size);color:var(--text-subtle)}.foot{margin-top:var(--space-16)}</style><script src="../src/legacy/rune-icons.js"></script><script src="../src/legacy/component-builders.js"></script><script src="../src/legacy/library.js"></script><script src="../src/legacy/workspace-blocks.js"></script><script src="../src/legacy/charts.js"></script><script defer src="../src/legacy/forms.js"></script><script defer src="../src/legacy/dashboard-components.js"></script><script defer src="../src/legacy/primitives.js"></script><div id="app"></div><script>
-const ui=SESAMA_UI,B=SESAMA_BLOCKS;
-const tableNode=document.createElement('div');tableNode.innerHTML=ui.getExamples('Table')[0].html;const table=tableNode.querySelector('table');table.querySelector('thead').innerHTML='<tr><th>Produk</th><th>SKU</th><th>Terjual</th><th>Kontribusi</th><th>Pendapatan</th></tr>';table.querySelector('tbody').id='products';
-document.querySelector('#app').innerHTML=B.appShell({sidebar:B.sidebar({workspace:'Tim penjualan',workspaces:['Tim penjualan'],navigation:[{n:'Reporting penjualan',i:'grid-3x3',key:'sales',selected:true}],profileName:'Tim penjualan',initials:'TP'}),header:B.pageHeader({title:'Reporting penjualan',icon:'grid-3x3',actions:ui.iconButton('file','','id="export"','Ekspor CSV')}),content:B.pageLayout(B.pageGrid([{html:B.dataSection({title:'Ringkasan penjualan',description:'Pantau performa bisnis dan peluang pertumbuhan.',filters:ui.select('without label',{label:'Periode',name:'period',value:'Oktober 2026',options:['Oktober 2026','September 2026','Agustus 2026']})+ui.select('without label',{label:'Channel',name:'channel',value:'Semua channel',options:['Semua channel','Marketplace','Website','Toko offline']})}),span:12},...Array.from({length:4},(_,i)=>({html:`<div id="metric-${i}"></div>`,span:3,tablet:3})),{html:B.dataSection({title:'Tren pendapatan',description:'Pendapatan harian · dalam juta rupiah',table:'<div id="chart"></div>'}),span:8},{html:B.dataSection({title:'Penjualan per channel',description:'Kontribusi terhadap pendapatan',table:'<div id="channels"></div>'}),span:4},{html:B.dataSection({title:'Produk terlaris',description:'Diurutkan berdasarkan pendapatan tertinggi',table:table.outerHTML,pagination:'<div id="summary" role="status"></div>'}),span:12},{html:'',span:12}]))});const exp=document.querySelector('#export');
-const base=[['Essential Cotton Tee','ESS-001',320,76800000],['Everyday Tote Bag','ETB-002',245,61250000],['Classic Linen Shirt','CLS-003',180,54000000],['Relaxed Fit Pants','RFP-004',156,46800000],['Canvas Sneakers','CSN-005',120,45600000]];const rup=n=>'Rp'+Math.round(n).toLocaleString('id-ID');let rows=[];function render(){const period=document.querySelector('[name=period]').value,channel=document.querySelector('[name=channel]').value;const m=({'Oktober 2026':1,'September 2026':.88,'Agustus 2026':.79})[period],c=({'Semua channel':1,Marketplace:.52,Website:.31,'Toko offline':.17})[channel],f=m*c,total=284450000*f;rows=base.map(r=>[r[0],r[1],Math.round(r[2]*f),r[3]*f]);[['Pendapatan bersih',rup(total),'+13,6%'],['Pesanan',Math.round(1021*f).toLocaleString('id-ID'),'+8,2%'],['Produk terjual',Math.round(1426*f).toLocaleString('id-ID'),'+11,4%'],['Rata-rata pesanan',rup(total/Math.round(1021*f)),'+5,0%']].forEach(([label,value,change],i)=>document.querySelector('#metric-'+i).innerHTML=B.metricCard({label,value,change}));document.querySelector('#channels').innerHTML=['Marketplace','Website','Toko offline'].map((n,i)=>{const pct=channel==='Semua channel'?[52,31,17][i]:channel===n?100:0;return `<div class="channel"><div class="channel-line"><span>${n}</span><span>${pct}%</span></div><div class="track"><i style="width:${pct}%"></i></div><p class="meta">${rup(total*pct/100)}</p></div>`}).join('');document.querySelector('#products').innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td class="meta">${r[1]}</td><td>${r[2]}</td><td>${(r[3]/total*100).toFixed(1)}%</td><td>${rup(r[3])}</td></tr>`).join('');document.querySelector('#summary').textContent=`5 produk · ${period} · ${channel}`;document.querySelector('#chart').innerHTML=B.revenueChart({scale:f,label:'Tren pendapatan '+period});}render();document.addEventListener('click',e=>{if(e.target.closest('[data-select-value]'))setTimeout(render,0)});exp.onclick=()=>{const csv='\uFEFFProduk,SKU,Terjual,Pendapatan\r\n'+rows.map(r=>r.join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='reporting-penjualan.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
-</script></html>
+<!doctype html>
+<html lang="id" data-mode="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Reporting Penjualan · Sesama</title>
+  <link rel="stylesheet" href="../src/styles/components.css">
+  <link rel="stylesheet" href="../src/styles/blocks.css">
+  <link rel="stylesheet" href="../src/styles/fonts.css">
+  <style>
+    body { margin: 0; background: var(--color-canvas); }
+    .channel { margin-top: var(--space-24); }
+    .channel:first-child { margin-top: 0; }
+    .channel-line { display: flex; justify-content: space-between; gap: var(--space-8); }
+    .track { height: 6px; background: var(--color-recessed); border-radius: var(--radius-xs); margin-top: var(--space-8); overflow: hidden; }
+    .track i { display: block; height: 100%; background: var(--color-brand); }
+    .meta, .foot { font-size: var(--font-meta-size); color: var(--text-subtle); }
+    .foot { margin-top: var(--space-16); }
+  </style>
+</head>
+<body class="sui-root">
+  <div id="app"></div>
+  <script type="module">
+    import {
+      appShell,
+      workspaceSidebar,
+      pageHeader,
+      pageLayout,
+      pageGrid,
+      dataSection,
+      metricCard,
+      chart,
+      table,
+      select,
+      iconButton,
+      mount
+    } from '../src/index.mjs';
+
+    let period = 'Oktober 2026';
+    let channel = 'Semua channel';
+
+    const base = [
+      ['Essential Cotton Tee', 'ESS-001', 320, 76800000],
+      ['Everyday Tote Bag', 'ETB-002', 245, 61250000],
+      ['Classic Linen Shirt', 'CLS-003', 180, 54000000],
+      ['Relaxed Fit Pants', 'RFP-004', 156, 46800000],
+      ['Canvas Sneakers', 'CSN-005', 120, 45600000]
+    ];
+    const rup = n => 'Rp' + Math.round(n).toLocaleString('id-ID');
+    const dailyValues = [2, 3, 1.5, 5, 4.2, 8, 6, 9, 7.5, 6.5, 10, 8.5, 12, 9.5, 7, 10, 9, 12, 10.5, 13, 11.2, 13.5, 11, 14.5, 13, 15.5, 13.2, 14.5, 12.5, 16];
+
+    document.getElementById('app').innerHTML = appShell({
+      sidebar: workspaceSidebar({
+        workspace: 'Tim penjualan',
+        workspaces: ['Tim penjualan'],
+        navigation: [{ label: 'Reporting penjualan', icon: 'grid-3x3', active: true }],
+        profileName: 'Tim penjualan',
+        initials: 'TP'
+      }),
+      header: pageHeader({
+        title: 'Reporting penjualan',
+        icon: 'grid-3x3',
+        actions: iconButton({ icon: 'file', attributes: 'id="export"', accessibleLabel: 'Ekspor CSV' })
+      }),
+      content: pageLayout('<div id="sales-content"></div>', { variant: 'data' })
+    });
+
+    const session = mount(document.body);
+
+    function render() {
+      const periodFactor = { 'Oktober 2026': 1, 'September 2026': 0.88, 'Agustus 2026': 0.79 }[period];
+      const channelFactor = { 'Semua channel': 1, 'Marketplace': 0.52, 'Website': 0.31, 'Toko offline': 0.17 }[channel];
+      const factor = periodFactor * channelFactor;
+      const total = 284450000 * factor;
+      const rows = base.map(([name, sku, sold, revenue]) => ({
+        name, sku,
+        sold: Math.round(sold * factor),
+        revenue: revenue * factor
+      }));
+
+      const metrics = [
+        { label: 'Pendapatan bersih', value: rup(total), change: '+13,6%' },
+        { label: 'Pesanan', value: Math.round(1021 * factor).toLocaleString('id-ID'), change: '+8,2%' },
+        { label: 'Produk terjual', value: Math.round(1426 * factor).toLocaleString('id-ID'), change: '+11,4%' },
+        { label: 'Rata-rata pesanan', value: rup(total / Math.round(1021 * factor)), change: '+5,0%' }
+      ];
+
+      const byDay = dailyValues.map((v, i) => ({ label: String(i + 1).padStart(2, '0'), net: v * factor }));
+
+      const channels = ['Marketplace', 'Website', 'Toko offline'].map((name, i) => {
+        const pct = channel === 'Semua channel' ? [52, 31, 17][i] : (channel === name ? 100 : 0);
+        return `<div class="channel"><div class="channel-line"><span>${name}</span><span>${pct}%</span></div><div class="track"><i style="width:${pct}%"></i></div><p class="meta">${rup(total * pct / 100)}</p></div>`;
+      }).join('');
+
+      const grid = pageGrid([
+        {
+          html: dataSection({
+            title: 'Ringkasan penjualan',
+            description: 'Pantau performa bisnis dan peluang pertumbuhan.',
+            filters:
+              select({ name: 'period', label: 'Periode', hideLabel: true, value: period, options: ['Oktober 2026', 'September 2026', 'Agustus 2026'] }) +
+              select({ name: 'channel', label: 'Channel', hideLabel: true, value: channel, options: ['Semua channel', 'Marketplace', 'Website', 'Toko offline'] })
+          }),
+          span: 12
+        },
+        ...metrics.map(metric => ({ html: metricCard(metric), span: 3, tablet: 3 })),
+        {
+          html: dataSection({
+            title: 'Tren pendapatan',
+            description: 'Pendapatan harian · dalam juta rupiah',
+            data: chart({ type: 'area', label: 'Tren pendapatan ' + period, data: byDay, series: [{ key: 'net', label: 'Pendapatan harian' }], height: 240 })
+          }),
+          span: 8
+        },
+        {
+          html: dataSection({
+            title: 'Penjualan per channel',
+            description: 'Kontribusi terhadap pendapatan',
+            data: `<div>${channels}</div>`
+          }),
+          span: 4
+        },
+        {
+          html: dataSection({
+            title: 'Produk terlaris',
+            description: 'Diurutkan berdasarkan pendapatan tertinggi',
+            data: table({
+              label: 'Produk terlaris',
+              columns: [
+                { key: 'name', header: 'Produk' },
+                { key: 'sku', header: 'SKU' },
+                { key: 'sold', header: 'Terjual' },
+                { key: 'contribution', header: 'Kontribusi', align: 'right' },
+                { key: 'revenue', header: 'Pendapatan', align: 'right', render: rup }
+              ],
+              rows: rows.map(r => ({ ...r, contribution: (r.revenue / total * 100).toFixed(1) + '%' }))
+            }),
+            pagination: '<span class="sx-help" role="status" id="summary"></span>'
+          }),
+          span: 12
+        }
+      ]);
+
+      document.getElementById('sales-content').innerHTML = grid;
+      document.getElementById('summary').textContent = `5 produk · ${period} · ${channel}`;
+      session.refresh();
+    }
+
+    render();
+
+    document.addEventListener('sui:change', event => {
+      if (event.detail?.name === 'period') { period = event.detail.value; render(); }
+      if (event.detail?.name === 'channel') { channel = event.detail.value; render(); }
+    });
+
+    document.addEventListener('click', event => {
+      if (!event.target.closest('#export')) return;
+      const csv = '\uFEFFProduk,SKU,Terjual,Pendapatan\r\n' +
+        base.map(r => r.join(',')).join('\r\n');
+      const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'reporting-penjualan.csv';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+  </script>
+</body>
+</html>
