@@ -63,6 +63,18 @@ Try [Component API](demos/Component%20API.html), read the [preview contract](doc
 
 Run `npm run build` after changing shared builders or `src/styles/components/*.css`; generated legacy bridges are checked by CI. Any component stylesheet under `src/styles/components/` (e.g. `button.css`, `field.css`) can be used independently inside a `.sui-root` wrapper; `src/styles/components.css` and `src/styles/blocks.css` are the aggregates, and fonts are optional.
 
+## Migration & audit
+
+The repository completed its migration from the legacy monolith (global `window.SESAMA_*` runtimes loaded via sequential `<script>` tags) to the current modular ESM system. Per-change details live in the [changelog](CHANGELOG.md); the phased component inventory is in the [alpha release guide](docs/ALPHA-RELEASE.md).
+
+All application demos were rebuilt on the public ESM builders and audited against the preserved `demos-legacy/` reference (2026-10-31):
+
+- **Visual parity** — computed styles (typography, spacing, colors, gaps) and rendered geometry compared per component across all 10 demo pages; page heights identical, fonts loading identically.
+- **Responsive** — no horizontal overflow at 390, 600, 760, 761, 1000, 1100, 1101, or 1440px on any page.
+- **Runtime** — zero page or console errors across every demo.
+- **Intentional deviations** from legacy values, kept for WCAG AA contrast and enforced by the axe suite: `--text-placeholder` at alpha `.59` and `--color-danger-text` for form errors. Message and Composer content also uses the new 14px/22px body size.
+- **Focus/overlay correctness** — composer focus ring renders on the card (not the textarea), and every popup (select, menu, popover, dropdown, date picker, combobox, composer attach) is positioned by its controller with flip and dismissal handling.
+
 ## Checks and roadmap
 
 ```sh
