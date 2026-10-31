@@ -181,7 +181,7 @@ export function initTable(element) {
       bubbles: true,
       detail: {
         selectedKeys: selectedArray,
-        selectedRows: rowsData.filter(r => selectedKeys.has(String(r.id ?? r.key))),
+        selectedRows: rowsData.filter(r => selectedKeys.has(getRowKey(r, config.rowKey))),
       },
     }));
   }
@@ -242,7 +242,7 @@ export function initTable(element) {
       }
       const key = row.dataset.rowKey;
       const action = row.dataset.tableRowAction;
-      const rowObj = rowsData.find(r => String(r.id ?? r.key) === key) || null;
+      const rowObj = rowsData.find(r => getRowKey(r, config.rowKey) === key) || null;
 
       element.dispatchEvent(new view.CustomEvent('sui:table:rowclick', {
         bubbles: true,
@@ -317,7 +317,7 @@ export function initTable(element) {
       return [...selectedKeys];
     },
     getSelectedRows() {
-      return rowsData.filter(r => selectedKeys.has(String(r.id ?? r.key)));
+      return rowsData.filter(r => selectedKeys.has(getRowKey(r, config.rowKey)));
     },
     setSort(col, dir) {
       setSort(col, dir);
