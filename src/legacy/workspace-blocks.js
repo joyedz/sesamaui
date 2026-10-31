@@ -51,4 +51,4 @@ const SESAMA_BLOCKS=(()=>{
  return {metricSummary,salesSidebar,sidebarProfile,contentSection,peopleList,activityFeed,dashboardOverview,metricCard,revenueChart,appShell,sidebar,pageHeader,pageLayout,pageGrid,dataSection,examples,install};
 })();
 
-if(new URLSearchParams(location.search).get('previewMotion')==='1'){const motion=document.createElement('script');motion.src=new URL('../../preview-motion.js',document.currentScript?.src||document.baseURI).href;motion.defer=true;document.head.append(motion)}
+if(new URLSearchParams(location.search).get('previewMotion')==='1'){const motion=document.createElement('script');motion.src=new URL('../../site/preview-motion.js',document.currentScript?.src||document.baseURI).href;motion.defer=true;document.head.append(motion)}

@@ -8,7 +8,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
  fs.mkdirSync('.qa',{recursive:true});
  const browser=await chromium.launch({...(process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:{}),headless:true});
  const page=await browser.newPage({viewport:{width:1280,height:900}});const errors=[];const passed=[];
- page.on('pageerror',e=>errors.push(e.message));const base=pathToFileURL(path.resolve('Design system.html')).href;
+ page.on('pageerror',e=>errors.push(e.message));const base=pathToFileURL(path.resolve('site/Design system.html')).href;
  const route=async slug=>{await page.goto(base+'#'+slug);await page.reload();await page.locator('.reading,.home-gallery,.icon-gallery').first().waitFor();};
  const section=name=>page.locator('.variant-example').filter({has:page.getByRole('heading',{name,exact:true})}).first();
  async function check(name,fn){try{await fn();passed.push(name);console.log('PASS '+name)}catch(error){console.error('FAIL '+name);throw error}}

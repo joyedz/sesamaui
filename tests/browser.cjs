@@ -9,7 +9,7 @@ let browser;
   browser=await browserType.launch({headless:true,...(browserName==='chromium'&&process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:{})});
   const page=await browser.newPage({viewport:{width:1440,height:900}}),errors=[],failures=[];
   page.on('pageerror',error=>errors.push(error.message));page.on('response',response=>{if(response.url().startsWith(base)&&response.status()>=400)failures.push(response.url());});
-  for(const file of ['Sesama landing.html','Design system.html',...fs.readdirSync('demos').filter(name=>name.endsWith('.html')).map(name=>'demos/'+name)]){
+  for(const file of ['site/Sesama landing.html','site/Design system.html',...fs.readdirSync('demos').filter(name=>name.endsWith('.html')).map(name=>'demos/'+name)]){
     const response=await page.goto(base+'/'+file);assert.equal(response.status(),200,file);await page.waitForTimeout(150);
     console.log('Loaded '+file);
   }

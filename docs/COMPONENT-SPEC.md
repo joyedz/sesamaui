@@ -239,7 +239,7 @@ After UI completion: decide framework/distribution; finalize controlled/uncontro
 
 ## References
 
-- Sesama source: Design system.html, sesama-ui.css, forms.css/js, dashboard-components.css/js, rune-icons.js.
+- Legacy Sesama source (reference copies): demos-legacy/Design system.html, demos-legacy/sesama-ui.css, demos-legacy/forms.css/js, demos-legacy/dashboard-components.css/js, demos-legacy/rune-icons.js.
 - Kumo catalog: https://kumo-ui.com/
 - Input: https://kumo-ui.com/components/input/
 - Select: https://kumo-ui.com/components/select/

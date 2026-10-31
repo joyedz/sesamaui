@@ -91,7 +91,7 @@ import 'sesama-ui/css/components.css';
 
 **20 structural blocks** compose them into application layouts: `appShell`, `workspaceSidebar`, `pageHeader`, `pageLayout`, `pageGrid`, `contentSection`, `dataSection`, `metricCard`, `peopleList`, `activityFeed`, `chartSection`, plus domain recipes for dashboards, reports, and dialogs.
 
-Browse every component, variant, and state in the [component catalog](Design%20system.html), or try the [Component API preview](demos/Component%20API.html).
+Browse every component, variant, and state in the [component catalog](site/Design%20system.html), or try the [Component API preview](demos/Component%20API.html).
 
 ## Demos
 
@@ -99,7 +99,7 @@ Standalone application examples built with the library:
 
 | Page | Source |
 | --- | --- |
-| Landing | [Sesama landing.html](Sesama%20landing.html) |
+| Landing | [Sesama landing.html](site/Sesama%20landing.html) |
 | Login | [demos/Login.html](demos/Login.html) |
 | Dashboard | [demos/Dashboard overview.html](demos/Dashboard%20overview.html) |
 | Revenue | [demos/Revenue report.html](demos/Revenue%20report.html) |
