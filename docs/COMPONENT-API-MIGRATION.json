@@ -1,0 +1,705 @@
+{
+  "schemaVersion": 1,
+  "status": "completed; all 48 components, 20 blocks, demos, portable skill, and packaging alpha verified",
+  "priority": "functional component APIs first; manual screen-reader review deferred",
+  "baseline": {
+    "catalogEntries": 48,
+    "apiCoveredEntries": 48,
+    "implementationGroups": 4,
+    "remainingLegacyEntries": 0,
+    "blockEntries": 20,
+    "icons": 224
+  },
+  "phases": [
+    {
+      "id": "P0",
+      "title": "Existing API and shared foundations",
+      "status": "verified",
+      "dependsOn": [],
+      "componentCount": 5
+    },
+    {
+      "id": "P1",
+      "title": "Primitives and feedback",
+      "status": "verified",
+      "dependsOn": [
+        "P0"
+      ],
+      "componentCount": 11
+    },
+    {
+      "id": "P2",
+      "title": "Basic form controls",
+      "status": "verified",
+      "dependsOn": [
+        "P0",
+        "P1"
+      ],
+      "componentCount": 5
+    },
+    {
+      "id": "P3",
+      "title": "Overlays and action collections",
+      "status": "verified",
+      "dependsOn": [
+        "P0",
+        "P1",
+        "P2"
+      ],
+      "componentCount": 8
+    },
+    {
+      "id": "P4",
+      "title": "Advanced input controls",
+      "status": "verified",
+      "dependsOn": [
+        "P0",
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "componentCount": 3
+    },
+    {
+      "id": "P5",
+      "title": "Navigation and structured lists",
+      "status": "verified",
+      "dependsOn": [
+        "P0",
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "componentCount": 6
+    },
+    {
+      "id": "P6",
+      "title": "Data and canvas",
+      "status": "verified",
+      "dependsOn": [
+        "P0",
+        "P1",
+        "P2",
+        "P3",
+        "P5"
+      ],
+      "componentCount": 5
+    },
+    {
+      "id": "P7",
+      "title": "Attachments, messaging and agents",
+      "status": "verified",
+      "dependsOn": [
+        "P0",
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5"
+      ],
+      "componentCount": 5
+    },
+    {
+      "id": "P8",
+      "title": "Structural blocks and recipes",
+      "status": "verified",
+      "dependsOn": [
+        "P0",
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7"
+      ],
+      "componentCount": 0
+    },
+    {
+      "id": "P9",
+      "title": "Catalog, demos and portable skill",
+      "status": "verified",
+      "dependsOn": [
+        "P8"
+      ],
+      "componentCount": 0
+    },
+    {
+      "id": "P10",
+      "title": "Package and alpha distribution",
+      "status": "verified",
+      "dependsOn": [
+        "P9"
+      ],
+      "componentCount": 0
+    }
+  ],
+  "components": [
+    {
+      "name": "Button",
+      "phase": "P0",
+      "status": "verified",
+      "targetExports": [
+        "button",
+        "iconButton",
+        "linkButton",
+        "socialButton"
+      ]
+    },
+    {
+      "name": "Input",
+      "phase": "P0",
+      "status": "verified",
+      "targetExports": [
+        "input",
+        "initInput"
+      ]
+    },
+    {
+      "name": "Input Field",
+      "phase": "P0",
+      "status": "verified",
+      "targetExports": [
+        "inputField",
+        "initInput"
+      ]
+    },
+    {
+      "name": "Select",
+      "phase": "P0",
+      "status": "verified",
+      "targetExports": [
+        "select",
+        "initSelect"
+      ]
+    },
+    {
+      "name": "Modal",
+      "phase": "P0",
+      "status": "verified",
+      "targetExports": [
+        "modal",
+        "initModal"
+      ]
+    },
+    {
+      "name": "Badge",
+      "phase": "P1",
+      "status": "verified",
+      "targetExports": [
+        "badge"
+      ]
+    },
+    {
+      "name": "Status dot",
+      "phase": "P1",
+      "status": "verified",
+      "targetExports": [
+        "statusDot"
+      ]
+    },
+    {
+      "name": "Avatar",
+      "phase": "P1",
+      "status": "verified",
+      "targetExports": [
+        "avatar",
+        "initAvatar"
+      ]
+    },
+    {
+      "name": "Label",
+      "phase": "P1",
+      "status": "verified",
+      "targetExports": [
+        "label"
+      ]
+    },
+    {
+      "name": "Divider",
+      "phase": "P1",
+      "status": "verified",
+      "targetExports": [
+        "divider"
+      ]
+    },
+    {
+      "name": "Card",
+      "phase": "P1",
+      "status": "verified",
+      "targetExports": [
+        "card"
+      ]
+    },
+    {
+      "name": "Banner",
+      "phase": "P1",
+      "status": "verified",
+      "targetExports": [
+        "banner",
+        "initBanner"
+      ]
+    },
+    {
+      "name": "Empty State",
+      "phase": "P1",
+      "status": "verified",
+      "targetExports": [
+        "emptyState"
+      ]
+    },
+    {
+      "name": "Loader",
+      "phase": "P1",
+      "status": "verified",
+      "targetExports": [
+        "loader"
+      ]
+    },
+    {
+      "name": "Skeleton",
+      "phase": "P1",
+      "status": "verified",
+      "targetExports": [
+        "skeleton"
+      ]
+    },
+    {
+      "name": "Scroll Area",
+      "phase": "P1",
+      "status": "verified",
+      "targetExports": [
+        "scrollArea",
+        "initScrollArea"
+      ]
+    },
+    {
+      "name": "Checkbox",
+      "phase": "P2",
+      "status": "verified",
+      "targetExports": [
+        "checkbox",
+        "initCheckbox"
+      ]
+    },
+    {
+      "name": "Radio",
+      "phase": "P2",
+      "status": "verified",
+      "targetExports": [
+        "radio",
+        "initRadio"
+      ]
+    },
+    {
+      "name": "Switch",
+      "phase": "P2",
+      "status": "verified",
+      "targetExports": [
+        "switchControl",
+        "initSwitch"
+      ]
+    },
+    {
+      "name": "Input area",
+      "phase": "P2",
+      "status": "verified",
+      "targetExports": [
+        "textarea",
+        "initTextarea"
+      ]
+    },
+    {
+      "name": "Chip",
+      "phase": "P2",
+      "status": "verified",
+      "targetExports": [
+        "chip",
+        "initChip"
+      ]
+    },
+    {
+      "name": "Menu",
+      "phase": "P3",
+      "status": "verified",
+      "targetExports": [
+        "menu",
+        "initMenu"
+      ]
+    },
+    {
+      "name": "Menu Item",
+      "phase": "P3",
+      "status": "verified",
+      "targetExports": [
+        "menuItem"
+      ]
+    },
+    {
+      "name": "Popover",
+      "phase": "P3",
+      "status": "verified",
+      "targetExports": [
+        "popover",
+        "initPopover"
+      ]
+    },
+    {
+      "name": "Dropdown Menu",
+      "phase": "P3",
+      "status": "verified",
+      "targetExports": [
+        "dropdownMenu",
+        "initDropdownMenu"
+      ]
+    },
+    {
+      "name": "Tooltip",
+      "phase": "P3",
+      "status": "verified",
+      "targetExports": [
+        "tooltip",
+        "initTooltip"
+      ]
+    },
+    {
+      "name": "Toast",
+      "phase": "P3",
+      "status": "verified",
+      "targetExports": [
+        "showToast",
+        "initToastRegion"
+      ]
+    },
+    {
+      "name": "Button group",
+      "phase": "P3",
+      "status": "verified",
+      "targetExports": [
+        "buttonGroup",
+        "initButtonGroup"
+      ]
+    },
+    {
+      "name": "Command Palette",
+      "phase": "P3",
+      "status": "verified",
+      "targetExports": [
+        "commandPalette",
+        "initCommandPalette"
+      ]
+    },
+    {
+      "name": "Combobox",
+      "phase": "P4",
+      "status": "verified",
+      "targetExports": [
+        "combobox",
+        "initCombobox"
+      ]
+    },
+    {
+      "name": "Date Picker",
+      "phase": "P4",
+      "status": "verified",
+      "targetExports": [
+        "datePicker",
+        "initDatePicker"
+      ]
+    },
+    {
+      "name": "Tag Input",
+      "phase": "P4",
+      "status": "verified",
+      "targetExports": [
+        "tagInput",
+        "initTagInput"
+      ]
+    },
+    {
+      "name": "Tabs",
+      "phase": "P5",
+      "status": "verified",
+      "targetExports": [
+        "tabs",
+        "initTabs"
+      ]
+    },
+    {
+      "name": "Breadcrumbs",
+      "phase": "P5",
+      "status": "verified",
+      "targetExports": [
+        "breadcrumbs"
+      ]
+    },
+    {
+      "name": "Tree item",
+      "phase": "P5",
+      "status": "verified",
+      "targetExports": [
+        "tree",
+        "treeItem",
+        "treeSection",
+        "initTree"
+      ]
+    },
+    {
+      "name": "List row",
+      "phase": "P5",
+      "status": "verified",
+      "targetExports": [
+        "listRow"
+      ]
+    },
+    {
+      "name": "Toolbar",
+      "phase": "P5",
+      "status": "verified",
+      "targetExports": [
+        "toolbar"
+      ]
+    },
+    {
+      "name": "Collapsible",
+      "phase": "P5",
+      "status": "verified",
+      "targetExports": [
+        "collapsible",
+        "initCollapsible"
+      ]
+    },
+    {
+      "name": "Table",
+      "phase": "P6",
+      "status": "verified",
+      "targetExports": [
+        "table",
+        "initTable"
+      ]
+    },
+    {
+      "name": "Pagination",
+      "phase": "P6",
+      "status": "verified",
+      "targetExports": [
+        "pagination",
+        "initPagination"
+      ]
+    },
+    {
+      "name": "Chart",
+      "phase": "P6",
+      "status": "verified",
+      "targetExports": [
+        "chart",
+        "initChart"
+      ]
+    },
+    {
+      "name": "Wire",
+      "phase": "P6",
+      "status": "verified",
+      "targetExports": [
+        "wire"
+      ]
+    },
+    {
+      "name": "Canvas",
+      "phase": "P6",
+      "status": "verified",
+      "targetExports": [
+        "canvas",
+        "initCanvas"
+      ]
+    },
+    {
+      "name": "File card",
+      "phase": "P7",
+      "status": "verified",
+      "targetExports": [
+        "fileCard",
+        "initFileCard"
+      ]
+    },
+    {
+      "name": "Message",
+      "phase": "P7",
+      "status": "verified",
+      "targetExports": [
+        "message",
+        "initMessage"
+      ]
+    },
+    {
+      "name": "Tool Call",
+      "phase": "P7",
+      "status": "verified",
+      "targetExports": [
+        "toolCall",
+        "initToolCall"
+      ]
+    },
+    {
+      "name": "Agent Run",
+      "phase": "P7",
+      "status": "verified",
+      "targetExports": [
+        "agentRun",
+        "initAgentRun"
+      ]
+    },
+    {
+      "name": "Composer",
+      "phase": "P7",
+      "status": "verified",
+      "targetExports": [
+        "composer",
+        "initComposer"
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Sidebar",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "generic_block",
+      "target": "workspaceSidebar",
+      "note": "Legacy alias of Workspace Sidebar; do not create duplicate implementations."
+    },
+    {
+      "name": "Requirement group",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "demo_recipe",
+      "target": null
+    },
+    {
+      "name": "Resource list",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "demo_recipe",
+      "target": null
+    },
+    {
+      "name": "Agent card",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "demo_recipe",
+      "target": null
+    },
+    {
+      "name": "Create skill dialog",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "demo_recipe",
+      "target": null
+    },
+    {
+      "name": "Page header",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "generic_block",
+      "target": "pageHeader"
+    },
+    {
+      "name": "Delete resource",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "demo_recipe",
+      "target": null
+    },
+    {
+      "name": "Chart Section",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "generic_block",
+      "target": "chartSection"
+    },
+    {
+      "name": "Content Section",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "generic_block",
+      "target": "contentSection"
+    },
+    {
+      "name": "People List",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "generic_block",
+      "target": "peopleList"
+    },
+    {
+      "name": "Activity Feed",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "generic_block",
+      "target": "activityFeed"
+    },
+    {
+      "name": "Dashboard Overview",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "demo_recipe",
+      "target": null
+    },
+    {
+      "name": "Metric Card",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "generic_block",
+      "target": "metricCard"
+    },
+    {
+      "name": "Revenue Chart",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "demo_recipe",
+      "target": null
+    },
+    {
+      "name": "App Shell",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "generic_block",
+      "target": "appShell"
+    },
+    {
+      "name": "Workspace Sidebar",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "generic_block",
+      "target": "workspaceSidebar"
+    },
+    {
+      "name": "Page Layout",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "generic_block",
+      "target": "pageLayout"
+    },
+    {
+      "name": "Page Grid",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "generic_block",
+      "target": "pageGrid"
+    },
+    {
+      "name": "Data Section",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "generic_block",
+      "target": "dataSection"
+    },
+    {
+      "name": "Data workspace",
+      "phase": "P8",
+      "status": "verified",
+      "destination": "demo_recipe",
+      "target": null
+    }
+  ]
+}

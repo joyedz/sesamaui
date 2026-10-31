@@ -1,0 +1,5 @@
+@import url("./menu.css");
+
+/* Canonical Sesama dropdown menu styles. */
+:where(.sui-root) .sx-dropdown{position:relative;display:inline-flex}
+:where(.sui-root) .sx-dropdown>[popover]{min-width:180px}

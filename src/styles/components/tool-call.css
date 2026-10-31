@@ -1,0 +1,78 @@
+/* Tool Call component */
+:where(.sui-root) .sx-tool-call {
+  width: 100%;
+  font-size: var(--font-ui-size, 13px);
+  line-height: var(--font-ui-line, 20px);
+  color: var(--text-subtle);
+  margin: 0 0 12px;
+}
+
+:where(.sui-root) .sx-tool-call > summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  cursor: pointer;
+  padding: 4px 0;
+  user-select: none;
+}
+
+:where(.sui-root) .sx-tool-call > summary::-webkit-details-marker {
+  display: none;
+}
+
+:where(.sui-root) .sx-tool-name {
+  color: var(--text-default);
+  font-weight: 500;
+}
+
+:where(.sui-root) .sx-run-meta {
+  font-size: var(--font-meta-size, 12px);
+  line-height: var(--font-meta-line, 16px);
+  color: var(--text-placeholder);
+  margin-left: auto;
+}
+
+:where(.sui-root) .sx-tool-body {
+  display: grid;
+  gap: var(--space-12, 12px);
+  padding: var(--space-12, 12px);
+  border-left: 1px solid var(--color-hairline);
+}
+
+:where(.sui-root) .sx-run-steps .sx-tool-body {
+  gap: var(--space-8, 8px);
+  padding: var(--space-8, 8px);
+}
+
+:where(.sui-root) .sx-tool-body strong {
+  font-size: var(--font-meta-size, 12px);
+  font-weight: 500;
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sx-tool-body pre {
+  font: 12px/18px ui-monospace, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: var(--space-4, 4px) 0 0;
+  color: var(--text-subtle);
+}
+
+:where(.sui-root) .sx-tool-body .sx-tool-error {
+  color: var(--color-danger);
+}
+
+:where(.sui-root) .sx-tool-call > summary > svg:last-child {
+  transition: transform var(--motion-fast, 150ms) var(--ease-out, ease-out);
+}
+
+:where(.sui-root) .sx-tool-call[open] > summary > svg:last-child {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.sui-root) .sx-tool-call > summary > svg:last-child {
+    transition: none;
+  }
+}

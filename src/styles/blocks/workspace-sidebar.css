@@ -1,0 +1,256 @@
+/* Workspace Sidebar block */
+:where(.sui-root) .sb-sidebar,
+:where(.sui-root) .sx-workspace-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16, 16px);
+  padding: var(--space-8, 8px);
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--color-canvas);
+}
+
+:where(.sui-root) .sb-sidebar-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4, 4px);
+}
+
+:where(.sui-root) .sb-sidebar-top > .field,
+:where(.sui-root) .sb-sidebar-top > [data-sui-select] {
+  flex: 1;
+  min-width: 0;
+}
+
+:where(.sui-root) .sb-sidebar-top .form-field {
+  gap: 0;
+  max-width: none;
+}
+
+:where(.sui-root) .sb-sidebar-top > .ibtn {
+  flex: none;
+}
+
+:where(.sui-root) .sb-navigation {
+  min-width: 0;
+}
+
+:where(.sui-root) .sb-navigation > .sx-tree-section {
+  margin-top: var(--space-16, 16px);
+}
+
+:where(.sui-root) .sb-projects {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+:where(.sui-root) .sb-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8, 8px);
+  padding-top: var(--space-8, 8px);
+}
+
+:where(.sui-root) .sb-profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8, 8px);
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  border-radius: var(--radius-sm, 6px);
+  padding: 4px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+:where(.sui-root) .sb-profile-trigger:hover {
+  background: var(--color-tint);
+}
+
+:where(.sui-root) .sb-profile-trigger .sx-avatar {
+  flex: none;
+}
+
+:where(.sui-root) .sb-profile-info {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+}
+
+:where(.sui-root) .sb-profile-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 400;
+  font-size: var(--font-ui-size, 13px);
+  line-height: var(--font-ui-line, 20px);
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sb-profile .ibtn {
+  flex: none;
+}
+
+:where(.sui-root) .sb-projects-rail {
+  display: none;
+}
+
+@media (min-width: 761px) {
+  :where(.sui-root) :is(.sb-app-shell.is-collapsed, .is-collapsed) > .sb-sidebar {
+    position: absolute;
+    inset: 8px auto 8px 8px;
+    width: 48px;
+    z-index: 10;
+    transition: width 320ms var(--ease-out);
+  }
+
+  :where(.sui-root) :is(.sb-app-shell.is-collapsed.is-peeking, .is-collapsed.is-peeking) > .sb-sidebar {
+    width: 240px;
+    box-shadow: var(--shadow-float);
+  }
+
+  :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-sidebar-top {
+    justify-content: center;
+  }
+
+  :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-sidebar-top > :not([data-shell-toggle]) {
+    display: none !important;
+  }
+
+  :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-sidebar .sx-tree-section-header {
+    display: none !important;
+  }
+
+  :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-sidebar .ti {
+    justify-content: center !important;
+    padding-inline: 0 !important;
+    width: 32px;
+    height: 32px;
+    margin-inline: auto;
+  }
+
+  :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-sidebar .ti :is(.sp, .sx-tree-spacer, .sx-tree-chevron, .sx-tree-label, .sx-tree-actions) {
+    display: none !important;
+  }
+
+  :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-sidebar .ti .c {
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-projects > .sx-tree-section {
+    display: none !important;
+  }
+
+  :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-projects-rail {
+    display: grid !important;
+    place-items: center;
+    margin: 0 auto;
+  }
+
+  :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-profile {
+    justify-content: center !important;
+  }
+
+  :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-profile-trigger {
+    justify-content: center !important;
+    padding: 0 !important;
+    flex: none !important;
+  }
+
+  :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) :is(.sb-profile-info, .sb-profile-name, .sb-profile-role) {
+    display: none !important;
+  }
+
+  :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-profile > .ibtn {
+    display: none !important;
+  }
+}
+
+@media (max-width: 760px) {
+  :where(.sui-root) .sb-sidebar {
+    position: absolute;
+    inset: 8px auto 8px 8px;
+    width: 48px;
+    z-index: 10;
+  }
+
+  :where(.sui-root) .sb-app-shell:not(.is-collapsed) > .sb-sidebar {
+    width: 240px;
+    box-shadow: var(--shadow-float);
+  }
+
+  :where(.sui-root) .sb-app-shell.is-collapsed .sb-sidebar-top {
+    justify-content: center;
+  }
+
+  :where(.sui-root) .sb-app-shell.is-collapsed .sb-sidebar-top > :not([data-shell-toggle]) {
+    display: none !important;
+  }
+
+  :where(.sui-root) .sb-app-shell.is-collapsed .sb-sidebar .sx-tree-section-header {
+    display: none !important;
+  }
+
+  :where(.sui-root) .sb-app-shell.is-collapsed .sb-sidebar .ti {
+    justify-content: center !important;
+    padding-inline: 0 !important;
+    width: 32px;
+    height: 32px;
+    margin-inline: auto;
+  }
+
+  :where(.sui-root) .sb-app-shell.is-collapsed .sb-sidebar .ti :is(.sp, .sx-tree-spacer, .sx-tree-chevron, .sx-tree-label, .sx-tree-actions) {
+    display: none !important;
+  }
+
+  :where(.sui-root) .sb-app-shell.is-collapsed .sb-sidebar .ti .c {
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  :where(.sui-root) .sb-app-shell.is-collapsed .sb-projects > .sx-tree-section {
+    display: none !important;
+  }
+
+  :where(.sui-root) .sb-app-shell.is-collapsed .sb-projects-rail {
+    display: grid !important;
+    place-items: center;
+    margin: 0 auto;
+  }
+
+  :where(.sui-root) .sb-app-shell.is-collapsed .sb-profile {
+    justify-content: center !important;
+  }
+
+  :where(.sui-root) .sb-app-shell.is-collapsed .sb-profile-trigger {
+    justify-content: center !important;
+    padding: 0 !important;
+    flex: none !important;
+  }
+
+  :where(.sui-root) .sb-app-shell.is-collapsed :is(.sb-profile-info, .sb-profile-name, .sb-profile-role) {
+    display: none !important;
+  }
+
+  :where(.sui-root) .sb-app-shell.is-collapsed .sb-profile > .ibtn {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.sui-root) .sb-sidebar {
+    transition: none !important;
+  }
+}

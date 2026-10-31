@@ -1,0 +1,33 @@
+@import url("../base.css");
+@import url("control.css");
+@import url("icon-button.css");
+/* Canonical Sesama field styles. Legacy compatibility is generated. */
+:where(.sui-root) .field{display:flex;align-items:center;gap:var(--space-8);width:220px;min-height:30px;padding:var(--space-4) var(--space-8);border-radius:var(--radius-md);box-shadow:inset 0 0 0 1px var(--color-hairline);color:var(--text-placeholder)}
+:where(.sui-root) .field:focus-within{box-shadow:inset 0 0 0 1px var(--color-brand-hover)}
+:where(.sui-root) .field input{all:unset;flex:1;min-width:0;color:var(--text-default)}
+:where(.sui-root) .field input::placeholder{color:var(--text-placeholder)}
+:where(.sui-root) .field{font-size:var(--font-ui-size);line-height:var(--font-control-line)}
+:where(.sui-root) .field{transition:background-color var(--motion-fast) var(--ease-standard),color var(--motion-fast) var(--ease-standard)}
+@media(prefers-reduced-motion:reduce){:where(.sui-root) .field{transition:none}}
+:where(.sui-root) .field{min-height:var(--control-size-base)}
+:where(.sui-root) .field{box-shadow:inset 0 0 0 1px var(--color-control-edge)}
+:where(.sui-root) .field:focus-within{box-shadow:inset 0 0 0 1.5px var(--color-focus)}
+:where(.sui-root) .field:has(input:focus-visible){outline:2px solid var(--color-focus);outline-offset:2px}
+:where(.sui-root) .field input:focus-visible{outline:none}
+:where(.sui-root) .form-field{display:grid;gap:var(--space-6);width:100%;max-width:300px}
+:where(.sui-root) .form-label{font-weight:500;color:var(--text-default)}
+:where(.sui-root) .form-help,:where(.sui-root) .form-error{font-size:var(--font-meta-size);line-height:var(--font-meta-line)}
+:where(.sui-root) .form-help{color:var(--text-subtle)}
+:where(.sui-root) .form-error{color:var(--color-danger-text)}
+:where(.sui-root) .form-field .field{width:100%;background:var(--color-base)}
+:where(.sui-root) .field:has(input:disabled){opacity:.5}
+:where(.sui-root) .field:has([aria-invalid="true"]){box-shadow:inset 0 0 0 1px var(--color-danger)}
+:where(.sui-root) .phone-prefix{color:var(--text-subtle);padding-right:var(--space-8);border-right:1px solid var(--color-hairline)}
+:where(.sui-root) .field input[type="tel"]{min-width:0}
+:where(.sui-root) .form-field .ibtn{flex:none}
+:where(.sui-root) .form-field [hidden]{display:none!important}
+:where(.sui-root) .sx-input-shell{width:100%;background:var(--color-base)}
+:where(.sui-root) .sx-input-shell input{width:100%}
+:where(.sui-root) .sx-input-shell .sx-affix{flex:none;color:var(--text-subtle)}
+:where(.sui-root) .field.sx-size-xs{padding-block:var(--space-2)}
+:where(.sui-root) .field:not(:has(:disabled)):hover{background:color-mix(in srgb,var(--color-base),var(--color-contrast) 3%)}

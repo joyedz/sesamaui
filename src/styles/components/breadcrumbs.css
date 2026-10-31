@@ -1,0 +1,91 @@
+:where(.sui-root) .sx-breadcrumbs-nav {
+  display: flex;
+  align-items: center;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+:where(.sui-root) .sx-breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+:where(.sui-root) .sx-breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+:where(.sui-root) .sx-breadcrumb-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  color: var(--text-subtle);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-4);
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+:where(.sui-root) .sx-breadcrumb-link:hover {
+  color: var(--text-default);
+  background: var(--color-tint);
+}
+
+:where(.sui-root) .sx-breadcrumb-link:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 1px;
+}
+
+:where(.sui-root) .sx-breadcrumb-current {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  color: var(--text-default);
+  font-weight: 500;
+  padding: var(--space-2) var(--space-4);
+}
+
+:where(.sui-root) .sx-breadcrumb-text {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  color: var(--text-subtle);
+  padding: var(--space-2) var(--space-4);
+}
+
+:where(.sui-root) .sx-breadcrumb-separator {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-placeholder);
+  user-select: none;
+}
+
+:where(.sui-root) .sx-breadcrumb-separator svg {
+  display: block;
+}
+
+:where(.sui-root) .sx-breadcrumb-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: none;
+  color: var(--text-placeholder);
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-4);
+}
+
+:where(.sui-root) .sx-breadcrumb-ellipsis:hover {
+  color: var(--text-default);
+  background: var(--color-tint);
+}

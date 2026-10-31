@@ -1,0 +1,48 @@
+@import url("../base.css");
+
+:where(.sui-root) .sx-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
+  font-size: 11px;
+  line-height: 15px;
+  font-weight: 500;
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sx-label.size-base {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+:where(.sui-root) .sx-label[class*="tone-"] {
+  color: var(--tone);
+}
+
+:where(.sui-root) .sx-label.tone-default {
+  --tone: var(--text-default);
+}
+
+:where(.sui-root) .sx-label.tone-neutral {
+  --tone: var(--text-subtle);
+}
+
+:where(.sui-root) .sx-label.tone-subtle {
+  --tone: var(--text-placeholder);
+}
+
+:where(.sui-root) .sx-label.tone-brand {
+  --tone: var(--color-brand-text);
+}
+
+:where(.sui-root) .sx-label.tone-success {
+  --tone: var(--color-success);
+}
+
+:where(.sui-root) .sx-label.tone-warning {
+  --tone: var(--color-warning-solid);
+}
+
+:where(.sui-root) .sx-label.tone-error {
+  --tone: var(--color-danger);
+}

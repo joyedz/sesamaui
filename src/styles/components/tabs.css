@@ -1,0 +1,137 @@
+:where(.sui-root) .sx-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  width: 100%;
+}
+
+:where(.sui-root) .sx-tablist {
+  display: flex;
+  align-items: center;
+  position: relative;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+:where(.sui-root) .sx-tablist::-webkit-scrollbar {
+  display: none;
+}
+
+:where(.sui-root) .sx-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+
+:where(.sui-root) .sx-tab:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 1px;
+}
+
+:where(.sui-root) .sx-tab:disabled,
+:where(.sui-root) .sx-tab[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Segmented variant */
+:where(.sui-root) .sx-tablist.seg {
+  gap: 2px;
+  padding: 2px;
+  width: fit-content;
+  border-radius: var(--radius-md);
+  background: var(--color-recessed);
+}
+
+:where(.sui-root) .sx-tablist.seg .sx-tab {
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  color: var(--text-placeholder);
+}
+
+:where(.sui-root) .sx-tablist.seg .sx-tab:hover:not(:disabled) {
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sx-tablist.seg .sx-tab.on,
+:where(.sui-root) .sx-tablist.seg .sx-tab[aria-selected="true"] {
+  background: var(--color-base);
+  color: var(--text-default);
+  box-shadow: var(--shadow-ring);
+}
+
+/* Pill variant */
+:where(.sui-root) .sx-tablist.pill {
+  gap: var(--space-4);
+}
+
+:where(.sui-root) .sx-tablist.pill .sx-tab {
+  padding: var(--space-4) var(--space-8);
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  color: var(--text-subtle);
+}
+
+:where(.sui-root) .sx-tablist.pill .sx-tab:hover:not(:disabled) {
+  background: var(--color-tint);
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sx-tablist.pill .sx-tab.on,
+:where(.sui-root) .sx-tablist.pill .sx-tab[aria-selected="true"] {
+  background: var(--color-tint);
+  color: var(--text-default);
+}
+
+/* Line variant */
+:where(.sui-root) .sx-tablist.line {
+  gap: var(--space-16);
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+:where(.sui-root) .sx-tablist.line .sx-tab {
+  padding: var(--space-8) 0;
+  font-weight: 500;
+  color: var(--text-subtle);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+:where(.sui-root) .sx-tablist.line .sx-tab:hover:not(:disabled) {
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sx-tablist.line .sx-tab.on,
+:where(.sui-root) .sx-tablist.line .sx-tab[aria-selected="true"] {
+  color: var(--color-brand);
+  border-bottom-color: var(--color-brand);
+}
+
+/* Tabpanels */
+:where(.sui-root) .sx-tabpanels {
+  width: 100%;
+}
+
+:where(.sui-root) .sx-tabpanel {
+  outline: none;
+}
+
+:where(.sui-root) .sx-tabpanel:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+:where(.sui-root) .sx-tabpanel[hidden] {
+  display: none !important;
+}

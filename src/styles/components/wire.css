@@ -1,0 +1,29 @@
+:where(.sui-root) .wires,
+:where(.sui-root) .sx-wire {
+  overflow: visible;
+  display: block;
+}
+
+:where(.sui-root) .wires rect,
+:where(.sui-root) .sx-wire rect {
+  fill: var(--color-base);
+  stroke: var(--color-hairline);
+}
+
+:where(.sui-root) .wires path,
+:where(.sui-root) .sx-wire path {
+  stroke: var(--text-placeholder);
+  stroke-width: 1px;
+  fill: none;
+}
+
+:where(.sui-root) .wires circle,
+:where(.sui-root) .sx-wire circle {
+  fill: var(--color-base);
+  stroke: var(--text-placeholder);
+}
+
+:where(.sui-root) .wires.dashed path,
+:where(.sui-root) .sx-wire.dashed path {
+  stroke-dasharray: 4 4;
+}

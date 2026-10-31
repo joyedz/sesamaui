@@ -1,0 +1,52 @@
+@import url("../base.css");
+
+:where(.sui-root) .sx-status-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
+  line-height: var(--font-ui-line);
+}
+
+:where(.sui-root) .sx-status-dot {
+  display: inline-block;
+  flex: none;
+  width: var(--status-dot-size, 8px);
+  height: var(--status-dot-size, 8px);
+  border-radius: 50%;
+  background: var(--color-neutral);
+}
+
+:where(.sui-root) .sx-status-dot[data-tone="neutral"] {
+  background: var(--color-neutral);
+}
+
+:where(.sui-root) .sx-status-dot[data-tone="informative"] {
+  background: var(--color-brand-hover);
+}
+
+:where(.sui-root) .sx-status-dot[data-tone="success"] {
+  background: var(--color-success);
+}
+
+:where(.sui-root) .sx-status-dot[data-tone="warning"] {
+  background: var(--color-warning-solid);
+}
+
+:where(.sui-root) .sx-status-dot[data-tone="error"] {
+  background: var(--color-danger);
+}
+
+:where(.sui-root) .sx-status-dot[data-tone="disabled"] {
+  background: var(--text-placeholder);
+  opacity: 0.45;
+}
+
+:where(.sui-root) .sx-status-dot.is-active {
+  animation: sx-status-pulse 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.sui-root) .sx-status-dot.is-active {
+    animation: none;
+  }
+}

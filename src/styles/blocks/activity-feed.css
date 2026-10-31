@@ -1,0 +1,43 @@
+/* Activity Feed block */
+:where(.sui-root) .sb-activity-feed .sb-activity-items,
+:where(.sui-root) .sb-activity-feed,
+:where(.sui-root) .sx-activity-feed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-16, 16px);
+}
+
+:where(.sui-root) .sb-activity-feed li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8, 8px);
+}
+
+:where(.sui-root) .sb-activity-icon {
+  color: var(--text-subtle);
+  padding-top: 2px;
+  flex: none;
+  display: block;
+}
+
+:where(.sui-root) .sb-activity-feed li > div {
+  display: grid;
+  gap: var(--space-4, 4px);
+  min-width: 0;
+  font-size: var(--font-ui-size, 13px);
+  line-height: var(--font-ui-line, 20px);
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sb-activity-content > div {
+  display: grid;
+  gap: var(--space-4, 4px);
+}
+
+:where(.sui-root) .sb-activity-feed time {
+  font-size: var(--font-meta-size, 12px);
+  line-height: var(--font-meta-line, 16px);
+  color: var(--text-placeholder);
+}

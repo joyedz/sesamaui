@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sesama · Customers</title>
+  <link rel="stylesheet" href="../src/styles/components.css">
+  <link rel="stylesheet" href="../src/styles/blocks.css">
+  <link rel="stylesheet" href="../src/styles/fonts.css">
+  <style>
+    body { margin: 0; background: var(--color-canvas); }
+    .orders-filters { justify-content: space-between; }
+    .orders-search { flex: 0 1 260px; min-width: 180px; }
+    .orders-filter-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin-left: auto; min-width: 0; }
+    @media(max-width:700px){
+      .orders-search { flex: 1 1 100%; }
+      .orders-filter-actions { width: 100%; }
+    }
+    .order-detail-content { display: grid; gap: 24px; }
+    .order-section-inset { padding-inline: var(--space-16, 16px); }
+    .order-detail-content > .sb-content-section { gap: 16px; }
+    .order-info-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; }
+    .order-info-grid > div { min-width: 0; }
+    .order-info-grid dt { color: var(--text-subtle); margin-bottom: 4px; }
+    .order-info-grid dd { margin: 0; overflow-wrap: anywhere; }
+    .order-detail-content thead th { height: 28px; padding-top: 0; padding-bottom: 8px; }
+    .order-detail-content tfoot td { text-align: right; font-weight: 400; border: 0; height: 32px; padding-block: 6px; }
+    .order-detail-content tfoot tr:first-child td { border-top: 1px solid var(--color-hairline); padding-top: 8px; height: 32px; }
+    .order-detail-content tfoot td:first-child { color: var(--text-subtle); }
+    .order-detail-content tfoot .order-total td { font-weight: 500; color: var(--text-default); height: 32px; }
+    .order-detail-content .sx-table { table-layout: fixed; }
+    .order-detail-content .sx-table td { overflow-wrap: anywhere; }
+    @media(max-width:520px){
+      .order-info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    .customer-identity { display: flex; align-items: center; gap: 8px; }
+    .customer-identity > div { min-width: 0; }
+    .customer-identity span { font-size: 12px; color: var(--text-subtle); }
+  </style>
+</head>
+<body class="sui-root">
+  <div id="app"></div>
+  <script type="module">
+    import {
+      appShell,
+      pageHeader,
+      pageLayout,
+      contentSection,
+      dataSection,
+      table,
+      pagination,
+      avatar,
+      statusDot,
+      select,
+      iconButton,
+      menu,
+      initModal,
+      showToast,
+      controlIcon,
+      escapeHTML,
+      mount
+    } from '../src/index.mjs';
+    import {
+      createSalesSidebar,
+      sampleCustomers,
+      moneyExact
+    } from './shared/data.mjs';
+
+    let query = '';
+    let statusFilter = 'All customers';
+    let channel = 'All channels';
+    let joined = 'Any time';
+    let page = 1;
+    let size = 15;
+    let sortKey = 'spent';
+    let direction = 'desc';
+    let filtered = [];
+
+    const statusBadge = s => statusDot({
+      tone: s === 'Active' ? 'success' : s === 'New' ? 'informative' : 'neutral',
+      label: s
+    });
+
+    document.getElementById('app').innerHTML = appShell({
+      sidebar: createSalesSidebar('customers'),
+      header: pageHeader({ title: 'Customers', icon: 'users' }),
+      content: pageLayout('<div id="customer-toolbar"></div><div id="customer-results" style="margin-top:12px"></div>', { variant: 'data' })
+    });
+
+    function renderFilters() {
+      const menuId = 'customer-actions-menu';
+      const menuHTML = menu({
+        id: menuId,
+        ariaLabel: 'Customer actions',
+        attributes: 'popover',
+        items: [
+          { label: 'Export CSV', icon: 'file-down', attributes: 'data-menu-action="customers:export"' },
+          { label: 'Copy link', icon: 'copy', attributes: 'data-menu-action="customers:copy"' },
+          { label: 'Share', icon: 'share-2', attributes: 'data-menu-action="customers:share"' }
+        ]
+      });
+
+      document.getElementById('customer-toolbar').innerHTML = contentSection({
+        title: 'All customers',
+        description: 'Manage customer relationships and purchase history',
+        content: `
+          <div class="sb-section-filters orders-filters">
+            <label class="field orders-search">
+              ${controlIcon('search', 16)}
+              <input id="customer-search" placeholder="Search name or email…" aria-label="Search customers" value="${escapeHTML(query)}">
+            </label>
+            <div class="orders-filter-actions">
+              ${select({
+                name: 'customer-status',
+                label: 'Status',
+                hideLabel: true,
+                value: statusFilter,
+                options: ['All customers', 'Active', 'New', 'Inactive']
+              })}
+              ${select({
+                name: 'customer-channel',
+                label: 'Channel',
+                hideLabel: true,
+                icon: 'list-filter',
+                value: channel,
+                options: ['All channels', 'Website', 'Marketplace', 'Direct']
+              })}
+              ${select({
+                name: 'customer-joined',
+                label: 'Joined',
+                hideLabel: true,
+                icon: 'calendar',
+                value: joined,
+                options: ['Any time', 'Joined this quarter']
+              })}
+              ${iconButton({
+                icon: 'kebab',
+                variant: 'outline',
+                size: 'base',
+                attributes: `popovertarget="${menuId}" aria-haspopup="menu"`,
+                accessibleLabel: 'Customer actions'
+              })}
+              ${menuHTML}
+            </div>
+          </div>
+        `
+      });
+      mount(document.getElementById('customer-toolbar'));
+    }
+
+    function render() {
+      filtered = sampleCustomers.filter(c =>
+        (c.name + ' ' + c.email).toLowerCase().includes(query.toLowerCase()) &&
+        (statusFilter === 'All customers' || c.status === statusFilter) &&
+        (channel === 'All channels' || c.channel === channel) &&
+        (joined === 'Any time' || c.joined >= '2026-07-01')
+      );
+
+      filtered.sort((a, b) => {
+        const x = a[sortKey], y = b[sortKey];
+        return (typeof x === 'number' ? x - y : String(x).localeCompare(String(y), undefined, { numeric: true })) * (direction === 'asc' ? 1 : -1);
+      });
+
+      page = Math.min(page, Math.max(1, Math.ceil(filtered.length / size)));
+
+      const columns = [
+        {
+          key: 'name',
+          header: 'Customer',
+          render: (_, c) => {
+            const inits = c.name.split(' ').map(n => n[0]).join('');
+            const av = avatar({ name: c.name, initials: inits, size: 24 });
+            return `<div class="customer-identity">${av}<div><div>${escapeHTML(c.name)}</div><span>${escapeHTML(c.email)}</span></div></div>`;
+          }
+        },
+        { key: 'orders', header: 'Orders', align: 'right' },
+        { key: 'spent', header: 'Total spent', align: 'right', render: moneyExact },
+        { key: 'last', header: 'Last order' },
+        { key: 'joined', header: 'Joined' },
+        { key: 'status', header: 'Status', render: statusBadge },
+        {
+          key: 'actions',
+          header: 'Actions',
+          align: 'right',
+          render: (_, c) => `<div class="sx-table-actions">${iconButton({ icon: 'file-text', attributes: `data-customer-details="${c.id}"`, accessibleLabel: 'View ' + c.name })}</div>`
+        }
+      ];
+
+      columns.forEach(c => { c.sortable = c.key !== 'actions'; });
+
+      const paginationHTML = pagination({
+        page,
+        pageSize: size,
+        totalItems: filtered.length,
+        pageSizeOptions: [10, 15, 25, 50]
+      });
+
+      const tableHTML = table({
+        label: 'Customers',
+        rows: filtered.slice((page - 1) * size, page * size),
+        columns,
+        minWidth: 980,
+        rowAction: 'customer-details',
+        sortKey,
+        sortDirection: direction
+      });
+
+      document.getElementById('customer-results').innerHTML = dataSection({
+        title: '',
+        data: tableHTML,
+        pagination: paginationHTML
+      });
+
+      mount(document.getElementById('customer-results'));
+    }
+
+    renderFilters();
+    render();
+    mount(document.body);
+
+    document.addEventListener('input', e => {
+      if (e.target.id === 'customer-search') {
+        query = e.target.value;
+        page = 1;
+        render();
+      }
+    });
+
+    document.addEventListener('change', e => {
+      if (e.target.closest('#customer-results') && e.target.matches('[data-page-size]')) {
+        size = Number(e.target.value);
+        page = 1;
+        render();
+      }
+    });
+
+    document.addEventListener('sui:change', e => {
+      if (e.detail?.name?.startsWith('customer-')) {
+        if (e.detail.name === 'customer-status') statusFilter = e.detail.value;
+        if (e.detail.name === 'customer-channel') channel = e.detail.value;
+        if (e.detail.name === 'customer-joined') joined = e.detail.value;
+        page = 1;
+        render();
+      }
+    });
+
+    document.addEventListener('click', e => {
+      const option = e.target.closest('[data-select-value]');
+      if (option) {
+        const input = option.closest('[data-select-demo], [data-sui-select]')?.querySelector('input[type=hidden], select');
+        if (input?.name.startsWith('customer-')) {
+          setTimeout(() => {
+            if (input.name === 'customer-status') statusFilter = input.value;
+            if (input.name === 'customer-channel') channel = input.value;
+            if (input.name === 'customer-joined') joined = input.value;
+            page = 1;
+            render();
+          }, 0);
+        }
+      }
+
+      const sort = e.target.closest('#customer-results [data-table-sort]');
+      if (sort) {
+        direction = sortKey === sort.dataset.tableSort && direction === 'asc' ? 'desc' : 'asc';
+        sortKey = sort.dataset.tableSort;
+        page = 1;
+        render();
+        document.querySelector('[data-table-sort="' + sortKey + '"]')?.focus({ preventScroll: true });
+        return;
+      }
+
+      const paging = e.target.closest('#customer-results [data-page-step], #customer-results [data-page-number], #customer-results [data-page-number-control]');
+      if (paging) {
+        if (paging.hasAttribute('data-page-step')) {
+          page += Number(paging.dataset.pageStep);
+        } else if (paging.hasAttribute('data-page-number')) {
+          page = Number(paging.dataset.pageNumber);
+        }
+        render();
+      }
+
+      const detail = e.target.closest('[data-customer-details]');
+      if (detail) {
+        showCustomer(sampleCustomers.find(c => c.id === detail.dataset.customerDetails), detail);
+      }
+
+      const key = e.target.closest('[data-tree-key]')?.dataset.treeKey;
+      const routes = {
+        overview: 'Dashboard overview.html',
+        revenue: 'Revenue report.html',
+        orders: 'Orders.html'
+      };
+      if (routes[key]) location.href = routes[key];
+    });
+
+    document.addEventListener('sesama:row-action', e => {
+      if (e.detail.action === 'customer-details') {
+        showCustomer(sampleCustomers.find(c => c.id === e.detail.key), e.target);
+      }
+      if (e.detail.action === 'customer-order') {
+        location.href = 'Orders.html?order=' + encodeURIComponent(e.detail.key);
+      }
+    });
+
+    function showCustomer(customer, trigger) {
+      if (!customer) return;
+      const dialog = document.createElement('dialog');
+      dialog.className = 'ds-modal';
+      dialog.dataset.size = 'lg';
+      dialog.setAttribute('aria-labelledby', 'customer-title');
+
+      const fields = [
+        ['Email', escapeHTML(customer.email)],
+        ['Phone', customer.phone],
+        ['Joined', customer.joined],
+        ['Channel', customer.channel],
+        ['Status', statusBadge(customer.status)]
+      ];
+
+      const metrics = [
+        ['Orders', customer.orders],
+        ['Total spent', moneyExact(customer.spent)],
+        ['Avg. order value', moneyExact(customer.spent / customer.orders)]
+      ];
+
+      const recent = Array.from({ length: Math.min(4, customer.orders) }, (_, i) => ({
+        id: 'ORD-' + (2101 + (Number(customer.id.slice(4)) - 1001 + i) % 36),
+        date: customer.last,
+        total: Math.round(customer.spent / customer.orders * 100) / 100,
+        status: i === 0 ? 'Processing' : 'Completed'
+      }));
+
+      const history = table({
+        label: 'Customer order history',
+        columns: [
+          { key: 'id', header: 'Order ID' },
+          { key: 'date', header: 'Date' },
+          { key: 'total', header: 'Total', align: 'right', render: moneyExact },
+          { key: 'status', header: 'Status', render: s => statusDot({ tone: s === 'Completed' ? 'success' : 'informative', label: s }) }
+        ],
+        rows: recent,
+        rowAction: 'customer-order'
+      });
+
+      dialog.innerHTML = `
+        <div class="sx-modal-header">
+          <h2 id="customer-title">${escapeHTML(customer.name)}</h2>
+          ${iconButton({ icon: 'x', classes: 'sx-modal-close', attributes: 'data-modal-close', accessibleLabel: 'Close dialog' })}
+        </div>
+        <div class="sx-modal-body order-detail-content">
+          ${contentSection({
+            title: 'Customer Details',
+            content: `<div class="order-section-inset"><dl class="order-info-grid">${fields.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join('')}</dl></div>`
+          })}
+          ${contentSection({
+            title: 'Purchase Overview',
+            content: `<dl class="order-info-grid order-section-inset">${metrics.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join('')}</dl>`
+          })}
+          ${contentSection({
+            title: 'Recent Orders',
+            content: history
+          })}
+        </div>
+        <div class="actions">
+          <button type="button" class="btn secondary" data-modal-close>Close</button>
+        </div>
+      `;
+
+      document.body.append(dialog);
+      const modalInstance = initModal(dialog);
+      dialog.addEventListener('close', () => {
+        modalInstance.destroy();
+        dialog.remove();
+      }, { once: true });
+      modalInstance.open(trigger);
+    }
+
+    function exportCustomers() {
+      const keys = ['id', 'name', 'email', 'orders', 'spent', 'last', 'joined', 'status', 'channel'];
+      const csv = [keys.join(','), ...filtered.map(c => keys.map(k => '"' + String(c[k]).replaceAll('"', '""') + '"').join(','))].join('\r\n');
+      const url = URL.createObjectURL(new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'customers.csv';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    document.addEventListener('click', async e => {
+      const item = e.target.closest('[data-menu-action^="customers:"]');
+      if (!item) return;
+      e.stopImmediatePropagation();
+      item.closest('[popover]')?.hidePopover();
+      const action = item.dataset.menuAction;
+      if (action === 'customers:export') {
+        exportCustomers();
+        return;
+      }
+      try {
+        if (action === 'customers:share' && navigator.share) {
+          await navigator.share({ title: 'Customers', url: location.href });
+        } else {
+          await navigator.clipboard.writeText(location.href);
+          showToast('Link copied.', 'success');
+        }
+      } catch (error) {
+        if (error.name !== 'AbortError') showToast('Sharing is unavailable.');
+      }
+    }, true);
+  </script>
+</body>
+</html>

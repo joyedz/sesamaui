@@ -1,0 +1,87 @@
+/* File Card component */
+:where(.sui-root) .fcard,
+:where(.sui-root) .sx-file-card {
+  width: 100%;
+  max-width: 250px;
+  border-radius: var(--radius-md);
+  background: var(--color-base);
+  box-shadow: var(--shadow-ring);
+  overflow: hidden;
+  font-size: var(--font-ui-size);
+  line-height: var(--font-ui-line);
+}
+
+:where(.sui-root) .fhead,
+:where(.sui-root) .sx-file-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-4) var(--space-6) var(--space-4) var(--space-12);
+  color: var(--text-subtle);
+}
+
+:where(.sui-root) .sx-file-open {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+:where(.sui-root) .fhead span,
+:where(.sui-root) .sx-file-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-default);
+  font-weight: 500;
+}
+
+:where(.sui-root) .sx-file-size {
+  font-size: var(--font-meta-size);
+  color: var(--text-placeholder);
+  white-space: nowrap;
+}
+
+:where(.sui-root) .fprev,
+:where(.sui-root) .sx-file-preview {
+  display: grid;
+  place-items: center;
+  padding: var(--space-12);
+  border-top: 1px solid var(--color-hairline);
+  background: var(--color-canvas);
+  min-height: 90px;
+}
+
+:where(.sui-root) .fprev[hidden],
+:where(.sui-root) .sx-file-preview[hidden] {
+  display: none !important;
+}
+
+:where(.sui-root) .sx-file-image-preview {
+  max-width: 100%;
+  max-height: 140px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+}
+
+:where(.sui-root) .sx-file-icon-preview > svg :is(path, circle, rect, line, polyline, polygon, ellipse) {
+  vector-effect: non-scaling-stroke;
+  stroke-width: 1.5px;
+}
+
+:where(.sui-root) .sx-file-icon-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-placeholder);
+}

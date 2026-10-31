@@ -1,0 +1,32 @@
+@import url("tokens.css");
+
+/* Opt-in host baseline. Nothing resets the application's body, buttons or tables. */
+.sui-root {
+  color-scheme: light;
+  color: var(--text-default);
+  background: var(--color-canvas);
+  font: var(--font-regular) var(--font-ui-size)/var(--font-ui-line) var(--font-family-ui, "Inter", ui-sans-serif, system-ui, sans-serif);
+  -webkit-font-smoothing: antialiased;
+}
+.sui-root[data-sui-theme="dark"], :root[data-mode="dark"] .sui-root:not([data-sui-theme]) {color-scheme:dark}
+.sui-root[data-sui-theme="light"] {color-scheme:light}
+.sui-root[data-sui-theme="system"] {color-scheme:light dark}
+.sui-root, .sui-root *, .sui-root *::before, .sui-root *::after {box-sizing:border-box}
+:where(.sui-root) :where(button,input,select,textarea) {font:inherit;color:inherit}
+:where(.sui-root) :where(button) {background:none;border:0;padding:0;cursor:pointer;text-align:left}
+:where(.sui-root) svg {display:block;flex:none}
+.sui-root [hidden] {display:none!important}
+.sui-root :focus-visible {outline:2px solid var(--color-focus);outline-offset:2px}
+.sui-root .sui-sr-only {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+/* Shared layout and text utilities used across components and demos. */
+:where(.sui-root) .sx {width:100%;max-width:420px;min-width:0}
+:where(.sui-root) .sx-stack {display:grid;gap:var(--space-12)}
+:where(.sui-root) .sx-row {display:flex;align-items:center;gap:var(--space-8);flex-wrap:wrap}
+:where(.sui-root) .sx-muted {color:var(--text-subtle)}
+:where(.sui-root) .sx-help {font-size:var(--font-meta-size);line-height:var(--font-meta-line);color:var(--text-subtle)}
+@media(prefers-contrast:more) {.sui-root {--color-control-edge:light-dark(#777,#aaa)}}
+@media(forced-colors:active) {
+  .sui-root :where(button,.field,.sx-select) {border:1px solid ButtonText;box-shadow:none}
+  .sui-root :focus-visible {outline:2px solid Highlight}
+  .sui-root :disabled {color:GrayText;border-color:GrayText}
+}

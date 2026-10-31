@@ -6,7 +6,7 @@ UI scope implemented. Public framework APIs, React wrappers, package exports and
 
 New components: Checkbox, Radio Group, Dropdown Menu, Tooltip, Banner, Empty State, Popover, Combobox, Loader, Skeleton, Pagination, Date Picker, Tag Input and Command Palette.
 
-Completed existing areas: Input + Field, Select, Modal, Table, Toast, Tabs, Avatar, Input area and Button Group. Added Composer and Data workspace Blocks and a standalone Workspace demo.html. Login uses the same shared primitive and form styles.
+Completed existing areas: Input + Field, Select, Modal, Table, Toast, Tabs, Avatar, Input area and Button Group. Added Composer and Data workspace Blocks and a standalone demos/Workspace demo.html. Login uses the same shared primitive and form styles.
 
 - Selection: native checkbox/radio behavior, mixed select-all, disabled and invalid examples.
 - Menus and overlays: native popovers/dialogs, viewport-aware positioning, keyboard navigation, focus restoration, tooltip focus/hover and disabled wrapper, nested Popover/Combobox/Dropdown/Select in Modal.
@@ -29,8 +29,8 @@ Completed existing areas: Input + Field, Select, Modal, Table, Toast, Tabs, Avat
 | primitives.js | Reusable behavior for original controls, menus, switches, selection, sorting, composers |
 | rune-icons.js / assets/rune-icons | Bundled official Rune outline/solid assets |
 | Design system.html | Catalog, documentation and hash navigation |
-| Workspace demo.html | Standalone generic project workspace |
-| Login.html | Existing login demonstration using shared primitives |
+| demos/Workspace demo.html | Standalone generic project workspace |
+| demos/Login.html | Existing login demonstration using shared primitives |
 | tools/verify-components.cjs | Repeatable real-Chromium interaction checks |
 
 Scripts and assets work from file://. No development server or runtime icon CDN is required. Google Fonts retains the existing system-font fallback.

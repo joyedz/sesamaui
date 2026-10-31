@@ -1,0 +1,21 @@
+@import url("../base.css");
+
+/* Canonical Sesama toast styles. Keyframes are defined in tokens.css. */
+:where(.sui-root) .ds-toast-stack{position:fixed;left:50%;bottom:calc(var(--space-24) + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;display:flex;flex-direction:column;align-items:center;gap:var(--space-8);width:max-content;max-width:calc(100vw - 32px);pointer-events:none}
+:where(.sui-root) .ds-toast{display:flex;align-items:center;gap:var(--space-8);padding:var(--space-8) var(--space-12);border-radius:var(--radius-md);background:var(--color-contrast);color:var(--text-inverse);box-shadow:var(--shadow-dialog);max-width:380px;font:400 13px/20px "Inter",ui-sans-serif,system-ui,sans-serif;pointer-events:auto;animation:sui-toast-enter var(--motion-base) var(--ease-out)}
+:where(.sui-root) .ds-toast-icon{display:flex;align-items:center;justify-content:center;flex:0 0 20px;width:20px;height:20px;border-radius:0;background:none;color:inherit}
+:where(.sui-root) .ds-toast-icon svg{display:block;width:16px;height:16px;stroke:currentColor}
+:where(.sui-root) .ds-toast-text{display:grid;gap:var(--space-4);min-width:0;overflow-wrap:anywhere}
+:where(.sui-root) .ds-toast-text strong{font-weight:500}
+:where(.sui-root) .ds-toast .ibtn{width:20px;height:20px;flex:none;margin-left:var(--space-4);color:var(--text-inverse);opacity:.65}
+:where(.sui-root) .ds-toast .ibtn:hover,:where(.sui-root) .ds-toast .ibtn:active{color:var(--text-inverse);opacity:1;background:color-mix(in srgb,var(--text-inverse) 12%,transparent)}
+:where(.sui-root) .ds-toast .ibtn:focus-visible{outline-color:currentColor;opacity:1}
+:where(.sui-root) .ds-toast .ibtn svg{width:16px;height:16px;stroke:currentColor}
+:where(.sui-root) .ds-toast[data-tone="neutral"]{background:var(--color-contrast);color:var(--text-inverse)}
+:where(.sui-root) .ds-toast[data-tone="informative"]{background:var(--color-brand);color:var(--text-on-brand)}
+:where(.sui-root) .ds-toast[data-tone="success"]{background:var(--color-success);color:var(--text-on-brand)}
+:where(.sui-root) .ds-toast[data-tone="warning"]{background:var(--color-warning-solid);color:var(--text-on-brand)}
+:where(.sui-root) .ds-toast[data-tone="error"]{background:var(--color-danger);color:var(--text-on-brand)}
+:where(.sui-root) .ds-toast .btn.ghost{color:inherit}
+:where(.sui-root) .ds-toast .btn.ghost:hover{color:inherit;background:color-mix(in srgb,currentColor 12%,transparent)}
+@media(prefers-reduced-motion:reduce){:where(.sui-root) .ds-toast{animation:none}}

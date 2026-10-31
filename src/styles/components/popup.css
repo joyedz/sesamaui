@@ -1,0 +1,21 @@
+@import url("../base.css");
+/* Canonical Sesama popup styles. Legacy compatibility is generated. */
+:where(.sui-root) [popover]:not(:popover-open) {
+  display: none !important;
+}
+:where(.sui-root) .sx-popup{position:fixed;inset:auto;margin:0;padding:var(--space-4);border:0;border-radius:var(--radius-md);background:var(--color-base);color:var(--text-default);box-shadow:var(--shadow-float);min-width:180px;max-width:min(360px,calc(100vw - 24px));max-height:min(360px,60dvh);overflow:auto;z-index:60;font:inherit}
+:where(.sui-root) .sx-popup:popover-open{display:block}
+:where(.sui-root) .sx-menu-item{display:flex;align-items:center;gap:var(--space-8);width:100%;padding:var(--space-6) var(--space-8);min-height:28px;border-radius:var(--radius-sm);white-space:nowrap}
+:where(.sui-root) .sx-menu-item:hover,:where(.sui-root) .sx-menu-item:focus-visible{background:var(--color-tint)}
+:where(.sui-root) .sx-menu-item:disabled{opacity:.5;cursor:not-allowed}
+:where(.sui-root) .sx-menu-item.danger{color:var(--color-danger)}
+:where(.sui-root) .sx-menu-label{padding:var(--space-8);font-size:11px;color:var(--text-placeholder)}
+:where(.sui-root) .sx-menu-item kbd{margin-left:auto;font:11px/15px inherit;color:var(--text-placeholder)}
+@media(max-width:600px){:where(.sui-root) .sx-popup{max-width:calc(100vw - 24px)}}
+@media(pointer:coarse){:where(.sui-root) .sx-menu-item{min-height:44px}}
+:where(.sui-root) .sx-menu-item>span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+:where(.sui-root) .sx-menu-item>.sx-checkbox-control,:where(.sui-root) .sx-menu-item>.sx-radio-control{overflow:visible}
+:where(.sui-root) .sx-popup>[role=separator],:where(.sui-root) .sx-popup [role=group]+[role=separator]{height:1px;min-height:1px;background:var(--color-hairline);margin:var(--space-4) 0}
+:where(.sui-root) .sx-menu-item{font-size:var(--font-ui-size);font-weight:var(--font-regular)}
+:where(.sui-root) .sx-menu-item{line-height:var(--font-ui-line)}
+:where(.sui-root) .sx-menu-label{font-size:var(--font-meta-size);line-height:var(--font-meta-line);font-weight:var(--font-regular)}

@@ -1,0 +1,52 @@
+@import url("../base.css");
+
+:where(.sui-root) .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  height: 16px;
+  padding: 0 var(--space-6);
+  border-radius: var(--radius-xs);
+  background: var(--color-tint);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-subtle);
+  cursor: default;
+  white-space: nowrap;
+}
+
+:where(.sui-root) .badge.size-base {
+  height: 20px;
+  padding: 0 var(--space-8);
+  font-size: 12px;
+}
+
+:where(.sui-root) .badge[class*="tone-"] {
+  color: var(--tone);
+  background: color-mix(in srgb, var(--tone) 12%, transparent);
+}
+
+:where(.sui-root) .badge.tone-neutral {
+  --tone: var(--text-subtle);
+}
+
+:where(.sui-root) .badge.tone-informative {
+  --tone: var(--color-brand-text);
+}
+
+:where(.sui-root) .badge.tone-success {
+  --tone: var(--color-success);
+}
+
+:where(.sui-root) .badge.tone-warning {
+  --tone: var(--color-warning-solid);
+}
+
+:where(.sui-root) .badge.tone-error {
+  --tone: var(--color-danger);
+}
+
+:where(.sui-root) .badge.tone-disabled {
+  --tone: var(--text-placeholder);
+  opacity: 0.5;
+}

@@ -1,0 +1,90 @@
+@import url("../base.css");
+
+:where(.sui-root) .sx-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+  padding: var(--space-12);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  background: var(--color-recessed);
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sx-banner > svg {
+  margin-top: 1px;
+  flex: none;
+}
+
+:where(.sui-root) .sx-banner-content {
+  display: grid;
+  gap: var(--space-4);
+  flex: 1;
+  min-width: 0;
+}
+
+:where(.sui-root) .sx-banner-content b {
+  font-weight: 500;
+  line-height: var(--font-ui-line);
+}
+
+:where(.sui-root) .sx-banner-content p {
+  margin: 0 !important;
+  font-size: var(--font-ui-size);
+  line-height: var(--font-ui-line);
+  color: var(--text-subtle);
+}
+
+:where(.sui-root) .sx-banner[data-tone="informative"] {
+  background: var(--color-brand-tint);
+  border-color: var(--color-brand-line);
+}
+
+:where(.sui-root) .sx-banner[data-tone="informative"] > svg {
+  color: var(--color-brand-text);
+}
+
+:where(.sui-root) .sx-banner[data-tone="success"] > svg {
+  color: var(--color-success);
+}
+
+:where(.sui-root) .sx-banner[data-tone="error"] > svg {
+  color: var(--color-danger);
+}
+
+:where(.sui-root) .sx-banner[data-tone="warning"] {
+  background: var(--color-warning-surface);
+}
+
+:where(.sui-root) .sx-banner[data-tone="warning"] > svg {
+  color: var(--color-warning);
+}
+
+:where(.sui-root) .sx-banner-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: var(--space-8);
+  margin-top: var(--space-4);
+}
+
+:where(.sui-root) .sx-banner-actions > .btn {
+  width: auto;
+  flex: none;
+}
+
+:where(.sui-root) .sx-banner-dismiss {
+  flex: none;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-xs);
+  color: var(--text-subtle);
+}
+
+:where(.sui-root) .sx-banner-dismiss:hover {
+  background: var(--color-tint);
+  color: var(--text-default);
+}

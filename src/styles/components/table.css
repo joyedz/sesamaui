@@ -1,0 +1,145 @@
+:where(.sui-root) .sx-table-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  position: relative;
+  box-sizing: border-box;
+}
+
+:where(.sui-root) .sx-table {
+  width: 100%;
+  max-width: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-family: inherit;
+  text-align: left;
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sx-table.fixed {
+  table-layout: fixed;
+}
+
+:where(.sui-root) .sx-table th {
+  font-weight: 500;
+  color: var(--text-placeholder);
+  padding: var(--space-6) var(--space-8);
+  height: 40px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--color-hairline);
+  white-space: nowrap;
+  user-select: none;
+}
+
+:where(.sui-root) .sx-table td {
+  padding: var(--space-6) var(--space-8);
+  height: 40px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--color-hairline);
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sx-table tr > :is(th, td):first-child {
+  padding-left: var(--space-16, 16px);
+}
+
+:where(.sui-root) .sx-table tr > :is(th, td):last-child {
+  padding-right: var(--space-16, 16px);
+}
+
+:where(.sui-root) .sx-table input {
+  accent-color: var(--color-brand);
+}
+
+:where(.sui-root) .sx-table tr[aria-selected="true"] td {
+  background: var(--color-tint);
+}
+
+:where(.sui-root) .sx-table tbody > tr:last-child > td {
+  border-bottom: 0;
+}
+
+:where(.sui-root) .sx-table th > .sx-sort {
+  vertical-align: middle;
+}
+
+:where(.sui-root) .sx-table thead.sticky th {
+  position: sticky;
+  top: 0;
+  background: var(--color-base);
+  z-index: 1;
+}
+
+:where(.sui-root) .sx-table tr:hover td {
+  background: var(--color-tint);
+}
+
+:where(.sui-root) .sx-table tr.selected td {
+  background: color-mix(in srgb, var(--color-brand) 8%, var(--color-base));
+}
+
+:where(.sui-root) .sx-table tr[data-table-row-action] {
+  cursor: pointer;
+}
+
+:where(.sui-root) .sx-table tr[data-table-row-action]:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: -2px;
+}
+
+:where(.sui-root) .sx-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  transition: color 150ms ease;
+}
+
+:where(.sui-root) .sx-sort:hover {
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sx-sort:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 1px;
+}
+
+:where(.sui-root) .sx-table-select-col {
+  width: 36px;
+  min-width: 36px;
+  max-width: 36px;
+  padding: var(--space-8);
+  text-align: center;
+}
+
+:where(.sui-root) .sx-table-select-col input[type="checkbox"],
+:where(.sui-root) .sx-table-select-col input[type="radio"] {
+  cursor: pointer;
+  margin: 0;
+  vertical-align: middle;
+}
+
+:where(.sui-root) .sx-table-wrap.compact .sx-table th,
+:where(.sui-root) .sx-table-wrap.compact .sx-table td {
+  padding: var(--space-6) var(--space-8);
+}
+
+:where(.sui-root) .sx-table .sx-table-action-heading {
+  text-align: right;
+  width: 1%;
+  white-space: nowrap;
+}
+
+:where(.sui-root) .sx-table-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-4);
+  white-space: nowrap;
+}

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sesama component accessibility fixtures</title>
+  <script>const component=new URLSearchParams(location.search).get("component");const stylesheet=["button","field","select","modal"].includes(component)?"components/"+component+".css":"components.css";document.write('<link rel="stylesheet" href="../../src/styles/'+stylesheet+'">');</script>
+  <style>
+    body{margin:0;background:var(--color-canvas)}
+    main{padding:24px;max-width:800px;margin:auto}
+    h1{font-size:24px;font-weight:500;margin:0 0 24px}
+    form{display:grid;gap:16px}section{display:grid;gap:16px;margin-bottom:24px}
+    h2{font-size:16px;font-weight:500;margin:0}
+    .actions-row{display:flex;flex-wrap:wrap;gap:8px}
+    #host-control{font:17px/normal monospace;border:3px solid rgb(255,0,255);padding:11px;background:yellow}
+  </style>
+</head>
+<body>
+  <main class="sui-root" id="fixture">
+    <h1>Component accessibility fixtures</h1>
+    <div id="components"></div>
+  </main>
+  <script type="module">
+    import {button,input,inputField,select,modal,initModal,mount} from '../../src/index.mjs';
+    const params=new URLSearchParams(location.search),root=document.getElementById('fixture');
+    root.dataset.suiTheme=params.get('theme')||'light';
+    const mode=params.get('component')||'all',parts=[];
+    if(mode==='button'||mode==='all')parts.push('<section aria-labelledby="buttons-title"><h2 id="buttons-title">Buttons</h2><div class="actions-row">'+
+      ['primary','secondary','outline','ghost','danger'].map(variant=>button({label:variant,variant,size:'base'})).join('')+
+      button({label:'Unavailable',disabled:true})+'</div></section>');
+    if(mode==='field'||mode==='all')parts.push('<section aria-labelledby="fields-title"><h2 id="fields-title">Input fields</h2>'+inputField({id:'fixture-name',name:'name',label:'Name',helper:'Enter your full name.',required:true})+
+      inputField({id:'fixture-password',label:'Password',type:'password',autocomplete:'current-password'})+
+      inputField({id:'fixture-error',label:'Email',type:'email',invalid:true,error:'Enter a valid email address.'})+
+      inputField({id:'fixture-phone',label:'Phone',type:'tel',prefix:'+62'})+
+      inputField({id:'fixture-readonly',label:'Reference',value:'SES-2048',readonly:true})+
+      inputField({id:'fixture-disabled',label:'Unavailable field',disabled:true})+
+      input({name:'search',type:'search',label:'Search projects',placeholder:'Search projects'})+'</section>');
+    if(mode==='select'||mode==='all')parts.push('<section aria-labelledby="select-title"><h2 id="select-title">Select</h2>'+select({name:'team',label:'Team',value:'design',groups:[{label:'Active teams',options:[{label:'Design',value:'design'},{label:'Engineering',value:'engineering'}]},{label:'Other teams',options:[{label:'Operations',value:'operations'},{label:'Archived',value:'archived',disabled:true}]}]})+
+      select({name:'location',label:'Location',required:true,options:['Jakarta','Singapore']})+
+      select({name:'disabled-select',label:'Unavailable team',disabled:true,options:['Design']})+'</section>');
+    if(mode==='modal'||mode==='all')parts.push('<section aria-labelledby="modal-title"><h2 id="modal-title">Modal</h2>'+button({id:'open-fixture-modal',label:'Review changes',variant:'outline',size:'base'})+
+      modal({id:'fixture-modal',title:'Review changes',description:'Check these settings before continuing.',content:inputField({id:'modal-name',label:'Project name',value:'Website'})+select({name:'modal-team',label:'Team',options:['Design','Engineering']})+'<div class="long-content">'+Array.from({length:20},(_,i)=>'<p>Project detail '+(i+1)+'</p>').join('')+'</div>',actions:button({id:'modal-confirm',label:'Confirm',variant:'primary'})})+'</section>');
+    document.getElementById('components').innerHTML='<form id="fixture-form">'+parts.join('')+'<div class="actions-row">'+button({label:'Submit',type:'submit'})+button({label:'Reset',type:'reset'})+'</div><output id="result" aria-live="polite"></output></form>';
+    const session=mount(root);
+    const opener=document.getElementById('open-fixture-modal');
+    opener?.addEventListener('click',()=>initModal(document.getElementById('fixture-modal')).open(opener));
+    document.getElementById('modal-confirm')?.addEventListener('click',()=>initModal(document.getElementById('fixture-modal')).close('confirm'));
+    document.getElementById('fixture-form').addEventListener('submit',event=>{if(event.defaultPrevented)return;event.preventDefault();document.getElementById('result').textContent='Form submitted.';});
+    window.fixtureSession=session;
+    window.fixtureReady=true;
+  </script>
+</body>
+</html>

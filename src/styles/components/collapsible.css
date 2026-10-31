@@ -1,0 +1,52 @@
+:where(.sui-root) .sx-collapsible {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+:where(.sui-root) .sx-collapsible-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+  gap: var(--space-8);
+}
+
+:where(.sui-root) .sx-collapsible-trigger-text {
+  flex: 1;
+  min-width: 0;
+}
+
+:where(.sui-root) .sx-collapsible-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-placeholder);
+  transition: transform 200ms ease;
+}
+
+:where(.sui-root) .sx-collapsible-trigger[aria-expanded="true"] .sx-collapsible-chevron {
+  transform: rotate(180deg);
+}
+
+:where(.sui-root) .sx-collapsible-content {
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+:where(.sui-root) .sx-collapsible-content[hidden] {
+  display: none !important;
+}
+
+:where(.sui-root) .sx-collapsible-inner {
+  padding: var(--space-8) 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.sui-root) .sx-collapsible-chevron,
+  :where(.sui-root) .sx-collapsible-content {
+    transition: none !important;
+  }
+}

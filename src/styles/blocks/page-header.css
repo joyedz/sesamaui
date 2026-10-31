@@ -1,0 +1,55 @@
+/* Page Header block */
+:where(.sui-root) .sb-page-header,
+:where(.sui-root) .sx-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16, 16px);
+  padding: var(--space-12, 12px);
+  min-height: 48px;
+  border-bottom: 1px solid var(--color-hairline);
+  flex: none;
+}
+
+:where(.sui-root) .sb-header-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 4px);
+  min-width: 0;
+}
+
+:where(.sui-root) .sb-header-breadcrumbs {
+  margin-bottom: var(--space-2, 2px);
+}
+
+:where(.sui-root) .sb-header-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8, 8px);
+  min-width: 0;
+}
+
+:where(.sui-root) .sb-header-title h1 {
+  margin: 0;
+  font-size: var(--font-ui-size, 13px);
+  line-height: var(--font-ui-line, 20px);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sb-header-desc {
+  margin: 2px 0 0;
+  font-size: var(--font-meta-size, 11px);
+  line-height: var(--font-meta-line, 16px);
+  color: var(--text-subtle);
+}
+
+:where(.sui-root) .sb-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8, 8px);
+  flex-shrink: 0;
+}

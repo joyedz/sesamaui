@@ -1,44 +1,115 @@
-# Application structure: use the blocks
+# Application Structure: Page Blocks
 
-The Sales reporting trial reused Tree and Select but rebuilt the rest of the application. Its custom 216px shell, oversized header and private sidebar departed from Sesama. Its raw table inherited max-width:300px. Avoid this by using actual structural builders, not a visual description.
+Modern Sesama UI provides canonical layout and page assembly blocks exported directly from `src/index.mjs`. Use these blocks to structure all application interfaces, maintaining consistent responsive behaviors, rail collapsing, spacing, and header alignments.
 
-## Mandatory starting point
-
-Load `workspace-blocks.js` after `library.js`. All builders return HTML strings; slots take trusted HTML, so escape any user-provided content.
+## Canonical Starting Point
 
 ```js
-const B=SESAMA_BLOCKS;
-app.innerHTML=B.appShell({
- sidebar:B.sidebar({
-  workspace:'Sesama workspace',
-  navigation:[{n:'Sales reports',i:'grid-3x3',key:'sales',selected:true}],
-  projects:[{n:'Website launch',i:'folder',k:[{n:'Review launch checklist',i:false,key:'launch'}]}],
-  profileName:'Nils Eller',initials:'N'
- }),
- header:B.pageHeader({title:'Sales reports',icon:'grid-3x3'}),
- content:B.pageLayout(B.pageGrid([
-  {html:B.dataSection({title:'Products',table:tableHTML}),span:12,tablet:6}
- ]),{variant:'dashboard'})
+import {
+  appShell,
+  workspaceSidebar,
+  pageHeader,
+  pageLayout,
+  pageGrid,
+  dataSection,
+  table,
+  mount
+} from './src/index.mjs';
+
+const app = document.getElementById('app');
+
+app.innerHTML = appShell({
+  sidebar: workspaceSidebar({
+    brand: { name: 'Acme Workspace', badge: 'v2' },
+    navigation: [
+      { id: 'overview', label: 'Overview', icon: 'folder', active: true },
+      { id: 'reports', label: 'Reports', icon: 'file-text' }
+    ],
+    projects: [
+      {
+        id: 'website',
+        label: 'Website Launch',
+        items: [
+          { id: 'homepage', label: 'Homepage Review', active: true },
+          { id: 'analytics', label: 'Tracking Setup' }
+        ]
+      }
+    ],
+    user: { name: 'Alex Rivera', initials: 'AR' }
+  }),
+  header: pageHeader({
+    title: 'Project Initiatives',
+    icon: 'folder'
+  }),
+  content: pageLayout(
+    pageGrid([
+      {
+        html: dataSection({
+          title: 'Active Initiatives',
+          table: table({
+            columns: [
+              { key: 'name', label: 'Initiative' },
+              { key: 'status', label: 'Status' }
+            ],
+            rows: [
+              { id: '1', name: 'Design System Migration', status: 'Complete' }
+            ]
+          })
+        }),
+        span: 12
+      }
+    ]),
+    { variant: 'dashboard' }
+  )
 });
+
+mount(app);
 ```
 
-`tableHTML` must come from the central Table builder/example, rather than an independently styled HTML table. Current export is `SESAMA_UI.getExamples('Table')`; inspect its variants and event/data requirements. `dataSection` also guards table width to fill the container.
+## Block Responsibilities and Options
 
-## Responsibilities and contracts
+### `appShell(options)`
+Provides the desktop/tablet viewport canvas with inset content panels and optional collapsible sidebar rail:
+- `sidebar`: HTML string for the left workspace navigation.
+- `header`: HTML string for the top page bar.
+- `content`: HTML string for the main view panel with independent scroll.
+- `footer`: Optional HTML string for bottom bars or floating composer.
+- `detail`: Optional HTML string for a right-hand detail drawer (300px width).
+- `collapsed`: Boolean flag for initial sidebar rail state.
+- `theme`: Optional theme preset (`'light'` or `'dark'`).
 
-- `appShell({sidebar,header,content,footer,detail})`: canvas background; 8px gap/inset; 240px sidebar; inset central panel with independent scroll. Optional right detail is 300px. Footer can host a central Composer. Collapse creates a 48px rail. Hover opens after 200ms; exit waits 200ms. Content and header do not move on hover; no overlay shadow. Reduced motion is honored.
-- `sidebar({workspace,workspaces,navigation,projects,profileName,initials,projectActions})`: composes central Select, Tree, Tree section, Avatar styling and Icon Buttons. `projectActions` is the `treeSection` action config. Application handlers supply project creation and other business actions. Standard workspace selection and theme toggle work locally.
-- `pageHeader({title,icon,actions})`: default icon + title. Actions are optional. Do not add a second giant page title or breadcrumb row automatically.
-- `pageLayout(html,{variant,compact})`: dashboard has 1440px maximum outer width, data uses full width, conversation has 768px outer width (720px reading area with default padding). Padding 24px default, 16px compact/narrow.
-- `pageGrid([{html,span,tablet}],{compact})`: 12 desktop columns above 1100px; 6 tablet columns down to 600px; 1 mobile column. Gap16px or compact8px. Every item has min-width:0. A full table uses span12/tablet6. Four metrics use span3/tablet3. Main chart span8, breakdown span4, both tablet6. Sidebar is outside this grid.
-- `dataSection({title,description,actions,filters,table,pagination})`: consistent section header and slots. Use central Table, Select, Pagination, Skeleton and Empty State as needed. Table width is 100%, max-width none. Horizontal scrolling stays inside the data content.
+### `workspaceSidebar(options)` (alias: `sidebar`)
+Comprehensive workspace navigation supporting brand branding, workspace switching, tree navigation, and project sections:
+- `brand`: `{ name, badge, logo }`.
+- `selector`: HTML string for workspace switcher (e.g. `select(...)`).
+- `navigation`: Array of items `[{ id, label, icon, active, count }]`.
+- `projects`: Array of project groups `[{ id, label, items: [{ id, label, active }] }]`.
+- `user`: `{ name, role, initials, avatarUrl }`.
+- `collapseToggle`: Boolean or custom toggle button options.
+- `themeToggle`: Boolean or custom theme toggle options.
 
-Do not copy `AI agents demo.html` CSS as a shell implementation. It is an accumulated reference consumer; new pages should use these blocks. Existing pages can be migrated to the blocks as part of an explicitly requested page update, preserving their business behavior.
+### `pageHeader(options)`
+Standard header bar with breadcrumbs/title, badges, and action toolbars:
+- `title`: Primary page heading string.
+- `subtitle`: Optional descriptive string below title.
+- `icon`: Optional Rune icon identifier.
+- `badge`: Optional badge HTML string.
+- `actions`: Optional toolbar HTML string (e.g. buttons, dropdowns).
 
-## Missing components
+### `pageLayout(content, options)`
+Provides responsive horizontal and vertical constraints for page content:
+- `variant`:
+  - `'default'`: Standard bounded layout.
+  - `'dashboard'`: 1440px max-width container with responsive side gutters.
+  - `'data'`: Full-width responsive container (ideal for wide tables).
+  - `'conversation'`: Centered 768px reading column (ideal for chat and AI workflows).
+- `compact`: Boolean flag reducing padding from 24px to 16px.
 
-Chart and Chart Section now exist centrally in charts.js / charts.css. Use SESAMA_CHARTS.chart and SESAMA_CHARTS.section; read charts.md. Metric Card, Content Section, People List, Activity Feed and Dashboard Overview also exist centrally in workspace-blocks.js. Read content-blocks.md when building dashboard content.
-
-## Browser acceptance
-
-Verify a standalone starter at desktop, tablet and mobile. Measure that table width equals its available container, grid items fit their tracks, and sidebar matches 240px. Test collapse plus delayed hover and confirm main/header bounds stay unchanged during hover. Check shared controls retain their component styles and computed typography. Report checks actually performed, not a blanket visual guarantee.
+### `pageGrid(items, options)`
+Responsive 12-column CSS grid system:
+- `items`: Array of items `[{ html, span, tablet, mobile }]`.
+  - Full-width table/data: `span: 12, tablet: 6`.
+  - Four metrics row: `span: 3, tablet: 3`.
+  - Split chart / breakdown: `span: 8` and `span: 4`.
+- `columns`: Total columns (defaults to 12).
+- `compact`: Boolean flag reducing column gap from 16px to 8px.

@@ -1,0 +1,11 @@
+@import url("./popup.css");
+
+/* Canonical Sesama popover styles. */
+:where(.sui-root) .sx-popover-wrapper{position:relative;display:inline-flex}
+:where(.sui-root) .sx-popover-panel{width:240px}
+:where(.sui-root) .sx-popover-header{padding:var(--space-8);font-weight:500}
+:where(.sui-root) .sx-popover-body{padding:var(--space-4) var(--space-8) var(--space-8)}
+:where(.sui-root) .sx-popover-footer{display:flex;justify-content:flex-end;padding:var(--space-8);border-top:1px solid var(--color-hairline)}
+:where(.sui-root) .sx-popover-options{max-height:168px;overflow:auto;margin-inline:calc(-1 * var(--space-8));padding:2px 0}
+:where(.sui-root) .sx-popover-options>.sx-choice{align-items:center;min-height:28px;padding:var(--space-6) var(--space-8);border-radius:var(--radius-sm)}
+:where(.sui-root) .sx-popover-options>.sx-choice:hover{background:var(--color-tint)}

@@ -1,0 +1,11 @@
+@import url("./button.css");
+@import url("./menu.css");
+
+/* Canonical Sesama button group styles. */
+:where(.sui-root) .sx-button-group{display:inline-flex;max-width:100%;align-items:stretch}
+:where(.sui-root) .sx-button-group>.btn{border-radius:0;flex:none}
+:where(.sui-root) .sx-button-group>.btn:first-child{border-radius:var(--radius-sm) 0 0 var(--radius-sm)}
+:where(.sui-root) .sx-button-group>.btn:last-child{border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+:where(.sui-root) .sx-button-group>.btn:first-child:last-child{border-radius:var(--radius-sm)}
+:where(.sui-root) .sx-button-group>.btn+.btn{margin-left:1px}
+:where(.sui-root) .sx-button-group>.btn:focus-visible{z-index:1}

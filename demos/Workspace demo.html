@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Projects · Sesama</title>
+  <link rel="stylesheet" href="../src/styles/components.css">
+  <link rel="stylesheet" href="../src/styles/blocks.css">
+  <link rel="stylesheet" href="../src/styles/fonts.css">
+  <style>
+    body { margin: 0; background: var(--color-canvas); }
+    .demo-header { padding: var(--space-16) var(--space-24); border-bottom: 1px solid var(--color-hairline); display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); }
+    .demo-brand { font-weight: 500; font-size: 14px; line-height: 20px; }
+    .demo-main { width: 100%; max-width: 960px; padding: var(--space-24); margin: 0 auto; }
+    .demo-main h1 { font-size: 18px; line-height: 24px; font-weight: 500; margin: 0 0 var(--space-8); }
+    .demo-main > p { color: var(--text-subtle); margin: 0 0 var(--space-24); }
+    .demo-note { margin-top: var(--space-24); font-size: 11px; color: var(--text-placeholder); }
+    .demo-toolbar { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .demo-stack { display: grid; gap: var(--space-12); max-width: 100%; }
+    .demo-search { width: 100%; max-width: 420px; }
+  </style>
+</head>
+<body class="sui-root">
+  <header class="demo-header">
+    <span class="demo-brand">Sesama</span>
+    <button type="button" class="btn ghost" id="demo-theme">Switch theme</button>
+  </header>
+  <main class="demo-main">
+    <h1>Projects</h1>
+    <p>Manage the projects in your workspace.</p>
+    <div id="demo-content"></div>
+    <p class="demo-note">Local demonstration. Changes last until the page is reloaded.</p>
+  </main>
+
+  <script type="module">
+    import {
+      table,
+      pagination,
+      button,
+      iconButton,
+      inputField,
+      badge,
+      initModal,
+      showToast,
+      controlIcon,
+      escapeHTML,
+      mount
+    } from '../src/index.mjs';
+    import {
+      sampleRecentProjects
+    } from './shared/data.mjs';
+
+    const baseProjects = [...sampleRecentProjects];
+    const projects = Array.from({ length: 25 }, (_, i) => {
+      const seed = baseProjects[i % baseProjects.length];
+      const cycle = Math.floor(i / baseProjects.length);
+      return { ...seed, id: i + 1, name: i < baseProjects.length ? seed.name : `${seed.name} ${i + 1}`, status: i % 3 === 0 ? 'Draft' : i % 7 === 0 ? 'Review' : 'Active' };
+    }).map((p, i) => (i < baseProjects.length ? baseProjects[i] : p));
+    let query = '';
+    let page = 1;
+    let size = 5;
+    let sortKey = 'name';
+    let sortDirection = 'asc';
+    let selectedKeys = new Set();
+
+    function render() {
+      const filtered = projects.filter(p =>
+        (p.name + ' ' + p.owner + ' ' + p.status).toLowerCase().includes(query.toLowerCase())
+      );
+
+      filtered.sort((a, b) => {
+        const x = a[sortKey], y = b[sortKey];
+        return (typeof x === 'number' ? x - y : String(x).localeCompare(String(y), undefined, { numeric: true })) * (sortDirection === 'asc' ? 1 : -1);
+      });
+
+      const pages = Math.max(1, Math.ceil(filtered.length / size));
+      page = Math.min(page, pages);
+      const rows = filtered.slice((page - 1) * size, page * size);
+
+      const statusBadge = s => badge({
+        label: s,
+        tone: s === 'Active' ? 'success' : s === 'Review' ? 'warning' : 'neutral'
+      });
+
+      const columns = [
+        { key: 'name', header: 'Name', sortable: true },
+        { key: 'status', header: 'Status', sortable: true, render: statusBadge },
+        { key: 'owner', header: 'Owner', sortable: true },
+        { key: 'updated', header: 'Updated', sortable: true },
+        { key: 'due', header: 'Due date', sortable: true },
+        { key: 'progress', header: 'Progress', align: 'right', sortable: true },
+        {
+          key: 'actions',
+          header: 'Actions',
+          align: 'right',
+          render: (_, row) => `
+            <div class="sx-table-actions">
+              ${button({ label: 'Edit', variant: 'ghost', size: 'sm', attributes: `data-project-edit="${row.id}" aria-label="Edit ${escapeHTML(row.name)}"` })}
+            </div>
+          `
+        }
+      ];
+
+      const toolbarHTML = `
+        <div class="demo-toolbar">
+          ${button({ id: 'btn-export', label: 'Export CSV', variant: 'outline', size: 'sm' })}
+          ${button({ id: 'btn-new-project', label: 'New Project', variant: 'primary', size: 'sm' })}
+        </div>
+      `;
+
+      const paginationHTML = pagination({
+        page,
+        pageSize: size,
+        totalItems: filtered.length,
+        pageSizeOptions: [5, 10, 20]
+      });
+
+      const tableHTML = table({
+        label: 'Workspace Projects',
+        rows,
+        columns,
+        sortKey,
+        sortDirection,
+        minWidth: 720
+      });
+
+      document.getElementById('demo-content').innerHTML = `
+        ${toolbarHTML}
+        <div class="sx sx-stack demo-stack">
+          <label class="field sx-input-shell demo-search">
+            ${controlIcon('search', 16)}
+            <input id="project-search" placeholder="Filter projects…" aria-label="Filter projects" value="${escapeHTML(query)}">
+          </label>
+          ${tableHTML}
+          ${paginationHTML}
+          <span class="sx-page-summary" role="status">${selectedKeys.size} selected</span>
+        </div>
+      `;
+
+      mount(document.getElementById('demo-content'));
+    }
+
+    render();
+    mount(document.body);
+
+    document.getElementById('demo-theme').addEventListener('click', () => {
+      const r = document.documentElement;
+      const dark = r.dataset.mode ? r.dataset.mode === 'dark' : matchMedia('(prefers-color-scheme:dark)').matches;
+      r.dataset.mode = dark ? 'light' : 'dark';
+    });
+
+    document.addEventListener('input', e => {
+      if (e.target.id === 'project-search') {
+        query = e.target.value;
+        page = 1;
+        render();
+        const searchInput = document.getElementById('project-search');
+        if (searchInput) {
+          searchInput.focus();
+          searchInput.setSelectionRange(query.length, query.length);
+        }
+      }
+    });
+
+    document.addEventListener('change', e => {
+      if (e.target.matches('[data-page-size]')) {
+        size = Number(e.target.value);
+        page = 1;
+        render();
+      }
+    });
+
+    document.addEventListener('click', e => {
+      const sort = e.target.closest('[data-table-sort]');
+      if (sort) {
+        const key = sort.dataset.tableSort;
+        sortDirection = sortKey === key && sortDirection === 'asc' ? 'desc' : 'asc';
+        sortKey = key;
+        page = 1;
+        render();
+        return;
+      }
+
+      const paging = e.target.closest('[data-page-step], [data-page-number], [data-page-number-control]');
+      if (paging) {
+        if (paging.hasAttribute('data-page-step')) {
+          page += Number(paging.dataset.pageStep);
+        } else if (paging.hasAttribute('data-page-number')) {
+          page = Number(paging.dataset.pageNumber);
+        }
+        render();
+      }
+
+      const editBtn = e.target.closest('[data-project-edit]');
+      if (editBtn) {
+        const projectId = Number(editBtn.dataset.projectEdit);
+        const project = projects.find(p => p.id === projectId);
+        if (project) openEditModal(project, editBtn);
+      }
+
+      if (e.target.id === 'btn-new-project') {
+        openNewProjectModal(e.target);
+      }
+
+      if (e.target.id === 'btn-export') {
+        showToast('Exporting ' + projects.length + ' projects...', 'informative');
+      }
+    });
+
+    function openEditModal(project, trigger) {
+      const dialog = document.createElement('dialog');
+      dialog.className = 'ds-modal';
+      dialog.dataset.size = 'base';
+      dialog.setAttribute('aria-labelledby', 'edit-project-title');
+
+      dialog.innerHTML = `
+        <div class="sx-modal-header">
+          <h2 id="edit-project-title">Edit ${escapeHTML(project.name)}</h2>
+          ${iconButton({ icon: 'x', classes: 'sx-modal-close', attributes: 'data-modal-close', accessibleLabel: 'Close dialog' })}
+        </div>
+        <form id="edit-project-form">
+          <div class="sx-modal-body" style="display:grid;gap:16px;">
+            ${inputField({ id: 'proj-name', name: 'name', label: 'Project Name', value: project.name, required: true })}
+            ${inputField({ id: 'proj-owner', name: 'owner', label: 'Owner', value: project.owner, required: true })}
+            ${inputField({ id: 'proj-due', name: 'due', label: 'Due Date', value: project.due })}
+          </div>
+          <div class="actions">
+            <button type="button" class="btn secondary" data-modal-close>Cancel</button>
+            <button type="submit" class="btn primary">Save changes</button>
+          </div>
+        </form>
+      `;
+
+      document.body.append(dialog);
+      const modalInstance = initModal(dialog);
+
+      dialog.querySelector('form').addEventListener('submit', event => {
+        event.preventDefault();
+        const data = new FormData(event.target);
+        project.name = data.get('name') || project.name;
+        project.owner = data.get('owner') || project.owner;
+        project.due = data.get('due') || project.due;
+        modalInstance.close();
+        render();
+        showToast('Project updated.', 'success');
+      });
+
+      dialog.addEventListener('close', () => {
+        modalInstance.destroy();
+        dialog.remove();
+      }, { once: true });
+
+      modalInstance.open(trigger);
+    }
+
+    function openNewProjectModal(trigger) {
+      const dialog = document.createElement('dialog');
+      dialog.className = 'ds-modal';
+      dialog.dataset.size = 'base';
+      dialog.setAttribute('aria-labelledby', 'new-project-title');
+
+      dialog.innerHTML = `
+        <div class="sx-modal-header">
+          <h2 id="new-project-title">New Project</h2>
+          ${iconButton({ icon: 'x', classes: 'sx-modal-close', attributes: 'data-modal-close', accessibleLabel: 'Close dialog' })}
+        </div>
+        <form id="new-project-form">
+          <div class="sx-modal-body" style="display:grid;gap:16px;">
+            ${inputField({ id: 'new-name', name: 'name', label: 'Project Name', placeholder: 'e.g. Design system refresh', required: true })}
+            ${inputField({ id: 'new-owner', name: 'owner', label: 'Owner', placeholder: 'e.g. Amelia Park', required: true })}
+            ${inputField({ id: 'new-due', name: 'due', label: 'Due Date', placeholder: 'e.g. Nov 30, 2026' })}
+          </div>
+          <div class="actions">
+            <button type="button" class="btn secondary" data-modal-close>Cancel</button>
+            <button type="submit" class="btn primary">Create project</button>
+          </div>
+        </form>
+      `;
+
+      document.body.append(dialog);
+      const modalInstance = initModal(dialog);
+
+      dialog.querySelector('form').addEventListener('submit', event => {
+        event.preventDefault();
+        const data = new FormData(event.target);
+        const newProj = {
+          id: Date.now(),
+          name: data.get('name'),
+          status: 'Active',
+          owner: data.get('owner'),
+          updated: 'Just now',
+          due: data.get('due') || 'Dec 1, 2026',
+          progress: '0%'
+        };
+        projects.unshift(newProj);
+        modalInstance.close();
+        render();
+        showToast('Project created.', 'success');
+      });
+
+      dialog.addEventListener('close', () => {
+        modalInstance.destroy();
+        dialog.remove();
+      }, { once: true });
+
+      modalInstance.open(trigger);
+    }
+  </script>
+</body>
+</html>

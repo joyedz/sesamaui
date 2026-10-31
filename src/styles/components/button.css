@@ -1,0 +1,60 @@
+@import url("../base.css");
+@import url("icon-button.css");
+/* Canonical Sesama button styles. Legacy compatibility is generated. */
+:where(.sui-root) .spinner{width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sui-spin .8s linear infinite;display:inline-block;flex:none}
+@media(prefers-reduced-motion:reduce){:where(.sui-root) .spinner{animation:none}}
+:where(.sui-root) .btn.danger{background:var(--color-danger-fill);color:var(--text-on-brand)}
+:where(.sui-root) .btn.danger:hover:not(:disabled){filter:brightness(1.08)}
+:where(.sui-root) .btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-4);min-height:26px;padding:5px 7px;border-radius:var(--radius-sm);font-weight:500;white-space:nowrap}
+:where(.sui-root) .btn.primary{background:var(--color-brand);color:var(--text-on-brand);box-shadow:0 0 0 1px color-mix(in srgb,var(--color-brand) 78%,#000),inset 0 1px .5px var(--color-brand-hover)}
+:where(.sui-root) .btn.primary:hover:not(:disabled){background:var(--color-brand-hover)}
+:where(.sui-root) .btn.secondary{background:var(--color-base);box-shadow:var(--shadow-ring)}
+:where(.sui-root) .btn.secondary:hover:not(:disabled){background:var(--color-recessed)}
+:where(.sui-root) .btn.ghost{color:var(--text-subtle)}
+:where(.sui-root) .btn.ghost:hover:not(:disabled){background:var(--color-tint)}
+:where(.sui-root) .btn.dashed{padding:3px 5px;border:1px dashed var(--text-placeholder);color:var(--text-subtle)}
+:where(.sui-root) .btn.dashed:hover:not(:disabled){background:var(--color-tint)}
+:where(.sui-root) .btn .sep{align-self:stretch;width:1px;margin:0 var(--space-4);background:currentColor;opacity:.25}
+:where(.sui-root) .btn:active{transform:translateY(1px)}
+:where(.sui-root) .btn.lg{min-height:34px;padding:9px 13px}
+:where(.sui-root) .btn:disabled{opacity:.5;cursor:not-allowed}
+:where(.sui-root) .btn.xs{min-height:22px;padding:3px 5px}
+:where(.sui-root) .btn.base{min-height:30px;padding:5px 9px}
+:where(.sui-root) .btn.lg{min-height:34px;padding:9px 13px}
+:where(.sui-root) .btn.outline{box-shadow:0 0 0 1px var(--color-hairline)}
+:where(.sui-root) .btn.outline:hover:not(:disabled){background:var(--color-tint)}
+:where(.sui-root) .btn.destructive{background:var(--color-danger-fill);color:var(--text-on-brand)}
+:where(.sui-root) .btn.destructive:hover:not(:disabled){filter:brightness(1.08)}
+:where(.sui-root) .btn:disabled{opacity:.5;cursor:default}
+:where(.sui-root) .btn.secondary-destructive{background:var(--color-base);color:var(--color-danger);box-shadow:var(--shadow-ring)}
+:where(.sui-root) .btn.secondary-destructive:hover:not(:disabled){background:var(--color-tint)}
+:where(.sui-root) .btn{font-size:var(--font-ui-size);line-height:var(--font-control-line)}
+:where(.sui-root) .btn{transition:background-color var(--motion-fast) var(--ease-standard),color var(--motion-fast) var(--ease-standard)}
+@media(prefers-reduced-motion:reduce){:where(.sui-root) .btn{transition:none}}
+:where(.sui-root) .btn.sm{min-height:26px;padding:5px 7px}
+:where(.sui-root) .btn.link{display:inline-flex;align-items:center;justify-content:flex-start;gap:var(--space-4);min-height:0;height:auto;width:max-content;max-width:100%;padding:0;border:0;border-radius:var(--radius-xs);box-shadow:none;background:transparent;color:var(--text-subtle);font-size:var(--font-ui-size);line-height:var(--font-ui-line);font-weight:500;text-decoration:none;text-underline-offset:3px;vertical-align:baseline;white-space:normal;text-align:left}
+:where(.sui-root) .btn.link.link-brand{color:var(--color-brand)}
+:where(.sui-root) .btn.link:hover:not(:disabled):not([aria-disabled=true]){background:transparent;color:var(--text-default);text-decoration:underline}
+:where(.sui-root) .btn.link.link-brand:hover:not(:disabled):not([aria-disabled=true]){color:var(--color-brand-hover)}
+:where(.sui-root) .btn.link:focus-visible{outline:2px solid var(--color-brand);outline-offset:3px}
+:where(.sui-root) .btn.link:active{transform:none}
+:where(.sui-root) .btn.link:is(:disabled,[aria-disabled=true]){opacity:.5;cursor:default;pointer-events:none;text-decoration:none}
+:where(.sui-root) .btn.link>svg{flex:none}
+:where(.sui-root) .btn{min-height:var(--control-size-sm)}
+:where(.sui-root) .btn.xs{min-height:var(--control-size-xs)}
+:where(.sui-root) .btn.sm{min-height:var(--control-size-sm)}
+:where(.sui-root) .btn.base{min-height:var(--control-size-base)}
+:where(.sui-root) .btn.lg{min-height:var(--control-size-lg)}
+:where(.sui-root) .btn.link{min-height:0}
+:where(.sui-root) .btn.social{position:relative;gap:var(--space-8);background:var(--color-base);color:var(--text-default);box-shadow:0 0 0 1px var(--color-hairline)}
+:where(.sui-root) .btn.social:hover:not(:disabled){background:var(--color-tint)}
+:where(.sui-root) .sx-social-logo{display:block;width:16px;height:16px;flex:none;object-fit:contain}
+:where(.sui-root)[data-mode=dark] .sx-social-logo.is-monochrome{filter:invert(1)}
+@media(prefers-color-scheme:dark){:where(.sui-root):not([data-mode=light]) .sx-social-logo.is-monochrome{filter:invert(1)}}
+:where(.sui-root) .btn.outline,:where(.sui-root) .btn.social{box-shadow:0 0 0 1px var(--color-control-edge)}
+:where(.sui-root) .btn.link{box-shadow:none}
+:where(.sui-root) .btn.link.link-brand{color:var(--color-brand-text)}
+:where(.sui-root) .btn.link.link-brand:hover:not(:disabled):not([aria-disabled=true]){color:var(--color-brand-text-hover)}
+:where(.sui-root) .btn.link:focus-visible{outline-color:var(--color-focus)}
+
+@media(forced-colors:active){:where(.sui-root) .btn:is(.primary,.danger,.destructive){color:ButtonText;background:ButtonFace;border:1px solid ButtonText;box-shadow:none}}

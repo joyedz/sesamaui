@@ -1,20 +1,53 @@
-# SVG Charts
+# SVG Charts and Analytics
 
-Load charts.js after workspace-blocks.js and library.js. library.css imports charts.css. No React, Tailwind or network chart dependencies.
+Sesama UI includes built-in, dependency-free SVG charts. They render semantic markup on the server or client and progressively hydrate with interactive tooltips, keyboard navigation, and responsive scaling.
+
+## Public Chart Components
+
+Import directly from `src/index.mjs`:
 
 ```js
-const plot=SESAMA_CHARTS.chart({
- type:'area',label:'Weekly revenue',height:240,
- data:[{label:'Mon',revenue:32,orders:20},{label:'Tue',revenue:45,orders:28}],
- series:[{key:'revenue',label:'Revenue'},{key:'orders',label:'Orders'}]
+import { chart, initChart, chartSection, mount } from './src/index.mjs';
+
+const revenuePlot = chart({
+  type: 'area', // 'line' | 'area' | 'bar' | 'stacked-bar' | 'donut'
+  label: 'Weekly Revenue',
+  height: 240,
+  data: [
+    { label: 'Mon', revenue: 3200, orders: 40 },
+    { label: 'Tue', revenue: 4500, orders: 55 },
+    { label: 'Wed', revenue: 4100, orders: 50 },
+    { label: 'Thu', revenue: 5800, orders: 72 },
+    { label: 'Fri', revenue: 6200, orders: 85 }
+  ],
+  series: [
+    { key: 'revenue', label: 'Revenue ($)', color: 'var(--color-primary)' },
+    { key: 'orders', label: 'Orders', color: 'var(--color-secondary)' }
+  ],
+  format: 'currency',
+  currency: 'USD'
 });
-const block=SESAMA_CHARTS.section({title:'Performance',description:'Example weekly values',chart:plot,variant:'bordered'});
+
+const section = chartSection({
+  title: 'Revenue Trends',
+  description: 'Daily revenue vs order volume for the current week',
+  chart: revenuePlot,
+  variant: 'bordered'
+});
 ```
 
-Types: line, area, bar (grouped), stacked bar, donut. Data is an ordered array with label and numeric fields. Series specify key, label and optional semantic CSS color. Donut uses the first visible series and categories in data. Values must be finite and nonnegative; negative/diverging charts are not supported. Avoid implying support for large datasets or zoom/pan. Amounts may use format currency with currency USD or another Intl currency code. Percent format expects percentage points (e.g. 42 means 42%).
+## Supported Chart Types
 
-Auto initialization and ResizeObserver adapt the SVG to the container. Keyboard-focusable data regions offer tooltip details with left/right/Home/End navigation. Legend buttons toggle series on Cartesian charts; donut legend identifies categories. View data supplies an accessible table fallback. Tooltip closes on scroll/Escape. Loading/empty/error states use the same chart footprint. No unnecessary entrance animation.
+- **`'line'`**: Multi-series continuous line plot.
+- **`'area'`**: Filled gradient area chart.
+- **`'bar'`**: Grouped column bar chart.
+- **`'stacked-bar'`**: Stacked column chart.
+- **`'donut'`**: Radial proportion donut chart with legend and center statistics.
 
-For updates, call SESAMA_CHARTS.update(rootElement,{data:newRows}) after initialization. Use SESAMA_CHARTS.init(container) if explicit mounting is needed. New markup is initialized automatically. Keep chart content in Page Grid and Chart Section; do not handcraft chart SVG or duplicate axes/tooltips in page code.
+## Interactive Features & Accessibility
 
-Chart Section has title, optional description/actions, chart, optional footer; bordered and plain variants. Actions accept shared Select/Button HTML. A filter must call chart update through application logic; the catalog filter is only a layout example and is labelled accordingly.
+- **Responsive scaling**: Automatically adapts to container width using `ResizeObserver`.
+- **Keyboard navigation**: Data points are focusable using Tab, and navigable with Left/Right/Home/End keys.
+- **Accessible tooltips**: Displays precise values on hover and keyboard focus; dismisses on Escape or scroll.
+- **Accessible table fallback**: Embeds an accessible hidden `<table>` representing the raw data for screen readers.
+- **Dynamic updates**: Controllers support `.update({ data, series })` to smoothly redraw without rebuilding the DOM.

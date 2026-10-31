@@ -1,0 +1,32 @@
+/**
+ * Chart Section block styles
+ * Strictly scoped under :where(.sui-root)
+ */
+
+:where(.sui-root) .sb-chart-section {
+  display: flex;
+  flex-direction: column;
+}
+
+:where(.sui-root) .sb-chart-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4, 4px);
+  margin-bottom: var(--space-4, 4px);
+}
+
+:where(.sui-root) .sb-chart-summary {
+  margin-bottom: var(--space-4, 4px);
+  color: var(--text-subtle);
+  font-size: var(--font-meta-size, 12px);
+  line-height: var(--font-meta-line, 16px);
+}
+
+:where(.sui-root) .sb-chart-content {
+  position: relative;
+  width: 100%;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

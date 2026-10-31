@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sesama · Revenue report</title>
+  <link rel="stylesheet" href="../src/styles/components.css">
+  <link rel="stylesheet" href="../src/styles/blocks.css">
+  <link rel="stylesheet" href="../src/styles/fonts.css">
+  <style>
+    body { margin: 0; background: var(--color-canvas); }
+    .revenue-filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  </style>
+</head>
+<body class="sui-root">
+  <div id="app"></div>
+  <script type="module">
+    import {
+      appShell,
+      pageHeader,
+      pageLayout,
+      pageGrid,
+      contentSection,
+      metricCard,
+      chartSection,
+      chart,
+      table,
+      select,
+      iconButton,
+      menu,
+      showToast,
+      mount
+    } from '../src/index.mjs';
+    import {
+      createSalesSidebar,
+      sampleRevenue,
+      money
+    } from './shared/data.mjs';
+
+    let period = 'Last 30 days';
+    let channel = 'All channels';
+    let visible = [];
+
+    document.getElementById('app').innerHTML = appShell({
+      sidebar: createSalesSidebar('revenue'),
+      header: pageHeader({ title: 'Revenue report', icon: 'grid-3x3' }),
+      content: '<div id="revenue-content"></div>'
+    });
+
+    function render() {
+      visible = sampleRevenue
+        .slice(period === 'Last 7 days' ? -7 : -30)
+        .filter(row => channel === 'All channels' || row.channel === channel);
+
+      const days = period === 'Last 7 days' ? 7 : 30;
+      const previous = sampleRevenue
+        .slice(-days * 2, -days)
+        .filter(row => channel === 'All channels' || row.channel === channel);
+
+      const prior = key => previous.reduce((n, row) => n + row[key], 0);
+      const comparison = (now, before) => before
+        ? ((now - before) / before * 100 >= 0 ? '+' : '') + ((now - before) / before * 100).toFixed(1) + '%'
+        : 'New';
+      const tone = (now, before, lower = false) => now === before
+        ? 'neutral'
+        : (lower ? now < before : now > before) ? 'success' : 'error';
+
+      const sum = key => visible.reduce((n, row) => n + row[key], 0);
+      const gross = sum('gross');
+      const discount = sum('discount');
+      const refund = sum('refund');
+      const net = sum('net');
+
+      const byDay = [...new Set(visible.map(r => r.date))].map(date => ({
+        label: date.slice(5),
+        net: visible.filter(r => r.date === date).reduce((n, r) => n + r.net, 0),
+        gross: visible.filter(r => r.date === date).reduce((n, r) => n + r.gross, 0)
+      }));
+
+      const breakdown = ['Website', 'Marketplace', 'Direct'].map(label => ({
+        label,
+        revenue: visible.filter(r => r.channel === label).reduce((n, r) => n + r.net, 0)
+      }));
+
+      const actionMenuId = 'report-actions-menu';
+      const actionMenuHTML = menu({
+        id: actionMenuId,
+        ariaLabel: 'Report actions',
+        attributes: 'popover',
+        items: [
+          { label: 'Export CSV', icon: 'file-down', attributes: 'data-menu-action="report:export"' },
+          { label: 'Copy link', icon: 'copy', attributes: 'data-menu-action="report:copy"' },
+          { label: 'Share', icon: 'share-2', attributes: 'data-menu-action="report:share"' }
+        ]
+      });
+
+      const filters = `
+        <div class="revenue-filter-row">
+          ${select({
+            name: 'revenue-period',
+            label: 'Period',
+            hideLabel: true,
+            icon: 'calendar',
+            value: period,
+            options: ['Last 7 days', 'Last 30 days']
+          })}
+          ${select({
+            name: 'revenue-channel',
+            label: 'Channel',
+            hideLabel: true,
+            icon: 'list-filter',
+            value: channel,
+            options: ['All channels', 'Website', 'Marketplace', 'Direct']
+          })}
+          ${iconButton({
+            icon: 'kebab',
+            variant: 'outline',
+            size: 'base',
+            attributes: `popovertarget="${actionMenuId}" aria-haspopup="menu"`,
+            accessibleLabel: 'Report actions'
+          })}
+          ${actionMenuHTML}
+        </div>
+      `;
+
+      const columns = [
+        { key: 'date', header: 'Date' },
+        { key: 'id', header: 'Order ID' },
+        { key: 'customer', header: 'Customer' },
+        { key: 'channel', header: 'Channel' },
+        ...['gross', 'discount', 'refund', 'net'].map(key => ({
+          key,
+          header: { gross: 'Gross revenue', discount: 'Discounts', refund: 'Refunds', net: 'Net revenue' }[key],
+          align: 'right',
+          render: n => money(n)
+        }))
+      ];
+
+      const metrics = [
+        { label: 'Net revenue', value: money(net), change: comparison(net, prior('net')), tone: tone(net, prior('net')) },
+        { label: 'Gross revenue', value: money(gross), change: comparison(gross, prior('gross')), tone: tone(gross, prior('gross')) },
+        { label: 'Discounts', value: money(discount), description: 'Discount rate ' + (gross ? (discount / gross * 100).toFixed(1) : '0.0') + '%' },
+        { label: 'Refunds', value: money(refund), change: comparison(refund, prior('refund')), tone: tone(refund, prior('refund'), true) },
+        { label: 'Total orders', value: String(visible.length), description: 'Avg order ' + money(visible.length ? net / visible.length : 0) },
+        { label: 'Customers', value: String(new Set(visible.map(row => row.customer)).size), description: 'Unique customers' }
+      ];
+
+      const trendChart = chart({
+        type: 'area',
+        label: 'Daily revenue trend',
+        data: byDay,
+        format: 'currency',
+        currency: 'USD',
+        height: 280,
+        series: [
+          { key: 'gross', label: 'Gross revenue', color: 'var(--color-type-tc)' },
+          { key: 'net', label: 'Net revenue', color: 'var(--color-brand)' }
+        ]
+      });
+
+      const breakdownChart = chart({
+        type: 'bar',
+        barSize: 'thin',
+        label: 'Net revenue by channel',
+        data: breakdown,
+        format: 'currency',
+        currency: 'USD',
+        height: 280,
+        series: [{ key: 'revenue', label: 'Net revenue' }]
+      });
+
+      const tableHTML = table({
+        label: 'Revenue details',
+        columns,
+        rows: visible,
+        minWidth: 980,
+        maxHeight: 360
+      });
+
+      const items = [
+        {
+          span: 12,
+          html: contentSection({
+            title: 'Revenue performance',
+            description: 'October 2026 · USD',
+            actions: filters,
+            content: ''
+          })
+        },
+        ...metrics.map(metric => ({
+          span: 2,
+          tablet: 3,
+          html: metricCard({
+            ...metric,
+            size: 'compact',
+            description: metric.description || 'vs previous ' + days + ' days'
+          })
+        })),
+        {
+          span: 8,
+          html: chartSection({
+            title: 'Revenue trend',
+            description: 'Gross and net revenue by day',
+            chart: trendChart,
+            variant: 'bordered'
+          })
+        },
+        {
+          span: 4,
+          html: chartSection({
+            title: 'By channel',
+            description: 'Net revenue contribution',
+            chart: breakdownChart,
+            variant: 'bordered'
+          })
+        },
+        {
+          span: 12,
+          html: contentSection({
+            title: 'Revenue details',
+            description: visible.length + ' orders · ' + period,
+            content: tableHTML,
+            footer: '<span class="sx-help">' + visible.length + ' orders · Net revenue ' + money(net) + '</span>',
+            variant: 'bordered'
+          })
+        }
+      ];
+
+      document.getElementById('revenue-content').innerHTML = pageLayout(pageGrid({ items }), { variant: 'data' });
+      mount(document.getElementById('revenue-content'));
+    }
+
+    render();
+    mount(document.body);
+
+    document.addEventListener('sui:change', event => {
+      if (event.detail.name === 'revenue-period') {
+        period = event.detail.value;
+        render();
+      } else if (event.detail.name === 'revenue-channel') {
+        channel = event.detail.value;
+        render();
+      }
+    });
+
+    document.addEventListener('click', event => {
+      const option = event.target.closest('[data-select-value]');
+      if (option) {
+        const root = option.closest('[data-select-demo], [data-sui-select]');
+        const input = root?.querySelector('input[type=hidden], select');
+        if (input && (input.name === 'revenue-period' || input.name === 'revenue-channel')) {
+          setTimeout(() => {
+            if (input.name === 'revenue-period') period = input.value;
+            else channel = input.value;
+            render();
+          }, 0);
+        }
+      }
+
+      const item = event.target.closest('[data-tree-key]');
+      if (item?.dataset.treeKey === 'overview') {
+        location.href = 'Dashboard%20overview.html';
+      } else if (item?.dataset.treeKey === 'orders') {
+        location.href = 'Orders.html';
+      } else if (item?.dataset.treeKey === 'customers') {
+        location.href = 'Customers.html';
+      } else if (item && !['revenue', 'launch'].includes(item.dataset.treeKey) && !item.hasAttribute('data-fold')) {
+        showToast('Navigation example · ' + item.textContent.trim());
+      }
+    });
+
+    function exportRevenue() {
+      const escape = value => '"' + String(value).replaceAll('"', '""') + '"';
+      const keys = ['date', 'id', 'customer', 'channel', 'gross', 'discount', 'refund', 'net'];
+      const csv = [keys.join(','), ...visible.map(row => keys.map(key => escape(row[key])).join(','))].join('\r\n');
+      const url = URL.createObjectURL(new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'revenue-report.csv';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    document.addEventListener('click', async event => {
+      const item = event.target.closest('[data-menu-action^="report:"]');
+      if (!item) return;
+      event.stopImmediatePropagation();
+      item.closest('[popover]')?.hidePopover();
+      if (item.dataset.menuAction === 'report:export') {
+        exportRevenue();
+        return;
+      }
+      try {
+        if (item.dataset.menuAction === 'report:share' && navigator.share) {
+          await navigator.share({ title: 'Revenue report', url: location.href });
+        } else {
+          await navigator.clipboard.writeText(location.href);
+          showToast('Report link copied.', 'success');
+        }
+      } catch (error) {
+        if (error.name !== 'AbortError') showToast('Sharing is unavailable in this browser.', 'neutral');
+      }
+    }, true);
+  </script>
+</body>
+</html>

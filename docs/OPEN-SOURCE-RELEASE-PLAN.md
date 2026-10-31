@@ -2,7 +2,8 @@
 
 Status: architecture proposal and source audit, not a published package.
 Audit date: 2026-10-31. Inventory: [OSS-INVENTORY.json](OSS-INVENTORY.json).
-Existing pages remain the working visual reference. This document does not move or rewrite them.
+Execution order, per-component scope and acceptance criteria: [Component API implementation plan](COMPONENT-API-IMPLEMENTATION-PLAN.md). This is the current detailed migration plan; manual screen-reader review is deferred while functional APIs are completed.
+Existing pages remain the working visual reference. Application examples now live under `demos/`; shared classic runtime lives under `src/legacy/`, styles under `src/styles/`. The first four shared builders have an opt-in module preview under `src/components/`; see [COMPONENT-API-PREVIEW.md](COMPONENT-API-PREVIEW.md). The package layout below remains the target, not a completed release.
 
 ## 1. Product and first-release boundary
 
@@ -287,16 +288,16 @@ Keep domain/template entries in examples: Requirement group, Resource list, Agen
 
 | Existing page | Proposed path | Role |
 | --- | --- | --- |
-| Login.html | examples/auth/login/ | Form/social/recovery UI; no real authentication |
-| Dashboard overview.html | examples/dashboard/overview/ | Composition, metrics, charts, activity and custom table columns |
-| Revenue report.html | examples/dashboard/revenue/ | Filters, responsive compact metrics, charts and exports |
-| Orders.html | examples/commerce/orders/ | Search/sort/page, row actions and detail modal |
-| Customers.html | examples/commerce/customers/ | Identity rows, detail and cross-page orders |
-| AI agents demo.html | examples/agent/workspace/ | Chat/project state, attachments, composer and agent progress |
-| Issue workspace.html + JS/CSS | examples/issues/ | Issue navigation, properties, activity and agent delegation simulation |
-| Workspace demo.html | examples/data-workspace/ | Data-table behaviors; reconcile duplicates before promotion |
-| Sales reporting.html | examples/reporting/ | Review overlap with overview/revenue |
-| Requirements dashboard.html | examples/requirements/ | Audit legacy code/dependencies before advertising as a public example |
+| demos/Login.html | examples/auth/login/ | Form/social/recovery UI; no real authentication |
+| demos/Dashboard overview.html | examples/dashboard/overview/ | Composition, metrics, charts, activity and custom table columns |
+| demos/Revenue report.html | examples/dashboard/revenue/ | Filters, responsive compact metrics, charts and exports |
+| demos/Orders.html | examples/commerce/orders/ | Search/sort/page, row actions and detail modal |
+| demos/Customers.html | examples/commerce/customers/ | Identity rows, detail and cross-page orders |
+| demos/AI agents demo.html | examples/agent/workspace/ | Chat/project state, attachments, composer and agent progress |
+| demos/Issue workspace.html + JS/CSS | examples/issues/ | Issue navigation, properties, activity and agent delegation simulation |
+| demos/Workspace demo.html | examples/data-workspace/ | Data-table behaviors; reconcile duplicates before promotion |
+| demos/Sales reporting.html | examples/reporting/ | Review overlap with overview/revenue |
+| demos/Requirements dashboard.html | examples/requirements/ | Audit legacy code/dependencies before advertising as a public example |
 | Sesama landing.html + JS/CSS | apps/landing/ | Marketing only |
 | Design system.html | apps/docs/ | Component API, variants, states and foundations |
 
