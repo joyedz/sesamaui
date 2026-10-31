@@ -24,6 +24,11 @@
 :where(.sui-root) .sx-row {display:flex;align-items:center;gap:var(--space-8);flex-wrap:wrap}
 :where(.sui-root) .sx-muted {color:var(--text-subtle)}
 :where(.sui-root) .sx-help {font-size:var(--font-meta-size);line-height:var(--font-meta-line);color:var(--text-subtle)}
+/* Shared choice row (checkbox/radio + label) used by filters and option lists. */
+:where(.sui-root) .sx-choice {display:flex;align-items:flex-start;gap:var(--space-8);cursor:pointer;font-weight:400}
+:where(.sui-root) .sx-choice input {accent-color:var(--color-brand);margin:2px 0 0;flex:none;width:14px;height:14px}
+/* Shared body inside popover/popup panels; interactive status text overrides it locally. */
+:where(.sui-root) .sx-pop-content {display:grid;gap:var(--space-8);padding:var(--space-8);font-size:var(--font-ui-size);line-height:var(--font-ui-line)}
 @media(prefers-contrast:more) {.sui-root {--color-control-edge:light-dark(#777,#aaa)}}
 @media(forced-colors:active) {
   .sui-root :where(button,.field,.sx-select) {border:1px solid ButtonText;box-shadow:none}

@@ -21,9 +21,10 @@
   display: none;
 }
 
+/* Tool names follow the run typography: subtle, regular. */
 :where(.sui-root) .sx-tool-name {
-  color: var(--text-default);
-  font-weight: 500;
+  color: var(--text-subtle);
+  font-weight: var(--font-regular, 400);
 }
 
 :where(.sui-root) .sx-run-meta {

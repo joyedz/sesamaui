@@ -8,12 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Design system catalog now renders a "Canonical (ESM)" example for every component and block page (legacy examples remain for comparison); see `site/canonical-examples.mjs`.
+- Design system catalog now renders an equivalent "(ESM)" example directly below every legacy variant example, built with the canonical builders from `src/index.mjs` (`site/canonical-examples.mjs`); legacy previews remain for comparison.
 
 ### Fixed
 - Input fields no longer render a double focus outline (stacked inset ring + outer outline); a single inset focus ring remains.
 - Message action icons use compact 20px hit areas with 14px icons and sit 8px below the message text instead of 16px.
 - Recipes now use real builder signatures: badge `tone`, `statusDot({ tone, label })`, avatar initials from `name`, list row `description`, table column `header`, Select `name`/`ariaLabel`, and card `classes` (removing duplicate `class` attributes); Card gains a `classes` option.
+- Popover keeps its free-form content purpose; only its typography and spacing were standardized — shared `.sx-pop-content` styling (8px padding, 8px row gap, UI font size, normal text color) now lives in base styles, and combobox loading/no-results status styling is scoped to the combobox list.
+- Popover adopts the Dropdown/Combobox panel patterns: the shared `.sx-choice` choice-row pattern and thin-scrollbar treatment for `.sx-popover-options` moved into the canonical styles, panel width follows its content, and the catalog examples use the real popover structure (header, body, options list, footer with apply action).
+- Initials avatars default to a name-derived tinted background in both the canonical builder and the legacy bridge (image avatars stay neutral).
+- Catalog ESM previews center inside their example stage; full-width block previews opt out.
+- Tool Call names follow the run typography (subtle, regular) instead of a darker emphasized color.
 - Removed native browser tooltips (`title` attributes) from Sidebar, Composer, Message and File Card controls; accessible names remain via `aria-label`.
 - People List rows use the plain appearance (no card background inside bordered sections).
 - Chart hover info is placed beside the hovered point, bar top or donut segment instead of covering it; donut segments highlight on hover.

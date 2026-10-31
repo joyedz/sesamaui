@@ -64,7 +64,8 @@ export function avatar(options = {}) {
     `font-size:${numSize <= 16 ? 8 : numSize <= 24 ? 12 : 14}px`,
   ];
 
-  const colorMode = color || tone;
+  // Initials avatars default to a name-derived tint; image avatars stay neutral.
+  const colorMode = color || tone || (image ? '' : 'auto');
   if (colorMode === 'auto') {
     const hash = [...(name || 'Jordan Lee')].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 0);
     const chosen = AUTO_TONES[hash % AUTO_TONES.length];
