@@ -1,0 +1,39 @@
+@import url("field.css");
+@import url("popup.css");
+/* Canonical Sesama select styles. Legacy compatibility is generated. */
+:where(.sui-root) .sx-select-options>.hr {height:1px;min-height:1px;background:var(--color-hairline);margin:var(--space-4) 0}
+:where(.sui-root) .sx-select{font:inherit;color:var(--text-default);background:var(--color-base);border:0;box-shadow:inset 0 0 0 1px var(--color-hairline);border-radius:var(--radius-sm);min-height:30px;padding:var(--space-4) var(--space-8);max-width:100%;width:100%}
+:where(.sui-root) .sx-select option,:where(.sui-root) .sx-select optgroup{background:var(--color-base);color:var(--text-default)}
+:where(.sui-root) .sx-select:disabled{opacity:.5}
+:where(.sui-root) .sx-select[aria-invalid=true]{box-shadow:inset 0 0 0 1px var(--color-danger)}
+:where(.sui-root) .sx-select.inline{background:transparent;box-shadow:none;width:auto}
+:where(.sui-root) .sx-select-trigger{display:flex;align-items:center;justify-content:space-between;gap:var(--space-8);text-align:left;padding-inline:var(--space-8);cursor:pointer}
+:where(.sui-root) .sx-select-trigger>:is([data-select-label],[data-sui-select-label]){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.sui-root) .sx-select-trigger>svg{flex:none}
+:where(.sui-root) .sx-select-trigger.inline{background:transparent;box-shadow:none}
+:where(.sui-root) .sx-select-trigger[aria-invalid=true]{box-shadow:inset 0 0 0 1px var(--color-danger)}
+:where(.sui-root) .sx-select-options [aria-selected=true]{background:var(--color-tint);font-weight:500}
+:where(.sui-root) .sx-select-trigger>:is([data-select-label],[data-sui-select-label]){flex:1}
+:where(.sui-root) .sx-select-trigger[aria-expanded=true]{box-shadow:0 0 0 1px var(--color-brand-hover)}
+:where(.sui-root) .sx-select-trigger[aria-expanded=true]>svg:last-child{transform:rotate(180deg)}
+:where(.sui-root) .sx-select:not(:disabled):hover{background:color-mix(in srgb,var(--color-base),var(--color-contrast) 3%)}
+:where(.sui-root) .sx-select-trigger>:is([data-select-label],[data-sui-select-label]){min-width:0}
+:where(.sui-root) .sx-select-trigger{gap:var(--space-8);justify-content:flex-start}
+:where(.sui-root) .sx-select-trigger>:is([data-select-label],[data-sui-select-label]){flex:0 1 auto;min-width:0}
+:where(.sui-root) .sx-select-trigger{min-width:0;max-width:100%;gap:var(--space-8);justify-content:flex-start;overflow:hidden}
+:where(.sui-root) .sx-select-trigger>:is([data-select-label],[data-sui-select-label]){display:block;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.sui-root) .sx-select-trigger>svg{flex:0 0 16px;width:16px;height:16px}
+:where(.sui-root) .sx-select-check{display:none;margin-left:auto;flex:none}
+:where(.sui-root) .sx-select-options [aria-selected=true]>.sx-select-check{display:flex}
+:where(.sui-root) .sx-select{font-size:var(--font-ui-size);font-weight:var(--font-regular)}
+:where(.sui-root) .sx-select{line-height:var(--font-control-line)}
+:where(.sui-root) .sx-select-options [aria-selected=true]{font-weight:var(--font-regular)}
+:where(.sui-root) .sx-select-trigger{transition:background-color var(--motion-fast) var(--ease-standard),color var(--motion-fast) var(--ease-standard)}
+:where(.sui-root) .sx-select-trigger>svg:last-child{transition:transform var(--motion-fast) var(--ease-out)}
+@media(prefers-reduced-motion:reduce){:where(.sui-root) .sx-select-trigger,:where(.sui-root) .sx-select-trigger>svg:last-child{transition:none}}
+:where(.sui-root) .sx-select{min-height:var(--control-size-base)}
+:where(.sui-root) .sx-select{box-shadow:inset 0 0 0 1px var(--color-control-edge)}
+:where(.sui-root) .sx-select-trigger.inline{box-shadow:none}
+:where(.sui-root) .sx-select-trigger:focus-visible,:where(.sui-root) .sx-select-trigger[aria-expanded=true]{outline-color:var(--color-focus)}
+:where(.sui-root) .sx-select-trigger[aria-invalid=true]{box-shadow:inset 0 0 0 1px var(--color-danger)}
+:where(.sui-root) .sx-select-trigger>svg{color:var(--text-subtle)}

@@ -1,0 +1,59 @@
+:where(.sui-root) .ds-canvas,
+:where(.sui-root) .sx-canvas {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  background: var(--color-base);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+:where(.sui-root) .ds-canvas.dotted,
+:where(.sui-root) .sx-canvas.dotted {
+  background-image: radial-gradient(var(--color-hairline) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+:where(.sui-root) .ds-canvas-viewport,
+:where(.sui-root) .sx-canvas-viewport {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  outline: none;
+}
+
+:where(.sui-root) .ds-canvas-viewport:focus-visible,
+:where(.sui-root) .sx-canvas-viewport:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: -2px;
+}
+
+:where(.sui-root) .ds-canvas-viewport.dragging,
+:where(.sui-root) .sx-canvas-viewport.dragging {
+  cursor: grabbing;
+}
+
+:where(.sui-root) .ds-canvas-world,
+:where(.sui-root) .sx-canvas-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: top left;
+  will-change: transform;
+}
+
+:where(.sui-root) .ds-canvas-tools,
+:where(.sui-root) .sx-canvas-tools {
+  position: absolute;
+  right: var(--space-8);
+  top: var(--space-8);
+  z-index: 2;
+  pointer-events: auto;
+}

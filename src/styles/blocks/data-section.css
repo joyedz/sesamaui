@@ -1,0 +1,38 @@
+/* Data Section block */
+:where(.sui-root) .sb-data-section,
+:where(.sui-root) .sx-data-section {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16, 16px);
+}
+
+:where(.sui-root) .sb-section-filters {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8, 8px);
+  flex-wrap: wrap;
+}
+
+:where(.sui-root) .sb-data-content {
+  width: 100%;
+  min-width: 0;
+  overflow: auto;
+}
+
+:where(.sui-root) .sb-data-content table,
+:where(.sui-root) .sb-data-content .sx-table {
+  width: 100%;
+  max-width: none;
+}
+
+:where(.sui-root) .sb-data-pagination {
+  width: 100%;
+  min-width: 0;
+}
+
+:where(.sui-root) .sb-content-footer.sb-pagination-footer {
+  border-top: 0;
+  padding-top: 0;
+}

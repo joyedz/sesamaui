@@ -1,0 +1,11 @@
+@import url("./popup.css");
+
+/* Canonical Sesama menu styles. */
+:where(.sui-root) .sx-menu-list{display:flex;flex-direction:column;min-width:180px;outline:none}
+:where(.sui-root) .sx-menu-list[popover]:not(:popover-open){display:none !important}
+:where(.sui-root) .sx-menu-list:popover-open{display:flex}
+:where(.sui-root) .sx-menu-item{cursor:pointer;user-select:none;border:none;background:transparent;text-align:left;text-decoration:none;color:inherit}
+:where(.sui-root) .sx-menu-item:focus{outline:none}
+:where(.sui-root) .sx-menu-item:focus-visible,:where(.sui-root) .sx-menu-item.active{background:var(--color-tint);outline:none}
+:where(.sui-root) .sx-menu-check,:where(.sui-root) .sx-menu-radio{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;flex:none}
+:where(.sui-root) .sx-menu-preview{display:flex;flex-direction:column;width:100%;background:var(--color-base);border-radius:var(--radius-md);box-shadow:var(--shadow-ring);padding:var(--space-4)}

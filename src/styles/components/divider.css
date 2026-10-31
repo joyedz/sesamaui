@@ -1,0 +1,44 @@
+@import url("../base.css");
+
+:where(.sui-root) .sx-divider.horizontal {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 1px;
+  background: var(--color-hairline);
+  margin: var(--space-4) 0;
+  border: 0;
+}
+
+:where(.sui-root) .sx-divider.vertical {
+  display: inline-flex;
+  width: 1px;
+  height: 100%;
+  min-height: 16px;
+  background: var(--color-hairline);
+  margin: 0 var(--space-4);
+  border: 0;
+  vertical-align: middle;
+}
+
+:where(.sui-root) .sx-divider.has-label {
+  height: auto;
+  background: transparent;
+  gap: var(--space-8);
+  font-size: 11px;
+  color: var(--text-subtle);
+  margin: var(--space-8) 0;
+}
+
+:where(.sui-root) .sx-divider.has-label .sx-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-hairline);
+}
+
+:where(.sui-root) .sx-divider.has-label .sx-divider-label {
+  flex: none;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}

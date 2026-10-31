@@ -1,0 +1,65 @@
+:where(.sui-root) .sx-toolbar,
+:where(.sui-root) .zoom-toolbar {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-base);
+  box-shadow: var(--shadow-ring);
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 20px;
+  box-sizing: border-box;
+}
+
+:where(.sui-root) .sx-toolbar-horizontal,
+:where(.sui-root) .zoom-toolbar:not(.vertical) {
+  flex-direction: row;
+}
+
+:where(.sui-root) .sx-toolbar-vertical,
+:where(.sui-root) .zoom-toolbar.vertical {
+  flex-direction: column;
+}
+
+:where(.sui-root) .sx-toolbar-sm {
+  padding: var(--space-2);
+  gap: var(--space-4);
+}
+
+:where(.sui-root) .sx-toolbar output,
+:where(.sui-root) .zoom-toolbar output {
+  font-size: 11px;
+  color: var(--text-subtle);
+  min-width: 34px;
+  text-align: center;
+  user-select: none;
+}
+
+:where(.sui-root) .sx-toolbar-separator {
+  background: var(--color-hairline);
+  flex-shrink: 0;
+}
+
+:where(.sui-root) .sx-toolbar-horizontal .sx-toolbar-separator {
+  width: 1px;
+  height: 16px;
+  margin: 0 var(--space-2);
+}
+
+:where(.sui-root) .sx-toolbar-vertical .sx-toolbar-separator {
+  width: 16px;
+  height: 1px;
+  margin: var(--space-2) 0;
+}
+
+:where(.sui-root) .sx-toolbar-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+:where(.sui-root) .sx-toolbar-vertical .sx-toolbar-group {
+  flex-direction: column;
+}

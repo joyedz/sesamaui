@@ -1,0 +1,75 @@
+@import url("../base.css");
+@import url("field.css");
+
+:where(.sui-root) .sx-textarea-field {
+  display: grid;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+:where(.sui-root) .sx-textarea-shell {
+  height: auto;
+  min-height: 72px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+:where(.sui-root) .sx-textarea {
+  width: 100%;
+  font: inherit;
+  color: var(--text-default);
+  background: var(--color-base);
+  padding: var(--space-8);
+  border: 1px solid var(--color-control-edge, var(--color-hairline));
+  border-radius: var(--radius-md);
+  min-height: 72px;
+  max-height: 240px;
+  resize: vertical;
+  line-height: 20px;
+  box-sizing: border-box;
+  transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard);
+}
+
+:where(.sui-root) .sx-textarea:focus {
+  outline: none;
+  border-color: var(--color-focus);
+}
+
+:where(.sui-root) .sx-textarea:not(:disabled):hover {
+  background: color-mix(in srgb, var(--color-base), var(--color-contrast) 3%);
+}
+
+:where(.sui-root) .sx-textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+:where(.sui-root) .sx-textarea[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+:where(.sui-root) .sx-textarea-shell.sx-size-sm .sx-textarea {
+  padding: var(--space-6);
+  font-size: var(--font-meta-size);
+  min-height: 56px;
+}
+
+:where(.sui-root) .sx-textarea-shell.sx-size-lg .sx-textarea {
+  padding: var(--space-12);
+  font-size: var(--font-body-size);
+  min-height: 96px;
+}
+
+:where(.sui-root) .sx-counter {
+  text-align: right;
+  font-size: 11px;
+  color: var(--text-placeholder);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.sui-root) .sx-textarea {
+    transition: none;
+  }
+}

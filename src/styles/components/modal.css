@@ -1,0 +1,23 @@
+@import url("../base.css");
+@import url("button.css");
+@import url("icon-button.css");
+/* Canonical Sesama modal styles. Legacy compatibility is generated. */
+:where(.sui-root) .ds-modal{border:0;color:var(--text-default);width:min(400px,calc(100vw - 32px));padding:var(--space-16);border-radius:var(--radius-lg);background:var(--color-base);box-shadow:var(--shadow-dialog)}
+:where(.sui-root) .ds-modal::backdrop{background:color-mix(in srgb,var(--color-contrast) 35%,transparent)}
+:where(.sui-root) .ds-modal h2{font-size:16px;line-height:24px;font-weight:500;margin:0 0 var(--space-8)}
+:where(.sui-root) .ds-modal p{color:var(--text-subtle);margin:0 0 var(--space-16)}
+:where(.sui-root) .ds-modal .actions{display:flex;justify-content:flex-end;gap:var(--space-8);margin-top:var(--space-16)}
+:where(.sui-root) .ds-modal .form-field{max-width:none}
+:where(.sui-root) .ds-modal .field input{width:100%}
+:where(.sui-root) .ds-modal form{margin:0}
+:where(.sui-root) .ds-modal .sx-modal-header{display:flex;align-items:center;justify-content:space-between;gap:var(--space-12);margin-bottom:var(--space-8)}
+:where(.sui-root) .ds-modal .sx-modal-header h2{margin:0;min-width:0}
+:where(.sui-root) .ds-modal .sx-modal-header h2{overflow-wrap:anywhere}
+:where(.sui-root) .ds-modal .sx-modal-close{display:grid;place-items:center;flex:none;width:24px;height:24px;padding:0;border-radius:var(--radius-sm);color:var(--text-subtle)}
+:where(.sui-root) .ds-modal .sx-modal-close:hover{background:var(--color-tint)}
+:where(.sui-root) .ds-modal[data-size=sm]{width:min(288px,calc(100vw - 32px))}
+:where(.sui-root) .ds-modal[data-size=lg]{width:min(512px,calc(100vw - 32px))}
+:where(.sui-root) .ds-modal[data-size=xl]{width:min(768px,calc(100vw - 32px))}
+:where(.sui-root) .ds-modal{max-height:calc(100dvh - 48px);overflow:auto}
+:where(.sui-root) .ds-modal .sx-modal-body{overflow:visible;padding:2px;margin:-2px}
+:where(.sui-root) .ds-modal .sx-modal-body-scroll{max-height:45dvh;overflow:auto}

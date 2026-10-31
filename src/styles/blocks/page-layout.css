@@ -1,0 +1,32 @@
+/* Page Layout block */
+:where(.sui-root) .sb-page-layout,
+:where(.sui-root) .sx-page-layout {
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-24, 24px);
+  margin-inline: auto;
+}
+
+:where(.sui-root) .sb-layout-dashboard {
+  max-width: 1440px;
+}
+
+:where(.sui-root) .sb-layout-data {
+  max-width: none;
+}
+
+:where(.sui-root) .sb-layout-conversation {
+  max-width: 768px;
+}
+
+:where(.sui-root) .sb-page-layout.is-compact,
+:where(.sui-root) .sx-page-layout.is-compact {
+  padding: var(--space-16, 16px);
+}
+
+@media (max-width: 760px) {
+  :where(.sui-root) .sb-page-layout,
+  :where(.sui-root) .sx-page-layout {
+    padding: var(--space-16, 16px);
+  }
+}

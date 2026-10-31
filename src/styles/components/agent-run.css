@@ -1,0 +1,97 @@
+/* Agent Run component */
+:where(.sui-root) .sx-agent-run {
+  width: 100%;
+  font-size: var(--font-ui-size, 13px);
+  line-height: var(--font-ui-line, 20px);
+  color: var(--text-subtle);
+  margin: 0 0 12px;
+}
+
+:where(.sui-root) .sx-agent-run > summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  cursor: pointer;
+  padding: var(--space-2, 2px) 0;
+  min-height: 24px;
+  user-select: none;
+}
+
+:where(.sui-root) .sx-agent-run > summary::-webkit-details-marker {
+  display: none;
+}
+
+:where(.sui-root) .sx-agent-run > summary > svg:last-child {
+  transition: transform var(--motion-fast, 150ms) var(--ease-out, ease-out);
+}
+
+:where(.sui-root) .sx-agent-run[open] > summary > svg:last-child {
+  transform: rotate(180deg);
+}
+
+:where(.sui-root) .sx-run-steps {
+  display: grid;
+  gap: var(--space-8, 8px);
+  padding: var(--space-8, 8px) 0 0;
+}
+
+:where(.sui-root) .sx-run-steps > details {
+  margin: 0;
+}
+
+:where(.sui-root) .sx-run-steps .sx-tool-call > summary,
+:where(.sui-root) .sx-run-steps .sx-thinking-step > summary {
+  padding-block: var(--space-2, 2px);
+  min-height: 24px;
+}
+
+:where(.sui-root) .sx-run-step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-height: 24px;
+  color: var(--text-subtle);
+}
+
+:where(.sui-root) .sx-thinking-step {
+  margin: 0;
+}
+
+:where(.sui-root) .sx-thinking-step > summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  list-style: none;
+  cursor: pointer;
+  padding: var(--space-2, 2px) 0;
+  min-height: 24px;
+  user-select: none;
+}
+
+:where(.sui-root) .sx-thinking-step > summary::-webkit-details-marker {
+  display: none;
+}
+
+:where(.sui-root) .sx-thinking-step > summary > svg:last-child {
+  transition: transform var(--motion-fast, 150ms) var(--ease-out, ease-out);
+}
+
+:where(.sui-root) .sx-thinking-step[open] > summary > svg:last-child {
+  transform: rotate(180deg);
+}
+
+:where(.sui-root) .sx-thinking-detail {
+  padding: var(--space-6, 6px) 0;
+  font-size: var(--font-meta-size, 12px);
+  line-height: 18px;
+  color: var(--text-subtle);
+  white-space: pre-wrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.sui-root) .sx-agent-run > summary > svg:last-child,
+  :where(.sui-root) .sx-thinking-step > summary > svg:last-child {
+    transition: none;
+  }
+}

@@ -1,0 +1,14 @@
+@import url("../base.css");
+
+/* Canonical Sesama tag input styles. */
+:where(.sui-root) .sx-tagbox{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-4);min-height:var(--control-size-base,30px);padding:3px var(--space-6);border:1px solid var(--color-hairline);border-radius:var(--radius-md);background:var(--color-base);transition:background-color var(--motion-fast) var(--ease-standard),color var(--motion-fast) var(--ease-standard),border-color var(--motion-fast) var(--ease-standard)}
+:where(.sui-root) .sx-tagbox input{font:inherit;background:none;color:var(--text-default);border:0;outline:none;min-width:60px;flex:1;width:60px;height:20px;padding:0;line-height:var(--font-control-line,20px);font-size:var(--font-ui-size)}
+:where(.sui-root) .sx-tagbox:focus-within{border-color:var(--color-brand-hover)}
+:where(.sui-root) .sx-tagbox[aria-invalid=true]{border-color:var(--color-danger)}
+:where(.sui-root) .sx-tagbox[data-disabled]{opacity:.5}
+:where(.sui-root) .sx-tagbox:not([data-disabled]):hover{background:color-mix(in srgb,var(--color-base),var(--color-contrast) 3%)}
+:where(.sui-root) .sx-tag{display:flex;align-items:center;height:20px;min-width:0;gap:var(--space-4);max-width:100%;padding:var(--space-2) var(--space-6);background:var(--color-recessed);border-radius:var(--radius-xs);font-size:12px;line-height:16px}
+:where(.sui-root) .sx-tag span{overflow-wrap:anywhere}
+:where(.sui-root) .sx-tag button{width:16px;min-width:16px;height:16px;min-height:16px;padding:0;flex:none;display:grid;place-items:center;border:none;background:none;cursor:pointer;color:inherit;opacity:.7}
+:where(.sui-root) .sx-tag button:hover{opacity:1}
+@media(prefers-reduced-motion:reduce){:where(.sui-root) .sx-tagbox{transition:none}}

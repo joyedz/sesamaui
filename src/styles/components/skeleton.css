@@ -1,0 +1,46 @@
+@import url("../base.css");
+
+:where(.sui-root) .sx-skeleton {
+  background: color-mix(in srgb, var(--color-base), var(--color-contrast) 16%);
+  border-radius: var(--skeleton-radius, var(--radius-xs));
+  height: var(--skeleton-height, 12px);
+  width: var(--skeleton-width, 100%);
+  max-width: 100%;
+  animation: sx-pulse 1.4s ease-in-out infinite;
+}
+
+:where(.sui-root) .sx-skeleton.round {
+  width: var(--skeleton-size, 32px);
+  height: var(--skeleton-size, 32px);
+  border-radius: 50%;
+  flex: none;
+}
+
+:where(.sui-root) .sx-skeleton.line-short {
+  width: var(--skeleton-width, 65%);
+}
+
+:where(.sui-root) .sx-skeleton.card-shape {
+  height: var(--skeleton-height, 100px);
+  border-radius: var(--skeleton-radius, var(--radius-md));
+}
+
+:where(.sui-root) .sx-skeleton.fill {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border-radius: inherit;
+}
+
+:where(.sui-root) .sx-skeleton-layout {
+  display: grid;
+  gap: var(--space-8);
+  width: 100%;
+  min-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.sui-root) .sx-skeleton {
+    animation: none;
+  }
+}

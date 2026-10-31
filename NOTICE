@@ -1,0 +1,16 @@
+Sesama UI
+Copyright (c) 2026 Zihni and Sesama UI contributors.
+Licensed under the MIT License.
+
+This product includes software and assets developed by third parties:
+
+1. Rune Icons
+   Copyright (c) 2026 Rune Icons Team
+   Licensed under the Apache License, Version 2.0.
+   Website: https://runeicons.com
+   Icon artwork in `assets/rune-icons/` and outline SVGs in `src/icons/` are derived from Rune Icons.
+
+2. Inter Typeface
+   Copyright (c) 2016-2024 The Inter Project Authors
+   Licensed under the SIL Open Font License, Version 1.1.
+   Font files in `assets/` and referenced via `src/styles/fonts.css`.

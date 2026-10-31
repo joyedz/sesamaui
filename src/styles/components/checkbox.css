@@ -1,0 +1,92 @@
+@import url("../base.css");
+
+:where(.sui-root) .sx-checkbox-layout {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr);
+  column-gap: var(--space-8);
+  row-gap: var(--space-4);
+  align-items: center;
+}
+
+:where(.sui-root) .sx-checkbox-layout > label {
+  font-weight: 400;
+  cursor: pointer;
+  line-height: 20px;
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sx-checkbox-layout > .sx-help {
+  grid-column: 2;
+  line-height: 15px;
+  color: var(--text-subtle);
+  font-size: var(--font-meta-size);
+}
+
+:where(.sui-root) .sx-checkbox-layout input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  display: inline-grid;
+  place-items: center;
+  margin: 0;
+  width: 14px;
+  height: 14px;
+  flex: none;
+  border: 1px solid var(--text-placeholder);
+  border-radius: var(--radius-xs);
+  background: var(--color-base);
+  vertical-align: middle;
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard);
+}
+
+:where(.sui-root) .sx-checkbox-layout input[type="checkbox"]:checked,
+:where(.sui-root) .sx-checkbox-layout input[type="checkbox"]:indeterminate {
+  background: var(--color-contrast);
+  border-color: var(--color-contrast);
+}
+
+:where(.sui-root) .sx-checkbox-layout input[type="checkbox"]:checked::after {
+  content: "";
+  display: block;
+  width: 12px;
+  height: 12px;
+  background: var(--text-inverse);
+  mask: url("data:image/svg+xml,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cpath%20d%3D%22M20%206L9%2017L4%2012%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%0A%3C%2Fsvg%3E%0A") center/contain no-repeat;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cpath%20d%3D%22M20%206L9%2017L4%2012%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%0A%3C%2Fsvg%3E%0A") center/contain no-repeat;
+}
+
+:where(.sui-root) .sx-checkbox-layout input[type="checkbox"]:indeterminate::after {
+  content: "";
+  display: block;
+  width: 8px;
+  height: 2px;
+  background: var(--text-inverse);
+  mask: none;
+  -webkit-mask: none;
+  border-radius: 1px;
+}
+
+:where(.sui-root) .sx-checkbox-layout:has([aria-invalid="true"]) > label {
+  color: var(--color-danger);
+}
+
+:where(.sui-root) .sx-checkbox-layout input[type="checkbox"][aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+:where(.sui-root) .sx-checkbox-layout:has(:disabled) {
+  opacity: 0.5;
+}
+
+:where(.sui-root) .sx-checkbox-layout:has(:disabled) > label,
+:where(.sui-root) .sx-checkbox-layout input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+}
+
+@media (forced-colors: active) {
+  :where(.sui-root) .sx-checkbox-layout input[type="checkbox"]:checked::after,
+  :where(.sui-root) .sx-checkbox-layout input[type="checkbox"]:indeterminate::after {
+    background: HighlightText;
+  }
+}

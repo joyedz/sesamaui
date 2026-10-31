@@ -1,0 +1,27 @@
+@import url("../base.css");
+
+:where(.sui-root) .sx-loader {
+  width: var(--loader-size, 16px);
+  height: var(--loader-size, 16px);
+  border: 2px solid var(--color-hairline);
+  border-top-color: var(--color-brand-hover);
+  border-radius: 50%;
+  animation: sui-spin 0.8s linear infinite;
+  display: inline-block;
+  flex: none;
+}
+
+:where(.sui-root) .sx-loader-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
+  font-size: var(--font-ui-size);
+  line-height: var(--font-ui-line);
+  color: var(--text-subtle);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.sui-root) .sx-loader {
+    animation: none;
+  }
+}

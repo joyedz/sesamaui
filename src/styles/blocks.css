@@ -1,0 +1,13 @@
+/* Aggregate of structural blocks and domain recipes */
+@import url("blocks/app-shell.css");
+@import url("blocks/workspace-sidebar.css");
+@import url("blocks/page-header.css");
+@import url("blocks/page-layout.css");
+@import url("blocks/page-grid.css");
+@import url("blocks/content-section.css");
+@import url("blocks/data-section.css");
+@import url("blocks/people-list.css");
+@import url("blocks/activity-feed.css");
+@import url("blocks/metric-card.css");
+@import url("blocks/chart-section.css");
+@import url("blocks/recipes.css");

@@ -1,0 +1,6 @@
+@import url("../base.css");
+
+/* Canonical Sesama tooltip styles. */
+:where(.sui-root) .sx-tooltip-wrap{position:relative;display:inline-flex}
+:where(.sui-root) .sx-tooltip{position:fixed;margin:0;inset:auto;border:0;max-width:240px;padding:var(--space-6) var(--space-8);background:var(--color-contrast);color:var(--text-inverse);border-radius:var(--radius-sm);box-shadow:var(--shadow-float);font:inherit;font-size:12px;line-height:16px;z-index:70;pointer-events:none}
+:where(.sui-root) .sx-tooltip:popover-open{display:block}

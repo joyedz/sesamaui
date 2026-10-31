@@ -1,0 +1,104 @@
+/* Metric Card block */
+:where(.sui-root) .sb-metric,
+:where(.sui-root) .sx-metric-card {
+  padding: var(--space-16, 16px);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md, 8px);
+  background: var(--color-base);
+  display: flex;
+  flex-direction: column;
+}
+
+:where(.sui-root) .sb-metric h2 {
+  font-size: var(--font-ui-size, 13px);
+  line-height: var(--font-ui-line, 20px);
+  font-weight: 500;
+  margin: 0;
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sb-metric-summary {
+  display: block;
+}
+
+:where(.sui-root) .sb-metric-value {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 500;
+  margin: var(--space-12, 12px) 0 var(--space-8, 8px);
+  overflow-wrap: anywhere;
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sb-metric-comparison {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+  gap: var(--space-4, 4px);
+  flex-wrap: wrap;
+}
+
+:where(.sui-root) .sb-metric-change {
+  color: var(--text-subtle);
+  font-size: var(--font-meta-size, 12px);
+  line-height: var(--font-meta-line, 16px);
+  font-weight: 400;
+}
+
+:where(.sui-root) .sb-metric-summary:not(.is-compact) .sb-metric-comparison :is(.sb-metric-change, .sx-help) {
+  font-size: 13px;
+  line-height: 20px;
+}
+
+:where(.sui-root) .sb-metric-change[data-tone="success"] {
+  color: var(--color-success);
+}
+
+:where(.sui-root) .sb-metric-change[data-tone="error"] {
+  color: var(--color-danger);
+}
+
+:where(.sui-root) .sb-metric-loading {
+  height: 64px;
+  display: flex;
+  align-items: center;
+}
+
+/* Compact metric */
+:where(.sui-root) .sb-metric.is-compact {
+  padding: var(--space-12, 12px);
+}
+
+/* Dense summaries: compact metrics take wider spans on mid-size viewports. */
+@media (min-width: 720px) and (max-width: 1100px) {
+  :where(.sui-root) .sb-page-grid > .sb-grid-item:has(> .sb-metric.is-compact) {
+    grid-column: span 2;
+  }
+}
+
+@media (min-width: 1101px) and (max-width: 1450px) {
+  :where(.sui-root) .sb-page-grid > .sb-grid-item:has(> .sb-metric.is-compact) {
+    grid-column: span 4;
+  }
+}
+
+:where(.sui-root) .sb-metric.is-compact h2 {
+  font-size: var(--font-meta-size, 12px);
+  line-height: var(--font-meta-line, 16px);
+}
+
+:where(.sui-root) .sb-metric.is-compact .sb-metric-value {
+  font-size: 20px;
+  line-height: 28px;
+  margin: var(--space-8, 8px) 0;
+}
+
+:where(.sui-root) .sb-metric.is-compact .sb-metric-comparison {
+  gap: 4px 6px;
+  align-items: baseline;
+}
+
+:where(.sui-root) .sb-metric.is-compact .sb-metric-comparison :is(.sb-metric-change, .sx-help) {
+  font-size: 11px;
+  line-height: 16px;
+}

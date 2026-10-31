@@ -1,0 +1,93 @@
+@import url("../base.css");
+@import url("icon-button.css");
+
+:where(.sui-root) .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
+  height: 24px;
+  padding: 0 var(--space-8);
+  border-radius: var(--radius-sm);
+  background: var(--color-recessed);
+  font-size: var(--font-ui-size);
+  line-height: var(--font-control-line);
+  font-weight: 500;
+  white-space: nowrap;
+  width: max-content;
+  max-width: 100%;
+  color: var(--text-default);
+  border: 0;
+  cursor: default;
+  transition: background-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+}
+
+:where(.sui-root) button.chip {
+  cursor: pointer;
+}
+
+:where(.sui-root) .chip:hover:not(:disabled) {
+  background: var(--color-tint);
+}
+
+:where(.sui-root) .chip[aria-pressed="true"],
+:where(.sui-root) .chip.selected {
+  box-shadow: inset 0 0 0 1px var(--color-brand-hover);
+  color: var(--color-brand-hover);
+  background: var(--color-brand-tint);
+}
+
+:where(.sui-root) .chip:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+:where(.sui-root) .chip > .ibtn,
+:where(.sui-root) .chip > .sx-chip-remove {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-xs);
+  color: var(--text-subtle);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+:where(.sui-root) .chip > .ibtn:hover,
+:where(.sui-root) .chip > .sx-chip-remove:hover {
+  color: var(--text-default);
+}
+
+:where(.sui-root) .chip[class*="tone-"] {
+  color: var(--tone);
+  background: color-mix(in srgb, var(--tone) 12%, transparent);
+}
+
+:where(.sui-root) .chip.tone-neutral {
+  --tone: var(--text-subtle);
+}
+
+:where(.sui-root) .chip.tone-informative {
+  --tone: var(--color-brand-text);
+}
+
+:where(.sui-root) .chip.tone-success {
+  --tone: var(--color-success);
+}
+
+:where(.sui-root) .chip.tone-warning {
+  --tone: var(--color-warning-solid);
+}
+
+:where(.sui-root) .chip.tone-error {
+  --tone: var(--color-danger);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.sui-root) .chip {
+    transition: none;
+  }
+}

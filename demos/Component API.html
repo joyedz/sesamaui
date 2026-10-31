@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" data-mode="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sesama · Component API preview</title>
+  <link rel="stylesheet" href="../src/styles/components.css">
+  <link rel="stylesheet" href="../src/styles/fonts.css">
+  <style>
+    body{margin:0;background:var(--color-canvas)}
+    main{max-width:720px;margin:64px auto;padding:24px;display:grid;gap:24px}
+    h1{font-size:24px;line-height:32px;font-weight:500;margin:0}
+    p{color:var(--text-subtle);margin:0}
+    form{display:grid;gap:16px;max-width:360px}
+    .api-actions{display:flex;gap:8px;flex-wrap:wrap}
+  </style>
+</head>
+<body>
+  <main class="sui-root">
+    <h1>Component API preview</h1>
+    <p>Shared Sesama components, imported as independent modules.</p>
+    <form id="preview-form"></form>
+    <div id="preview-actions" class="api-actions"></div>
+    <output id="preview-result" aria-live="polite"></output>
+    <div id="preview-dialog"></div>
+  </main>
+  <script type="module">
+    import {button,inputField,select,modal,initModal,mount} from '../src/index.mjs';
+    const form = document.getElementById('preview-form');
+    form.innerHTML = inputField({id:'api-email',name:'email',label:'Email',type:'email',autocomplete:'email',required:true}) +
+      inputField({id:'api-password',name:'password',label:'Password',type:'password',autocomplete:'current-password'}) +
+      select({name:'team',label:'Team',value:'design',groups:[{label:'Teams',options:[{label:'Design',value:'design'},{label:'Engineering',value:'engineering'},{label:'Archived',value:'archived',disabled:true}]}]}) +
+      '<div class="api-actions">' + button({label:'Save',type:'submit',variant:'primary',size:'base'}) + button({label:'Reset',type:'reset',size:'base'}) + '</div>';
+    document.getElementById('preview-actions').innerHTML = button({id:'open-modal',label:'Open modal',variant:'outline',size:'base'});
+    document.getElementById('preview-dialog').innerHTML = modal({id:'api-modal',title:'Review changes',description:'Confirm the selected team.',content:'<p>Your settings are ready to save.</p>'});
+    const session = mount(document.querySelector('main'));
+    const dialog = initModal(document.getElementById('api-modal'));
+    document.getElementById('open-modal').addEventListener('click',event => dialog.open(event.currentTarget));
+    form.addEventListener('submit',event => {if(event.defaultPrevented)return;event.preventDefault();document.getElementById('preview-result').textContent = 'Saved for ' + new FormData(form).get('team') + '.';});
+    window.addEventListener('pagehide',() => session.destroy(),{once:true});
+  </script>
+</body>
+</html>

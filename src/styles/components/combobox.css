@@ -1,0 +1,10 @@
+@import url("./popup.css");
+
+/* Canonical Sesama combobox styles. */
+:where(.sui-root) .sx-combo{position:relative}
+:where(.sui-root) .sx-combo-list [role=option]{cursor:pointer}
+:where(.sui-root) .sx-combo-list [aria-selected=true]{background:var(--color-brand-tint)}
+:where(.sui-root) .sx-combo-list .active{outline:2px solid var(--color-brand-hover);outline-offset:-2px}
+:where(.sui-root) .sx-combo-list [aria-disabled=true]{opacity:.5;cursor:not-allowed}
+:where(.sui-root) .sx-combo-clear{flex:none}
+:where(.sui-root) .sx-pop-content{padding:var(--space-8);color:var(--text-placeholder);font-size:var(--font-meta-size)}

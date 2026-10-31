@@ -1,0 +1,23 @@
+@import url("./popup.css");
+
+/* Canonical Sesama date picker styles. */
+:where(.sui-root) .sx-date-field{width:100%;padding:0 var(--space-8);gap:var(--space-4);display:flex;align-items:center}
+:where(.sui-root) .sx-date-trigger{flex:1;min-width:0;min-height:var(--control-size-base,30px);padding:var(--space-4) 0;text-align:left;font:inherit;background:none;border:none;cursor:pointer;color:var(--text-default);font-size:var(--font-ui-size);line-height:var(--font-control-line)}
+:where(.sui-root) .sx-date-trigger>span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.sui-root) .sx-date-trigger [data-date-display].sx-muted{color:var(--text-placeholder)}
+:where(.sui-root) .sx-date-field:has(:disabled){opacity:.5}
+:where(.sui-root) .sx-date-trigger:disabled{cursor:not-allowed}
+:where(.sui-root) .sx-date-field.invalid{box-shadow:inset 0 0 0 1px var(--color-danger)}
+:where(.sui-root) .sx-date-field [data-date-clear]{flex:none}
+:where(.sui-root) .sx-calendar{width:280px;max-width:calc(100vw - 32px);padding:var(--space-12)}
+:where(.sui-root) .sx-calendar-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-8)}
+:where(.sui-root) .sx-calendar-header strong{font-size:var(--font-ui-size);font-weight:var(--font-medium)}
+:where(.sui-root) .sx-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
+:where(.sui-root) .sx-calendar-grid button{height:28px;text-align:center;border-radius:var(--radius-sm);border:none;background:transparent;cursor:pointer;font:inherit;font-size:var(--font-ui-size);color:inherit}
+:where(.sui-root) .sx-calendar-grid button:hover:not(:disabled){background:var(--color-tint)}
+:where(.sui-root) .sx-calendar-grid button[aria-selected=true]{background:var(--color-brand);color:var(--text-on-brand)}
+:where(.sui-root) .sx-calendar-grid button[aria-current=date]{box-shadow:inset 0 0 0 1px var(--color-brand-hover)}
+:where(.sui-root) .sx-calendar-grid button[data-in-range]{background:var(--color-brand-tint);border-radius:0}
+:where(.sui-root) .sx-calendar-grid button:disabled{opacity:.3;cursor:not-allowed}
+:where(.sui-root) .sx-weekday{text-align:center;font-size:11px;color:var(--text-placeholder);padding:var(--space-4) 0}
+@media(pointer:coarse){:where(.sui-root) .sx-calendar-grid button{min-height:44px}}

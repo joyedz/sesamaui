@@ -1,0 +1,162 @@
+:where(.sui-root) .sc-chart {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  color: var(--text-default);
+}
+
+:where(.sui-root) .sc-svg {
+  display: block;
+  max-width: 100%;
+  overflow: visible;
+}
+
+:where(.sui-root) .sc-svg text {
+  font-family: inherit;
+  font-size: 11px;
+  line-height: 16px;
+  fill: var(--text-subtle);
+  user-select: none;
+}
+
+:where(.sui-root) .sc-svg .sc-total {
+  font-size: 22px;
+  font-weight: 500;
+  fill: var(--text-default);
+}
+
+:where(.sui-root) .sc-grid {
+  stroke: var(--color-hairline);
+  stroke-dasharray: 3 4;
+}
+
+:where(.sui-root) .sc-targets {
+  position: absolute;
+  inset: 0 0 auto;
+  height: var(--sc-height);
+  pointer-events: none;
+}
+
+:where(.sui-root) .sc-target {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+:where(.sui-root) .sc-target:focus-visible {
+  outline: 1px dashed var(--color-brand);
+  outline-offset: -1px;
+}
+
+:where(.sui-root) .sc-svg rect[data-sc-index] {
+  transition: opacity 150ms ease;
+}
+
+:where(.sui-root) .sc-tooltip {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+  background: var(--color-base);
+  color: var(--text-default);
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-float);
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 16px;
+  min-width: 140px;
+  max-width: calc(100% - 8px);
+}
+
+:where(.sui-root) .sc-tooltip[hidden] {
+  display: none !important;
+}
+
+:where(.sui-root) .sc-tooltip > strong {
+  font-weight: 500;
+  display: block;
+}
+
+:where(.sui-root) .sc-tooltip > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+:where(.sui-root) .sc-tooltip b {
+  font-weight: 500;
+  margin-left: auto;
+}
+
+:where(.sui-root) .sc-tooltip i,
+:where(.sui-root) .sc-legend i {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex: none;
+  display: inline-block;
+}
+
+:where(.sui-root) .sc-legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px 0;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+:where(.sui-root) .sc-legend button,
+:where(.sui-root) .sc-legend > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+:where(.sui-root) .sc-legend [aria-pressed="false"] {
+  opacity: 0.4;
+}
+
+:where(.sui-root) .sc-data {
+  font-size: var(--font-meta-size, 12px);
+  line-height: var(--font-meta-line, 16px);
+  margin-top: var(--space-4, 4px);
+}
+
+:where(.sui-root) .sc-data summary {
+  cursor: pointer;
+  color: var(--text-subtle);
+}
+
+:where(.sui-root) .sc-data table {
+  margin-top: var(--space-8, 8px);
+}
+
+:where(.sui-root) .sc-state {
+  height: var(--sc-height);
+  display: grid;
+  place-items: center;
+  color: var(--text-subtle);
+  font-size: 13px;
+}
+
+:where(.sui-root) .sc-svg [data-sc-segment] {
+  cursor: pointer;
+  transition: opacity 150ms ease, stroke-width 150ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.sui-root) .sc-svg [data-sc-segment],
+  :where(.sui-root) .sc-svg rect[data-sc-index] {
+    transition: none !important;
+  }
+}

@@ -133,5 +133,33 @@
       "install"
     ]
   },
-  "icons": 224
+  "icons": 224,
+  "modulePreview": {
+    "status": "experimental; not a published or frozen API",
+    "entry": "src/index.mjs",
+    "exports": [
+      "button",
+      "input",
+      "inputField",
+      "initInput",
+      "select",
+      "initSelect",
+      "modal",
+      "initModal",
+      "mount"
+    ],
+    "styles": "src/styles/",
+    "legacy": "src/legacy/",
+    "cssEntries": [
+      "src/styles/components/button.css",
+      "src/styles/components/field.css",
+      "src/styles/components/select.css",
+      "src/styles/components/modal.css"
+    ],
+    "cssWrapper": ".sui-root",
+    "accessibilityReport": "docs/ACCESSIBILITY-REPORT.md",
+    "functionalTests": "tests/functional.cjs",
+    "formIntegration": "native Input and Select; FormData, constraint validation, submit and reset",
+    "priority": "functional API first; manual screen-reader review deferred"
+  }
 }

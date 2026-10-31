@@ -1,8 +1,12 @@
 {
   "name": "sesamaui-workspace",
-  "version": "0.0.0",
+  "version": "0.1.0-alpha.1",
   "private": true,
   "description": "Sesama UI source, documentation, application examples and agent skill. Pre-release workspace.",
+  "type": "module",
+  "main": "./src/index.mjs",
+  "module": "./src/index.mjs",
+  "types": "./src/index.d.mts",
   "repository": {
     "type": "git",
     "url": "https://github.com/joyedz/sesamaui.git"
@@ -11,12 +15,261 @@
   "bugs": {
     "url": "https://github.com/joyedz/sesamaui/issues"
   },
+  "files": [
+    "src",
+    "assets",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.d.mts",
+      "default": "./src/index.mjs"
+    },
+    "./button": {
+      "types": "./src/components/button.d.mts",
+      "default": "./src/components/button.mjs"
+    },
+    "./input": {
+      "types": "./src/components/input.d.mts",
+      "default": "./src/components/input.mjs"
+    },
+    "./input-field": {
+      "types": "./src/components/input.d.mts",
+      "default": "./src/components/input.mjs"
+    },
+    "./select": {
+      "types": "./src/components/select.d.mts",
+      "default": "./src/components/select.mjs"
+    },
+    "./modal": {
+      "types": "./src/components/modal.d.mts",
+      "default": "./src/components/modal.mjs"
+    },
+    "./badge": {
+      "types": "./src/components/badge.d.mts",
+      "default": "./src/components/badge.mjs"
+    },
+    "./status-dot": {
+      "types": "./src/components/status-dot.d.mts",
+      "default": "./src/components/status-dot.mjs"
+    },
+    "./avatar": {
+      "types": "./src/components/avatar.d.mts",
+      "default": "./src/components/avatar.mjs"
+    },
+    "./label": {
+      "types": "./src/components/label.d.mts",
+      "default": "./src/components/label.mjs"
+    },
+    "./divider": {
+      "types": "./src/components/divider.d.mts",
+      "default": "./src/components/divider.mjs"
+    },
+    "./card": {
+      "types": "./src/components/card.d.mts",
+      "default": "./src/components/card.mjs"
+    },
+    "./banner": {
+      "types": "./src/components/banner.d.mts",
+      "default": "./src/components/banner.mjs"
+    },
+    "./empty-state": {
+      "types": "./src/components/empty-state.d.mts",
+      "default": "./src/components/empty-state.mjs"
+    },
+    "./loader": {
+      "types": "./src/components/loader.d.mts",
+      "default": "./src/components/loader.mjs"
+    },
+    "./skeleton": {
+      "types": "./src/components/skeleton.d.mts",
+      "default": "./src/components/skeleton.mjs"
+    },
+    "./scroll-area": {
+      "types": "./src/components/scroll-area.d.mts",
+      "default": "./src/components/scroll-area.mjs"
+    },
+    "./checkbox": {
+      "types": "./src/components/checkbox.d.mts",
+      "default": "./src/components/checkbox.mjs"
+    },
+    "./radio": {
+      "types": "./src/components/radio.d.mts",
+      "default": "./src/components/radio.mjs"
+    },
+    "./switch": {
+      "types": "./src/components/switch.d.mts",
+      "default": "./src/components/switch.mjs"
+    },
+    "./textarea": {
+      "types": "./src/components/textarea.d.mts",
+      "default": "./src/components/textarea.mjs"
+    },
+    "./chip": {
+      "types": "./src/components/chip.d.mts",
+      "default": "./src/components/chip.mjs"
+    },
+    "./menu": {
+      "types": "./src/components/menu.d.mts",
+      "default": "./src/components/menu.mjs"
+    },
+    "./menu-item": {
+      "types": "./src/components/menu-item.d.mts",
+      "default": "./src/components/menu-item.mjs"
+    },
+    "./popover": {
+      "types": "./src/components/popover.d.mts",
+      "default": "./src/components/popover.mjs"
+    },
+    "./dropdown-menu": {
+      "types": "./src/components/dropdown-menu.d.mts",
+      "default": "./src/components/dropdown-menu.mjs"
+    },
+    "./tooltip": {
+      "types": "./src/components/tooltip.d.mts",
+      "default": "./src/components/tooltip.mjs"
+    },
+    "./toast": {
+      "types": "./src/components/toast.d.mts",
+      "default": "./src/components/toast.mjs"
+    },
+    "./button-group": {
+      "types": "./src/components/button-group.d.mts",
+      "default": "./src/components/button-group.mjs"
+    },
+    "./command-palette": {
+      "types": "./src/components/command-palette.d.mts",
+      "default": "./src/components/command-palette.mjs"
+    },
+    "./combobox": {
+      "types": "./src/components/combobox.d.mts",
+      "default": "./src/components/combobox.mjs"
+    },
+    "./date-picker": {
+      "types": "./src/components/date-picker.d.mts",
+      "default": "./src/components/date-picker.mjs"
+    },
+    "./tag-input": {
+      "types": "./src/components/tag-input.d.mts",
+      "default": "./src/components/tag-input.mjs"
+    },
+    "./tabs": {
+      "types": "./src/components/tabs.d.mts",
+      "default": "./src/components/tabs.mjs"
+    },
+    "./breadcrumbs": {
+      "types": "./src/components/breadcrumbs.d.mts",
+      "default": "./src/components/breadcrumbs.mjs"
+    },
+    "./tree": {
+      "types": "./src/components/tree.d.mts",
+      "default": "./src/components/tree.mjs"
+    },
+    "./list-row": {
+      "types": "./src/components/list-row.d.mts",
+      "default": "./src/components/list-row.mjs"
+    },
+    "./toolbar": {
+      "types": "./src/components/toolbar.d.mts",
+      "default": "./src/components/toolbar.mjs"
+    },
+    "./collapsible": {
+      "types": "./src/components/collapsible.d.mts",
+      "default": "./src/components/collapsible.mjs"
+    },
+    "./table": {
+      "types": "./src/components/table.d.mts",
+      "default": "./src/components/table.mjs"
+    },
+    "./pagination": {
+      "types": "./src/components/pagination.d.mts",
+      "default": "./src/components/pagination.mjs"
+    },
+    "./chart": {
+      "types": "./src/components/chart.d.mts",
+      "default": "./src/components/chart.mjs"
+    },
+    "./wire": {
+      "types": "./src/components/wire.d.mts",
+      "default": "./src/components/wire.mjs"
+    },
+    "./canvas": {
+      "types": "./src/components/canvas.d.mts",
+      "default": "./src/components/canvas.mjs"
+    },
+    "./file-card": {
+      "types": "./src/components/file-card.d.mts",
+      "default": "./src/components/file-card.mjs"
+    },
+    "./message": {
+      "types": "./src/components/message.d.mts",
+      "default": "./src/components/message.mjs"
+    },
+    "./tool-call": {
+      "types": "./src/components/tool-call.d.mts",
+      "default": "./src/components/tool-call.mjs"
+    },
+    "./agent-run": {
+      "types": "./src/components/agent-run.d.mts",
+      "default": "./src/components/agent-run.mjs"
+    },
+    "./composer": {
+      "types": "./src/components/composer.d.mts",
+      "default": "./src/components/composer.mjs"
+    },
+    "./components/*": {
+      "types": "./src/components/*.d.mts",
+      "default": "./src/components/*.mjs"
+    },
+    "./blocks": {
+      "types": "./src/blocks/index.d.mts",
+      "default": "./src/blocks/index.mjs"
+    },
+    "./blocks/*": {
+      "types": "./src/blocks/*.d.mts",
+      "default": "./src/blocks/*.mjs"
+    },
+    "./icons": {
+      "types": "./src/icons/index.d.mts",
+      "default": "./src/icons/index.mjs"
+    },
+    "./icons/*": {
+      "types": "./src/icons/*.d.mts",
+      "default": "./src/icons/*.mjs"
+    },
+    "./runtime": {
+      "types": "./src/runtime.d.mts",
+      "default": "./src/runtime.mjs"
+    },
+    "./css/components.css": "./src/styles/components.css",
+    "./css/blocks.css": "./src/styles/blocks.css",
+    "./css/base.css": "./src/styles/base.css",
+    "./css/tokens.css": "./src/styles/tokens.css",
+    "./css/fonts.css": "./src/styles/fonts.css",
+    "./css/*": "./src/styles/*.css",
+    "./css/components/*": "./src/styles/components/*.css",
+    "./css/blocks/*": "./src/styles/blocks/*.css",
+    "./styles/*": "./src/styles/*"
+  },
   "scripts": {
     "dev": "node tools/serve.mjs",
-    "check": "node tools/check-syntax.cjs"
+    "check": "node tools/build-legacy-bridge.mjs --check && node tools/build-legacy-css.mjs --check && node tools/check-syntax.cjs",
+    "build": "node tools/build-legacy-bridge.mjs && node tools/build-legacy-css.mjs",
+    "test": "node --test tests/api.test.mjs tests/css.test.mjs tests/consumer.test.mjs tests/package.test.mjs",
+    "test:browser": "node tests/browser.cjs",
+    "test:a11y": "node tests/a11y.cjs",
+    "test:keyboard": "node tests/keyboard.cjs",
+    "test:functional": "node tests/functional.cjs"
   },
   "engines": {
     "node": ">=22"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "axe-core": "^4.14.0",
+    "playwright": "^1.64.1",
+    "postcss": "^8.5.32"
+  }
 }

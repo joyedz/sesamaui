@@ -1,0 +1,90 @@
+@import url("../base.css");
+
+:where(.sui-root) .card {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-md);
+  background: var(--color-base);
+  box-shadow: var(--shadow-ring);
+  color: var(--text-default);
+  transition: box-shadow var(--motion-fast) var(--ease-standard);
+}
+
+:where(.sui-root) .card:hover {
+  box-shadow: var(--shadow-float);
+}
+
+:where(.sui-root) .card.on {
+  box-shadow: 0 0 0 1.5px var(--color-brand-hover);
+}
+
+:where(.sui-root) .card.variant-flat {
+  box-shadow: none;
+}
+
+:where(.sui-root) .card.variant-bordered {
+  box-shadow: none;
+  border: 1px solid var(--color-hairline);
+}
+
+:where(.sui-root) .card.variant-recessed {
+  background: var(--color-recessed);
+  box-shadow: none;
+}
+
+:where(.sui-root) .card .ch,
+:where(.sui-root) .card .sx-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-8) var(--space-12);
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+:where(.sui-root) .card.bare .ch,
+:where(.sui-root) .card.bare .sx-card-header {
+  border-bottom: 0;
+}
+
+:where(.sui-root) .card .cb,
+:where(.sui-root) .card .sx-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-8);
+  padding: var(--space-12);
+}
+
+:where(.sui-root) .card:not(.bare) .cb,
+:where(.sui-root) .card:not(.bare) .sx-card-body {
+  padding-top: var(--space-8);
+}
+
+:where(.sui-root) .card .sx-card-title {
+  margin: 0;
+  font-size: var(--font-body-size);
+  font-weight: 500;
+  line-height: var(--font-body-line);
+}
+
+:where(.sui-root) .card .sx-card-description {
+  margin: 0;
+  font-size: var(--font-meta-size);
+  line-height: var(--font-meta-line);
+  color: var(--text-subtle);
+}
+
+:where(.sui-root) .card .cf,
+:where(.sui-root) .card .sx-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-8) var(--space-12);
+  border-top: 1px solid var(--color-hairline);
+}
+
+:where(.sui-root) .card .sx-card-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
