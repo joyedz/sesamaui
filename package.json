@@ -1,8 +1,17 @@
 {
-  "name": "sesamaui-workspace",
+  "name": "sesama-ui",
   "version": "0.1.0-alpha.1",
-  "private": true,
-  "description": "Sesama UI source, documentation, application examples and agent skill. Pre-release workspace.",
+  "private": false,
+  "description": "A shared UI language for dashboards, AI workspaces, and everyday tools. Pure ESM builders, scoped CSS, zero dependencies.",
+  "keywords": [
+    "design-system",
+    "ui",
+    "components",
+    "html",
+    "esm",
+    "vanilla-js",
+    "no-framework"
+  ],
   "type": "module",
   "main": "./src/index.mjs",
   "module": "./src/index.mjs",
@@ -265,6 +274,9 @@
   },
   "engines": {
     "node": ">=22"
+  },
+  "publishConfig": {
+    "tag": "alpha"
   },
   "license": "MIT",
   "devDependencies": {

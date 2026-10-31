@@ -8,10 +8,10 @@ const pkgPath = path.resolve('package.json');
 const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
 
 test('Package manifest: metadata and module configuration', () => {
-  assert.ok(pkg.name, 'Package must have a name');
+  assert.equal(pkg.name, 'sesama-ui', 'Package must publish under the sesama-ui name');
   assert.match(pkg.version, /^\d+\.\d+\.\d+(-[a-zA-Z0-9.]+)?$/, 'Version must follow semver format');
   assert.equal(pkg.type, 'module', 'Package must be ES module (type: module)');
-  assert.equal(pkg.private, true, 'Workspace root must remain private until intentional publication');
+  assert.notEqual(pkg.private, true, 'Package must be publishable; intentional publication is now allowed');
   assert.ok(fs.existsSync(pkg.main), `Main entry ${pkg.main} must exist on disk`);
   assert.ok(fs.existsSync(pkg.types), `Types entry ${pkg.types} must exist on disk`);
   assert.ok(Array.isArray(pkg.files), 'Package files array must be declared');
