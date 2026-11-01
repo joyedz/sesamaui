@@ -89,7 +89,7 @@ export function fileCard(options = {}) {
   } else if (src && type === 'image') {
     previewHTML = `<img src="${escapeHTML(src)}" alt="${escapeHTML(name)}" class="sx-file-image-preview">`;
   } else {
-    previewHTML = `<div class="sx-file-icon-preview">${controlIcon('box', 80)}</div>`;
+    previewHTML = `<div class="sx-file-icon-preview">${controlIcon(iconName, 80)}</div>`;
   }
 
   const extraAttrs = [];

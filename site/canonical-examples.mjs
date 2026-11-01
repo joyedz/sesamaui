@@ -394,9 +394,9 @@ const canonical = {
   },
 
   'File card': {
-    'With preview': () => fileCard({ name: 'MTR-HSG-4200-R02.step', type: 'other' }),
+    'With preview': () => fileCard({ name: 'MTR-HSG-4200-R02.step', type: 'other', expanded: true, preview: `<div class="sx-file-icon-preview">${controlIcon('box', 80)}</div>` }),
     'Without preview': () => fileCard({ name: 'motor.step', type: 'other' }),
-    'Image': () => fileCard({ name: 'landscape.png', type: 'image' }),
+    'Image': () => fileCard({ name: 'landscape.png', type: 'image', src: '/assets/file-preview.svg' }),
     'Document': () => fileCard({ name: 'Project brief.pdf', type: 'document' }),
     'Spreadsheet': () => fileCard({ name: 'Budget.xlsx', type: 'spreadsheet' }),
     'Presentation': () => fileCard({ name: 'Project overview.pptx', type: 'presentation' }),
