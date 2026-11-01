@@ -5,7 +5,7 @@
 :where(.sui-root) .sx-command{padding:var(--space-16);max-width:480px;border-radius:var(--radius-lg)}
 :where(.sui-root) .sx-command .field{width:100%}
 :where(.sui-root) .sx-command-results{display:grid;gap:var(--space-2);max-height:260px;overflow-y:auto;margin-top:var(--space-12);padding:2px;scrollbar-width:thin}
-:where(.sui-root) .sx-command-results .active,:where(.sui-root) .sx-command-results [aria-selected="true"]{background:var(--color-tint);outline:1px solid var(--color-brand-hover)}
+:where(.sui-root) .sx-command-results .active,:where(.sui-root) .sx-command-results [aria-selected="true"]{background:var(--color-tint)}
 :where(.sui-root) .sx-command-results>[role=group]+[role=group]{margin-top:var(--space-8)}
 :where(.sui-root) .sx-command-results .sx-menu-item{white-space:normal;overflow-wrap:anywhere;min-height:28px}
 :where(.sui-root) .sx-command .sx-command-results+p.sx-help{margin-top:var(--space-16);margin-bottom:0}

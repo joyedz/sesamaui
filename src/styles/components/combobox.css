@@ -4,7 +4,7 @@
 :where(.sui-root) .sx-combo{position:relative}
 :where(.sui-root) .sx-combo-list [role=option]{cursor:pointer}
 :where(.sui-root) .sx-combo-list [aria-selected=true]{background:var(--color-brand-tint)}
-:where(.sui-root) .sx-combo-list .active{outline:2px solid var(--color-brand-hover);outline-offset:-2px}
+:where(.sui-root) .sx-combo-list .active{background:var(--color-tint);outline:none}
 :where(.sui-root) .sx-combo-list [aria-disabled=true]{opacity:.5;cursor:not-allowed}
 :where(.sui-root) .sx-combo-clear{flex:none}
 /* Loading / no-results status text inside the combobox list only. */
