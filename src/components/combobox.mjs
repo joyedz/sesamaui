@@ -113,6 +113,7 @@ export function initCombobox(element) {
     onReposition: () => {
       if (isOpen) positionOverlay(anchor, list, 'bottom', { matchWidth: true });
     },
+    closeOnScroll: false
   });
 
   const getVisibleOptions = () => [...list.querySelectorAll('[role="option"]')];
@@ -146,7 +147,7 @@ export function initCombobox(element) {
         const itemsHtml = items.map((opt, i) => {
           const isSelected = currentValue === opt.value;
           const optId = `${escapeHTML(list.id)}-${grp ? escapeHTML(grp.replace(/\s+/g, '-')) + '-' : ''}${i}`;
-          return `<div role="option" id="${optId}" class="sx-menu-item" aria-selected="${isSelected}" aria-disabled="${Boolean(opt.disabled)}" data-combo-value="${escapeHTML(opt.value)}" data-combo-label="${escapeHTML(opt.label)}">${escapeHTML(opt.label)}</div>`;
+          return `<div role="option" id="${optId}" class="sx-menu-item" aria-selected="${isSelected}" aria-disabled="${Boolean(opt.disabled)}" data-sui-combobox-value="${escapeHTML(opt.value)}" data-sui-combobox-label="${escapeHTML(opt.label)}">${escapeHTML(opt.label)}</div>`;
         }).join('');
         if (grp) {
           return `<div role="group" aria-label="${escapeHTML(grp)}"><div class="sx-menu-label">${escapeHTML(grp)}</div>${itemsHtml}</div>`;
@@ -157,7 +158,7 @@ export function initCombobox(element) {
       list.innerHTML = filtered.map((opt, i) => {
         const isSelected = currentValue === opt.value;
         const optId = `${escapeHTML(list.id)}-${i}`;
-        return `<div role="option" id="${optId}" class="sx-menu-item" aria-selected="${isSelected}" aria-disabled="${Boolean(opt.disabled)}" data-combo-value="${escapeHTML(opt.value)}" data-combo-label="${escapeHTML(opt.label)}">${escapeHTML(opt.label)}</div>`;
+        return `<div role="option" id="${optId}" class="sx-menu-item" aria-selected="${isSelected}" aria-disabled="${Boolean(opt.disabled)}" data-sui-combobox-value="${escapeHTML(opt.value)}" data-sui-combobox-label="${escapeHTML(opt.label)}">${escapeHTML(opt.label)}</div>`;
       }).join('');
     }
 
@@ -206,8 +207,8 @@ export function initCombobox(element) {
 
   function commitOption(optEl) {
     if (!optEl || optEl.getAttribute('aria-disabled') === 'true') return;
-    const nextVal = optEl.dataset.comboValue;
-    const nextLbl = optEl.dataset.comboLabel || nextVal;
+    const nextVal = optEl.dataset.suiComboboxValue;
+    const nextLbl = optEl.dataset.suiComboboxLabel || nextVal;
     const prevVal = currentValue;
 
     currentValue = nextVal;
@@ -219,7 +220,7 @@ export function initCombobox(element) {
     if (statusEl) statusEl.textContent = 'Selected ' + nextLbl;
 
     close();
-    input.focus();
+    focusWithoutOpen();
 
     if (nextVal !== prevVal) {
       element.dispatchEvent(new view.CustomEvent('sui:change', {
@@ -238,7 +239,7 @@ export function initCombobox(element) {
     if (clearBtn) clearBtn.hidden = true;
     if (statusEl) statusEl.textContent = '';
     close();
-    input.focus();
+    focusWithoutOpen();
 
     element.dispatchEvent(new view.CustomEvent('sui:change', {
       bubbles: true,
@@ -246,8 +247,18 @@ export function initCombobox(element) {
     }));
   }
 
+  let suppressFocusOpen = false;
+  function focusWithoutOpen() {
+    suppressFocusOpen = true;
+    try { input.focus(); } finally { suppressFocusOpen = false; }
+  }
+
   function onInput() {
     open();
+  }
+
+  function onFocus() {
+    if (!suppressFocusOpen) open();
   }
 
   function onKeyDown(event) {
@@ -317,6 +328,8 @@ export function initCombobox(element) {
 
   input.addEventListener('input', onInput);
   input.addEventListener('keydown', onKeyDown);
+  input.addEventListener('focus', onFocus);
+  input.addEventListener('click', onFocus);
   list.addEventListener('click', onListClick);
   clearBtn?.addEventListener('click', onClearClick);
 

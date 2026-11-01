@@ -2156,7 +2156,7 @@ test('combobox and initCombobox support separate query/value, filtering, and nat
 
   const mockOpt = {
     getAttribute(attr) { return attr === 'aria-disabled' ? 'false' : null; },
-    dataset: { comboValue: 'p1', comboLabel: 'Website' },
+    dataset: { suiComboboxValue: 'p1', suiComboboxLabel: 'Website' },
     classList: { add() {}, remove() {} },
     scrollIntoView() {},
     id: 'c-list-0'

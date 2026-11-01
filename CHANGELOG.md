@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Button Group defaults to the regular button size (sm, 26px) instead of base, matching legacy groups; menu buttons in the catalog use the canonical Dropdown pattern.
 - Checkbox/Radio labels and choice rows no longer select their text on double-click (`user-select: none`); control icons gain the `fields` (grid-2x2 artwork) and `import` (arrow-down-to-line) aliases.
 - Combobox dropdown anchors to the field shell (not the bare input) and matches the field's width via `positionOverlay(matchWidth)`, which now also caps the panel max-width to the trigger width.
+- Combobox opens on focus or click (legacy behavior) with the full option list, scrolling repositions the anchored list instead of closing it, and committing/clearing no longer reopens it; option entries use canonical `data-sui-combobox-*` attributes so legacy global handlers no longer hijack them.
 - Chip defaults to the selectable (clickable) behavior like legacy; the non-interactive label is now the explicit `variant: 'static'`. Active states are tone-aware — success glows green and error glows red (ring, text and background) in both canonical and legacy styles — and chip hover no longer masks the active state.
 - Collapsible content uses the subtle text color (supporting-detail role) and the catalog example renders check-icon steps without default bullets, matching legacy.
 - Initials avatars default to a name-derived tinted background in both the canonical builder and the legacy bridge (image avatars stay neutral).
