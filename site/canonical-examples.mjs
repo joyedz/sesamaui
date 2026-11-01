@@ -187,17 +187,13 @@ const canonical = {
     'Text / default': () => inputField({ label: '', ariaLabel: 'Project name', placeholder: 'Project name' }),
     'Filled': () => inputField({ label: '', ariaLabel: 'Project name', value: 'Website redesign' }),
     'Disabled': () => inputField({ label: '', ariaLabel: 'Project name', placeholder: 'Project name', disabled: true }),
-    'Invalid': () => inputField({ label: 'Project name', ariaLabel: 'Project name', invalid: true, error: 'Check this value and try again.' }),
-    'Sizes': () => row(
-      inputField({ label: 'Small', ariaLabel: 'Small input', size: 'sm', placeholder: 'Project name' }),
-      inputField({ label: 'Base', ariaLabel: 'Base input', placeholder: 'Project name' }),
-      inputField({ label: 'Large', ariaLabel: 'Large input', size: 'lg', placeholder: 'Project name' })
-    ),
-    'Type: text': () => inputField({ label: 'Project name', name: 'project', placeholder: 'Project name' }),
-    'Type: email': () => inputField({ label: 'Email', name: 'email', type: 'email', placeholder: 'name@example.com' }),
-    'Type: number': () => inputField({ label: 'Count', name: 'count', type: 'number', placeholder: '5' }),
-    'Type: url': () => inputField({ label: 'Website', name: 'website', type: 'url', placeholder: 'https://example.com' }),
-    'Prefix and suffix': () => inputField({ label: 'Website', name: 'website', prefix: 'https://', suffix: '.com' })
+    'Invalid': () => inputField({ label: '', ariaLabel: 'Project name', invalid: true }),
+    'Sizes': () => `<div class="sx-stack">${['sm', 'base', 'lg'].map(size => `<div class="sx-stack"><span class="sx-help">${{ sm: 'Small · 26px', base: 'Base · 30px', lg: 'Large · 34px' }[size]}</span>${inputField({ label: '', ariaLabel: `Project name ${size}`, size, placeholder: 'Project name' })}</div>`).join('')}</div>`,
+    'Type: text': () => inputField({ label: '', ariaLabel: 'Project name', placeholder: 'Project name' }),
+    'Type: email': () => inputField({ label: '', ariaLabel: 'Email', type: 'email', placeholder: 'name@example.com' }),
+    'Type: number': () => inputField({ label: '', ariaLabel: 'Count', type: 'number', placeholder: '5' }),
+    'Type: url': () => inputField({ label: '', ariaLabel: 'Website', type: 'url', placeholder: 'https://example.com' }),
+    'Prefix and suffix': () => inputField({ label: '', ariaLabel: 'Website', name: 'website', prefix: 'https://', suffix: '.com' })
   },
 
   'Input Field': {
