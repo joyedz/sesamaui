@@ -75,11 +75,12 @@ export function initDropdownMenu(element) {
   const dismissManager = createDismissManager({
     popup: menuList,
     trigger,
+    closeOnScroll: false,
     onDismiss: (reason) => {
       close(reason === 'escape');
     },
     onReposition: () => {
-      if (isOpen) positionOverlay(trigger, menuList, placement);
+      if (isOpen) positionOverlay(trigger, menuList, placement, { gap: 6 });
     },
   });
 
@@ -88,7 +89,7 @@ export function initDropdownMenu(element) {
     isOpen = true;
     trigger.setAttribute('aria-expanded', 'true');
     menuList.showPopover();
-    positionOverlay(trigger, menuList, placement);
+    positionOverlay(trigger, menuList, placement, { gap: 6 });
     dismissManager.bind();
 
     if (focusTarget === 'first') {

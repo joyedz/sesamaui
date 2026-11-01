@@ -245,7 +245,7 @@ function formatRangeDisplay(start,end){const a=start&&start.match(/^(\d{4})-(\d{
  function activateTab(tab){const root=tab.closest('.sx-tabs');root.querySelectorAll('[role=tab]').forEach(t=>{const active=t===tab;t.classList.toggle('on',active);t.setAttribute('aria-selected',String(active));t.tabIndex=active?0:-1;document.getElementById(t.getAttribute('aria-controls')).hidden=!active})}
  document.addEventListener('click',event=>{const tab=event.target.closest('.sx-tabs [role=tab]');if(tab&&!tab.disabled)activateTab(tab)});
  // Dismiss anchored menus when their surrounding page or container scrolls.
- document.addEventListener('scroll',event=>{clearTimeout(tooltipTimer);document.querySelectorAll('[role=tooltip]:popover-open').forEach(popup=>popup.hidePopover());document.querySelectorAll('[popover][role="menu"]:popover-open').forEach(menu=>{if(event.target instanceof Node&&menu.contains(event.target))return;if(menu._anchorTrigger&&Math.abs(menu._anchorTrigger.getBoundingClientRect().top-menu._anchorTop)<1)return;menu.hidePopover()})},{capture:true,passive:true});
+document.addEventListener('scroll',event=>{clearTimeout(tooltipTimer);document.querySelectorAll('[role=tooltip]:popover-open').forEach(popup=>popup.hidePopover());document.querySelectorAll('[popover][role="menu"]:popover-open').forEach(menu=>{if(menu.hasAttribute('data-sui-menu'))return;if(event.target instanceof Node&&menu.contains(event.target))return;if(menu._anchorTrigger&&Math.abs(menu._anchorTrigger.getBoundingClientRect().top-menu._anchorTop)<1)return;menu.hidePopover()})},{capture:true,passive:true});
  window.addEventListener('resize',()=>document.querySelectorAll('[data-sx-popup]:popover-open').forEach(p=>position(p,triggerFor(p))));
 
  const descriptions={

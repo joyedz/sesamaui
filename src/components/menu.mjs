@@ -153,8 +153,8 @@ export function initMenu(element) {
     const trigger = element.ownerDocument?.querySelector(`[popovertarget="${element.id}"]`);
     if (trigger) trigger.setAttribute('aria-expanded', String(event.newState === 'open'));
     if (event.newState === 'open') {
-      if (trigger) {
-        positionOverlay(trigger, element, 'bottom', { align: 'end' });
+      if (trigger && !element.closest?.('[data-sui-dropdown]')) {
+        positionOverlay(trigger, element, 'bottom', { gap: 6 });
       }
       const first = getEnabledItems()[0];
       first?.focus({ preventScroll: true });
@@ -168,15 +168,16 @@ export function initMenu(element) {
 
   function onScroll(event) {
     if (destroyed || !element.matches?.(':popover-open')) return;
-    if (!event.target || !(event.target instanceof (view.Node || Object)) || !element.contains(event.target)) {
-      try { element.hidePopover(); } catch {}
-    }
+    if (!event.target || !(event.target instanceof (view.Node || Object)) || element.contains(event.target)) return;
+    if (element.closest?.('[data-sui-dropdown]')) return; // dropdown controller owns repositioning
+    const trigger = element.ownerDocument?.querySelector(`[popovertarget="${element.id}"]`);
+    if (trigger) positionOverlay(trigger, element, 'bottom', { gap: 6 });
   }
 
   function onResize() {
     if (destroyed || !element.matches?.(':popover-open')) return;
     const trigger = element.ownerDocument?.querySelector(`[popovertarget="${element.id}"]`);
-    if (trigger) positionOverlay(trigger, element, 'bottom', { align: 'end' });
+    if (trigger && !element.closest?.('[data-sui-dropdown]')) positionOverlay(trigger, element, 'bottom', { gap: 6 });
   }
 
   if (element.hasAttribute?.('popover')) {
@@ -200,11 +201,11 @@ export function initMenu(element) {
     },
     focusFirst() {
       const enabled = getEnabledItems();
-      enabled[0]?.focus();
+      enabled[0]?.focus({ preventScroll: true });
     },
     focusLast() {
       const enabled = getEnabledItems();
-      enabled[enabled.length - 1]?.focus();
+      enabled[enabled.length - 1]?.focus({ preventScroll: true });
     },
     destroy() {
       if (destroyed) return;
