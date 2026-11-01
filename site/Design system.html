@@ -257,7 +257,7 @@ function componentExamples(x){
  'Chip':()=>TONES.map(t=>ex(t,tag('Design',t))),
  'Label':()=>TONES.map(t=>ex(t,label(t,t))),
  'Wire':()=>['bezier','step'].map(t=>ex(t,wire(t))),
- 'Divider':()=>[ex('Horizontal','<div class="hr" style="width:220px"></div>'),ex('Vertical','<div class="divider-vertical" role="separator" aria-orientation="vertical"></div>')],
+'Divider':()=>[ex('Horizontal','<div class="hr" style="width:220px"></div>'),ex('With label','<div class="hr has-label" style="width:220px"><span class="sx-divider-line" aria-hidden="true"></span><span class="sx-divider-label">Section</span><span class="sx-divider-line" aria-hidden="true"></span></div>'),ex('Vertical','<div class="divider-vertical" role="separator" aria-orientation="vertical"></div>')],
  'Select':()=>[ex('Input Field',sel('Base','Base,Review,Approved','branch','',200)),ex('Inline',sel('Base','Base,Review,Approved','branch','inline',200)),ex('Disabled',sel('Base','Base,Review').replace('<button ','<button disabled '))],
  'Tabs':()=>[ex('Segmented',seg(['Table','Tree','Reader'],'Tree','seg')),ex('Pill',seg(['Agent','Automations'],'Agent','pill'))],
  'Breadcrumbs':()=>[ex('With icons',`<nav class="mr" aria-label="Breadcrumb">${btn('Workspace','ghost','folder')}${ic('chevR',11)}${btn('Projects','ghost','doc')}</nav>`),ex('Plain',`<nav class="mr" aria-label="Breadcrumb">${btn('Home','ghost')}${ic('chevR',11)}${btn('Systems','ghost')}</nav>`)],

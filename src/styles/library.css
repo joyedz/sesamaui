@@ -197,6 +197,9 @@ html:has(dialog[open]),body:has(dialog[open]){overflow:hidden}.sx-calendar-grid>
 
 .sx-table thead.sticky th{background:var(--color-base)}
 
+/* Labeled divider shares the canonical labeled-divider anatomy. */
+.hr.has-label{display:flex;align-items:center;height:auto;background:transparent;gap:var(--space-8);font-size:11px;color:var(--text-subtle);margin:var(--space-8) 0}.hr.has-label .sx-divider-line{flex:1;height:1px;background:var(--color-hairline)}.hr.has-label .sx-divider-label{flex:none;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+
 .sx-tree-section .sx-tree-section-header>h2{margin-left:var(--space-8)}
 
 .sx-agent-run,.sx-tool-call{width:100%;font-size:13px;line-height:20px;color:var(--text-subtle);margin:0 0 12px}.sx-agent-run>summary,.sx-tool-call>summary{list-style:none;display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 0}.sx-agent-run>summary::-webkit-details-marker,.sx-tool-call>summary::-webkit-details-marker{display:none}.sx-run-meta{font-size:12px;line-height:16px;color:var(--text-placeholder);margin-left:auto}.sx-run-steps{display:grid;gap:8px;padding:12px 0 0}.sx-run-step{display:flex;align-items:center;gap:8px}.sx-tool-body{display:grid;gap:12px;padding:12px;border-left:1px solid var(--color-hairline)}.sx-tool-body strong{font-size:12px;font-weight:500}.sx-tool-body pre{font:12px/18px ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0 0}.sx-agent-run>summary>svg:last-child,.sx-tool-call>summary>svg:last-child{transition:transform var(--motion-fast) var(--ease-out)}.sx-agent-run[open]>summary>svg:last-child,.sx-tool-call[open]>summary>svg:last-child{transform:rotate(180deg)}.sx-agent-actions .ibtn[aria-pressed=true]{color:var(--color-brand);background:var(--color-brand-tint)}

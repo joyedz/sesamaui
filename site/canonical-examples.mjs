@@ -244,7 +244,8 @@ const canonical = {
   },
 
   'Divider': {
-    'Horizontal': () => divider({ label: 'Section' }),
+    'Horizontal': () => divider({ attributes: 'style="width:220px"' }),
+    'With label': () => divider({ label: 'Section', attributes: 'style="width:220px"' }),
     'Vertical': () => divider({ orientation: 'vertical', attributes: 'style="height:48px"' })
   },
 
