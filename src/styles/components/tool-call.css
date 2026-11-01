@@ -72,8 +72,22 @@
   transform: rotate(180deg);
 }
 
+/* Expand/collapse: height animates where ::details-content is supported. */
+:where(.sui-root) .sx-tool-call::details-content {
+  height: 0;
+  overflow: hidden;
+  transition: height var(--motion-base) var(--ease-out), content-visibility var(--motion-base) allow-discrete;
+}
+
+:where(.sui-root) .sx-tool-call[open]::details-content {
+  height: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   :where(.sui-root) .sx-tool-call > summary > svg:last-child {
+    transition: none;
+  }
+  :where(.sui-root) .sx-tool-call::details-content {
     transition: none;
   }
 }

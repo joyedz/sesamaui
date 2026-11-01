@@ -89,9 +89,27 @@
   white-space: pre-wrap;
 }
 
+/* Expand/collapse: height animates where ::details-content is supported;
+   other browsers toggle instantly. */
+:where(.sui-root) .sx-agent-run::details-content,
+:where(.sui-root) .sx-thinking-step::details-content {
+  height: 0;
+  overflow: hidden;
+  transition: height var(--motion-base) var(--ease-out), content-visibility var(--motion-base) allow-discrete;
+}
+
+:where(.sui-root) .sx-agent-run[open]::details-content,
+:where(.sui-root) .sx-thinking-step[open]::details-content {
+  height: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   :where(.sui-root) .sx-agent-run > summary > svg:last-child,
   :where(.sui-root) .sx-thinking-step > summary > svg:last-child {
+    transition: none;
+  }
+  :where(.sui-root) .sx-agent-run::details-content,
+  :where(.sui-root) .sx-thinking-step::details-content {
     transition: none;
   }
 }
