@@ -2231,7 +2231,7 @@ test('datePicker and initDatePicker support direct opening, calendar grid naviga
   assert.match(singleHtml, /data-sui-date-picker/);
   assert.match(singleHtml, /data-date-mode="single"/);
   assert.match(singleHtml, /data-sui-date-hidden[^>]*value="2026-10-31"/);
-  assert.match(singleHtml, /2026-10-31<\/span>/);
+  assert.match(singleHtml, /Oct 31, 2026<\/span>/);
   assert.match(singleHtml, /data-date-clear/);
   assert.match(singleHtml, /data-calendar-content/);
 
@@ -2242,7 +2242,7 @@ test('datePicker and initDatePicker support direct opening, calendar grid naviga
     value: '2026-10-01 – 2026-10-15',
   });
   assert.match(rangeHtml, /data-date-mode="range"/);
-  assert.match(rangeHtml, /2026-10-01 – 2026-10-15/);
+  assert.match(rangeHtml, /Oct 1 – 15, 2026/);
 
   // Controller interaction
   let dateChange = null;

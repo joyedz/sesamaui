@@ -20,6 +20,31 @@ function parseISO(str) {
   return new Date(y, m, d);
 }
 
+function formatDate(iso) {
+  const date = parseISO(iso);
+  return date ? date.toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' }) : (iso || '');
+}
+
+function formatRangeDisplay(start, end) {
+  const a = parseISO(start);
+  const b = parseISO(end);
+  if (!a || !b) return `${formatDate(start)} – ${formatDate(end)}`;
+  if (a.getTime() === b.getTime()) return formatDate(start);
+  if (a.getFullYear() === b.getFullYear()) {
+    if (a.getMonth() === b.getMonth()) {
+      return `${a.toLocaleDateString('en', { month: 'short', day: 'numeric' })} – ${b.getDate()}, ${b.getFullYear()}`;
+    }
+    return `${a.toLocaleDateString('en', { month: 'short', day: 'numeric' })} – ${b.toLocaleDateString('en', { month: 'short', day: 'numeric' })}, ${b.getFullYear()}`;
+  }
+  return `${formatDate(start)} – ${formatDate(end)}`;
+}
+
+function formatValueDisplay(value, isRange) {
+  if (!isRange) return formatDate(value);
+  const parts = value.split('–').map(s => s.trim());
+  return parts.length === 2 && parts[0] && parts[1] ? formatRangeDisplay(parts[0], parts[1]) : formatDate(value);
+}
+
 /**
  * Pure builder for Date Picker control.
  *
@@ -52,7 +77,7 @@ export function datePicker(options = {}) {
   const isRange = mode === 'range';
   const defaultPlaceholder = isRange ? 'Choose date range' : 'Choose date';
   const displayPlaceholder = placeholder || defaultPlaceholder;
-  const displayValue = value || displayPlaceholder;
+  const displayValue = value ? formatValueDisplay(value, isRange) : displayPlaceholder;
   const isInvalid = Boolean(invalid || error);
 
   const clearBtn = `<button type="button" class="ibtn" data-date-clear aria-label="Clear ${isRange ? 'date range' : 'date'}" ${value && !disabled ? '' : 'hidden'}>${controlIcon('x', 14)}</button>`;
@@ -157,8 +182,8 @@ export function initDatePicker(element) {
   function updateDisplay() {
     const defaultPlaceholder = isRange ? 'Choose date range' : 'Choose date';
     const text = isRange
-      ? (rangeStart ? `${rangeStart} – ${rangeEnd || 'Choose end date'}` : '')
-      : currentValue;
+      ? (rangeStart ? (rangeEnd ? formatRangeDisplay(rangeStart, rangeEnd) : `${formatDate(rangeStart)} – Choose end date`) : '')
+      : formatDate(currentValue);
 
     if (displaySpan) {
       displaySpan.textContent = text || defaultPlaceholder;
