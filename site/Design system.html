@@ -160,7 +160,7 @@ function formExample(kind,variant='default'){
  return SESAMA_UI.inputField({id:`example-field-${++formExampleId}`,label:password?'Password':phone?'Phone number':'Email',name:phone?'phone':password?'password':'email',type,passwordToggle:password,autocomplete:phone?'tel':password?'new-password':'email',placeholder:phone?(variant==='country prefix'?'812 3456 7890':'+62 812 3456 7890'):password?'Enter password':'name@example.com',value:variant==='filled'||readonly?(phone?'+62 812 3456 7890':password?'Demo-password':'jordan@example.com'):'',disabled:variant==='disabled',readonly,invalid:variant==='invalid',required:variant==='required',prefix:phone&&variant==='country prefix'?'+62':'',helper:variant==='helper'?(phone?'Include your country code.':password?'Use at least 8 characters for a new password.':'We will use this address to contact you.'):'',error:variant==='invalid'?'Check this value and try again.':''});
 }
 
-C.push(['Components','Input Field','Input Field','default, helper, required, invalid, disabled','Label, Input',formExample('Input Field','helper')]);
+C.push(['Components','Input Field','Input Field','default, helper, required, invalid; password and phone compositions','Label, Input',formExample('Input Field','helper')]);
 
 
 function toastExample(tone='neutral',persistent=false){return `<button class="btn secondary" data-demo-toast="${tone}" data-message="${tone==='error'?'Unable to save changes. Try again.':tone==='success'?'Changes saved successfully.':'Your export is ready.'}" ${persistent?'data-persistent':''}>Show ${persistent?'persistent ':''}${tone} toast</button>`}
@@ -220,9 +220,10 @@ function componentExamples(x){
  'Toast':()=>['neutral','informative','success','error'].map(t=>ex(t,toastExample(t),'Automatically dismisses after 3 seconds. You can also close it manually.')).concat([ex('Persistent',toastExample('informative',true),'Remains until explicitly dismissed.')]),
  'Canvas':()=>['dotted','empty'].map(v=>ex(v==='dotted'?'Dotted (default)':'Empty',canvasExample(v),'A domain-neutral scrollable workspace. Use zoom controls or fit to width. Layout and business data belong to the page.')),
  'Modal':()=>['default','confirmation','form'].map(v=>ex(v,modalExample(v),'Opens a native modal dialog with focus containment. Escape, Cancel, or the backdrop closes it and returns focus.')),
- 'Input Field':()=>['default','helper','required','invalid','disabled'].map(v=>ex(v,formExample('Input Field',v),'The label is linked to its input. Helper and error text use aria-describedby.')).concat([
- ...['default','visible','filled','invalid','disabled'].map(v=>ex(`Password / ${v}`,formExample('Password Input',v),'Input type password, with an accessible visibility toggle.')),
- ...['default','country prefix','filled','read only','invalid','disabled'].map(v=>ex(`Phone / ${v}`,formExample('Phone Input',v),'Input type tel with autocomplete tel. Country prefix is optional.'))
+ 'Input Field':()=>['default','helper','required','invalid'].map(v=>ex(v,formExample('Input Field',v),'The label is linked to its input. Helper and error text use aria-describedby. Control states like disabled and read only live on the Input page.')).concat([
+ ex('Password / default',formExample('Password Input','default'),'Input type password, with an accessible visibility toggle.'),
+ ex('Password / invalid',formExample('Password Input','invalid'),'The visibility toggle composes with the error message.'),
+ ex('Phone / country prefix',formExample('Phone Input','country prefix'),'Input type tel with autocomplete tel. Country prefix is optional. The prefix example has a fixed +62 country code.')
  ]),
  'Password Input':()=>['default','visible','filled','invalid','disabled'].map(v=>ex(v,formExample('Password Input',v),'Use the visibility button to reveal or conceal the password.')),
  'Phone Input':()=>['default','country prefix','filled','read only','invalid','disabled'].map(v=>ex(v,formExample('Phone Input',v),'Use a telephone keyboard. Formatting and validation depend on the supported countries. The prefix example has a fixed +62 country code.')),

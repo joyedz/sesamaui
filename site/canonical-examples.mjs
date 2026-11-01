@@ -204,19 +204,10 @@ const canonical = {
     'default': () => inputField({ label: 'Email', name: 'email', type: 'email', placeholder: 'name@example.com' }),
     'helper': () => inputField({ label: 'Email', name: 'email', type: 'email', placeholder: 'name@example.com', helper: 'We will use this address to contact you.' }),
     'required': () => inputField({ label: 'Email', name: 'email', type: 'email', placeholder: 'name@example.com', required: true }),
-    'invalid': () => inputField({ label: 'Email', name: 'email', type: 'email', invalid: true, error: 'Check this value and try again.' }),
-    'disabled': () => inputField({ label: 'Email', name: 'email', type: 'email', disabled: true }),
+    'invalid': () => inputField({ label: 'Email', name: 'email', type: 'email', placeholder: 'name@example.com', invalid: true, error: 'Check this value and try again.' }),
     'Password / default': () => inputField({ label: 'Password', name: 'password', type: 'password', passwordToggle: true }),
-    'Password / visible': () => inputField({ label: 'Password', name: 'password', type: 'text', passwordToggle: true }),
-    'Password / filled': () => inputField({ label: 'Password', name: 'password', type: 'password', passwordToggle: true, value: 'Demo-password' }),
     'Password / invalid': () => inputField({ label: 'Password', name: 'password', type: 'password', passwordToggle: true, invalid: true, error: 'Use at least 8 characters.' }),
-    'Password / disabled': () => inputField({ label: 'Password', name: 'password', type: 'password', passwordToggle: true, disabled: true }),
-    'Phone / default': () => inputField({ label: 'Phone number', name: 'phone', type: 'tel', placeholder: '+62 812 3456 7890' }),
-    'Phone / country prefix': () => inputField({ label: 'Phone number', name: 'phone', type: 'tel', phonePrefix: true, prefix: '+62', placeholder: '812 3456 7890' }),
-    'Phone / filled': () => inputField({ label: 'Phone number', name: 'phone', type: 'tel', value: '+62 812 3456 7890' }),
-    'Phone / read only': () => inputField({ label: 'Phone number', name: 'phone', type: 'tel', value: '+62 812 3456 7890', readonly: true }),
-    'Phone / invalid': () => inputField({ label: 'Phone number', name: 'phone', type: 'tel', invalid: true, error: 'Enter a valid phone number.' }),
-    'Phone / disabled': () => inputField({ label: 'Phone number', name: 'phone', type: 'tel', disabled: true })
+    'Phone / country prefix': () => inputField({ label: 'Phone number', name: 'phone', type: 'tel', phonePrefix: true, prefix: '+62', placeholder: '812 3456 7890' })
   },
 
   'Chip': {
