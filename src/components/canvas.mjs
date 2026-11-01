@@ -1,8 +1,18 @@
 import { escapeHTML, uid } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
+import { toolbar } from './toolbar.mjs';
 
 function renderZoomToolbar() {
-  return `<div class="zoom-toolbar sx-toolbar sx-toolbar-horizontal sx-toolbar-sm" role="toolbar" aria-label="Canvas controls" aria-orientation="horizontal"><output aria-live="polite">100%</output><button type="button" class="ibtn raised" data-canvas-zoom="-0.1" aria-label="Zoom out">${controlIcon('minus', 16)}</button><button type="button" class="ibtn raised" data-canvas-zoom="0.1" aria-label="Zoom in">${controlIcon('plus', 16)}</button><button type="button" class="ibtn raised" data-canvas-zoom="fit" aria-label="Fit to screen">${controlIcon('fit', 16)}</button></div>`;
+  return toolbar({
+    ariaLabel: 'Canvas controls',
+    variant: 'rail',
+    items: [
+      '<output aria-live="polite">100%</output>',
+      { icon: 'minus', variant: 'raised', ariaLabel: 'Zoom out', attributes: 'data-canvas-zoom="-0.1"' },
+      { icon: 'plus', variant: 'raised', ariaLabel: 'Zoom in', attributes: 'data-canvas-zoom="0.1"' },
+      { icon: 'fit', variant: 'raised', ariaLabel: 'Fit to screen', attributes: 'data-canvas-zoom="fit"' }
+    ]
+  });
 }
 
 /**

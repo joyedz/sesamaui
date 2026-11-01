@@ -6,7 +6,7 @@ function renderSeparator(separator = 'chevron-right') {
     return separator;
   }
   try {
-    return controlIcon(separator, 12);
+    return controlIcon(separator, 11);
   } catch {
     return escapeHTML(separator);
   }
@@ -50,13 +50,14 @@ export function breadcrumbs(options = {}) {
     const iconHtml = item.icon ? `<span class="sx-breadcrumb-icon" aria-hidden="true">${controlIcon(item.icon, 14)}</span>` : '';
     const labelHtml = escapeHTML(item.label || '');
 
+    // Crumbs share the ghost-button pattern (metrics and hover of Button ghost).
     if (isCurrent) {
-      return `<li class="sx-breadcrumb-item"><span class="sx-breadcrumb-current" aria-current="page">${iconHtml}${labelHtml}</span></li>`;
+      return `<li class="sx-breadcrumb-item"><span class="btn ghost sx-breadcrumb-current" aria-current="page">${iconHtml}${labelHtml}</span></li>`;
     }
     if (item.href) {
-      return `<li class="sx-breadcrumb-item"><a href="${escapeHTML(item.href)}" class="sx-breadcrumb-link">${iconHtml}${labelHtml}</a></li>`;
+      return `<li class="sx-breadcrumb-item"><a href="${escapeHTML(item.href)}" class="btn ghost sx-breadcrumb-link">${iconHtml}${labelHtml}</a></li>`;
     }
-    return `<li class="sx-breadcrumb-item"><span class="sx-breadcrumb-text">${iconHtml}${labelHtml}</span></li>`;
+    return `<li class="sx-breadcrumb-item"><button type="button" class="btn ghost sx-breadcrumb-link">${iconHtml}${labelHtml}</button></li>`;
   }
 
   let listHtml = '';

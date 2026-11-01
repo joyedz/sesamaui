@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Design system catalog now renders an equivalent "(ESM)" example directly below every legacy variant example, built with the canonical builders from `src/index.mjs` (`site/canonical-examples.mjs`); legacy previews remain for comparison.
+- Full Rune icon set is now available as canonical ESM: `runeIcon(name, size)` + `RUNE_ICON_NAMES` (224 glyphs, generated from `assets/rune-icons` via `tools/build-rune-icons.mjs`, hooked into `npm run build`/`check`) — opt-in import (`sesama-ui/icons/rune-icons`) so component consumers keep the 36KB curated control set (`controlIcon`, 56 glyphs + 28 aliases, now exposing `CONTROL_ICON_NAMES`).
+- Design system catalog now renders an equivalent "(ESM)" example directly below every legacy variant example, built with the canonical builders from `src/index.mjs` (`site/canonical-examples.mjs`); legacy previews remain for comparison. The Icons page now shows both sets: Basic (control icons) and Full (Rune set), with a shared search.
 
 ### Fixed
 - Input fields no longer render a double focus outline (stacked inset ring + outer outline); a single inset focus ring remains.
@@ -16,6 +17,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Recipes now use real builder signatures: badge `tone`, `statusDot({ tone, label })`, avatar initials from `name`, list row `description`, table column `header`, Select `name`/`ariaLabel`, and card `classes` (removing duplicate `class` attributes); Card gains a `classes` option.
 - Popover keeps its free-form content purpose; only its typography and spacing were standardized — shared `.sx-pop-content` styling (8px padding, 8px row gap, UI font size, normal text color) now lives in base styles, and combobox loading/no-results status styling is scoped to the combobox list.
 - Popover adopts the Dropdown/Combobox panel patterns: the shared `.sx-choice` choice-row pattern and thin-scrollbar treatment for `.sx-popover-options` moved into the canonical styles, panel width follows its content, and the catalog examples use the real popover structure (header, body, options list, footer with apply action).
+- Breadcrumbs render crumbs with the ghost-button pattern (13px/16px medium, 26px hit area, subtle color, 11px separators) matching the legacy look and hover behavior; the list container is hardened against host page `ol` styling so crumbs never collapse into a vertical list.
+- Canvas zoom rail is a transparent bar with individually raised buttons (legacy pattern) instead of a joined pill; the canvas example cards use the chip header like the legacy canvas cards.
+- Button accepts the `secondary-destructive` variant in the canonical builder and type declaration, and the catalog icon-button ESM examples use the shared size variants (raised / outline size-base) so they align with legacy.
+- Button icons render at Rune's designed 16px (crisp 1.5px strokes) instead of 14px, matching the legacy icon weight; xs buttons keep 12px. The catalog Sizes example shows icon+label at every size.
+- Button Group defaults to the regular button size (sm, 26px) instead of base, matching legacy groups; menu buttons in the catalog use the canonical Dropdown pattern.
+- Checkbox/Radio labels and choice rows no longer select their text on double-click (`user-select: none`); control icons gain the `fields` (grid-2x2 artwork) and `import` (arrow-down-to-line) aliases.
+- Combobox dropdown anchors to the field shell (not the bare input) and matches the field's width via `positionOverlay(matchWidth)`, which now also caps the panel max-width to the trigger width.
+- Chip defaults to the selectable (clickable) behavior like legacy; the non-interactive label is now the explicit `variant: 'static'`. Active states are tone-aware — success glows green and error glows red (ring, text and background) in both canonical and legacy styles — and chip hover no longer masks the active state.
+- Collapsible content uses the subtle text color (supporting-detail role) and the catalog example renders check-icon steps without default bullets, matching legacy.
 - Initials avatars default to a name-derived tinted background in both the canonical builder and the legacy bridge (image avatars stay neutral).
 - Catalog ESM previews center inside their example stage; full-width block previews opt out.
 - Tool Call names follow the run typography (subtle, regular) instead of a darker emphasized color.

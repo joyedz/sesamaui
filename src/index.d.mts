@@ -439,6 +439,9 @@ export {
   dataWorkspaceRecipe,
 } from './blocks/recipes.mjs';
 export function controlIcon(name: string, size?: number): string;
+export function runeIcon(name: string, size?: number): string;
+export const CONTROL_ICON_NAMES: string[];
+export const RUNE_ICON_NAMES: string[];
 export function escapeHTML(text: any): string;
 export function uid(prefix?: string): string;
 export { mount, controllerRegistry, registerController } from './runtime.mjs';

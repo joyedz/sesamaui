@@ -20,8 +20,7 @@ export function chip(options = {}) {
   let variant = userVariant;
   if (!variant) {
     if (removable) variant = 'removable';
-    else if (selected) variant = 'selectable';
-    else variant = 'static';
+    else variant = 'selectable';
   }
 
   if (tone && !VALID_TONES.includes(tone)) throw new TypeError(`Invalid chip tone: ${tone}`);

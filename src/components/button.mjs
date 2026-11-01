@@ -1,7 +1,7 @@
 import { escapeHTML } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
-const VALID_VARIANTS = ['primary', 'secondary', 'outline', 'ghost', 'danger', 'dashed', 'destructive'];
+const VALID_VARIANTS = ['primary', 'secondary', 'outline', 'ghost', 'danger', 'dashed', 'destructive', 'secondary-destructive'];
 const VALID_SIZES = ['xs', 'sm', 'base', 'lg'];
 const VALID_TYPES = ['button', 'submit', 'reset'];
 
@@ -30,7 +30,7 @@ export function button(options = {}) {
   const isBusy = Boolean(loading);
 
   const spinnerMarkup = isBusy ? '<span class="spinner" aria-hidden="true"></span>' : '';
-  const iconMarkup = icon ? controlIcon(icon, size === 'xs' ? 12 : 14) : '';
+  const iconMarkup = icon ? controlIcon(icon, size === 'xs' ? 12 : 16) : '';
   const labelMarkup = label !== '' && label !== undefined ? escapeHTML(label) : '';
 
   let content = '';

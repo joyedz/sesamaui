@@ -66,6 +66,7 @@ export {
   revenueChartRecipe,
   dataWorkspaceRecipe
 } from './blocks/recipes.mjs';
-export {controlIcon} from './icons/controls.mjs';
+export {controlIcon, CONTROL_ICON_NAMES} from './icons/controls.mjs';
+export {runeIcon, RUNE_ICON_NAMES} from './icons/rune-icons.mjs';
 export {escapeHTML, uid} from './components/shared.mjs';
 export {mount, controllerRegistry, registerController} from './runtime.mjs';

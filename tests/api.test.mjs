@@ -1468,9 +1468,13 @@ test('textarea renders field, sizes, autoResize, character limit counter, and va
 });
 
 test('chip renders static, selectable and removable variants with tones and controller events', () => {
-  // Static chip (default)
+  // Default chip: selectable toggle (legacy behavior)
   const c1 = chip('Frontend');
-  assert.match(c1, /^<span data-sui-chip class="chip tone-neutral"><span>Frontend<\/span><\/span>$/);
+  assert.match(c1, /^<button data-sui-chip type="button" class="chip tone-neutral" data-sui-chip-select aria-pressed="false"><span>Frontend<\/span><\/button>$/);
+
+  // Static chip is opt-in (non-interactive label)
+  const staticChip = chip({label: 'Frontend', variant: 'static'});
+  assert.match(staticChip, /^<span data-sui-chip class="chip tone-neutral"><span>Frontend<\/span><\/span>$/);
 
   // Tones
   const tones = ['neutral', 'informative', 'success', 'warning', 'error'];
@@ -2594,9 +2598,9 @@ test('breadcrumbs renders links, current page, icons, separators, and ellipsis',
 
   assert.match(html, /<nav aria-label="Breadcrumbs" class="sx-breadcrumbs-nav" data-sui-breadcrumbs>/);
   assert.match(html, /<ol class="sx-breadcrumbs">/);
-  assert.match(html, /<a href="\/" class="sx-breadcrumb-link">[\s\S]*?Home<\/a>/);
-  assert.match(html, /<a href="\/workspace" class="sx-breadcrumb-link">Workspace<\/a>/);
-  assert.match(html, /<span class="sx-breadcrumb-current" aria-current="page">Website redesign<\/span>/);
+  assert.match(html, /<a href="\/" class="btn ghost sx-breadcrumb-link">[\s\S]*?Home<\/a>/);
+  assert.match(html, /<a href="\/workspace" class="btn ghost sx-breadcrumb-link">Workspace<\/a>/);
+  assert.match(html, /<span class="btn ghost sx-breadcrumb-current" aria-current="page">Website redesign<\/span>/);
   assert.match(html, /<li class="sx-breadcrumb-separator" aria-hidden="true" role="presentation">/);
 
   // Collapsing with maxItems
@@ -3237,7 +3241,7 @@ test('canvas and initCanvas handle viewport, zoom, pan, toolbar, and events', ()
   assert.match(html, /<div class="ds-canvas sx-canvas dotted" data-sui-canvas id="agent-canvas" data-zoom="1.25" data-pan-x="30" data-pan-y="50"/);
   assert.match(html, /<div class="ds-canvas-viewport sx-canvas-viewport" tabindex="0" role="region"/);
   assert.match(html, /<div class="ds-canvas-world sx-canvas-world" style="transform:translate\(30px,50px\) scale\(1.25\);"><div class="card">Start node<\/div><\/div>/);
-  assert.match(html, /class="zoom-toolbar sx-toolbar/);
+  assert.match(html, /class="sx-toolbar[^"]*sx-toolbar-rail"/);
   assert.match(html, /data-canvas-zoom="-0.1"/);
   assert.match(html, /data-canvas-zoom="0.1"/);
   assert.match(html, /data-canvas-zoom="fit"/);

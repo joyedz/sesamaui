@@ -6,14 +6,16 @@
   line-height: 20px;
 }
 
-:where(.sui-root) .sx-breadcrumbs {
+/* Specificity beats host page list styling (e.g. .reading ol). */
+.sui-root .sx-breadcrumbs {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--space-4);
+  gap: var(--space-8);
   list-style: none;
   margin: 0;
   padding: 0;
+  color: inherit;
 }
 
 :where(.sui-root) .sx-breadcrumb-item {
@@ -22,42 +24,22 @@
   gap: var(--space-4);
 }
 
-:where(.sui-root) .sx-breadcrumb-link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-4);
+/* Crumbs use the ghost-button pattern; hooks only pin color and weight. */
+.sui-root .sx-breadcrumb-link,
+.sui-root .sx-breadcrumb-current,
+.sui-root .sx-breadcrumb-text {
   color: var(--text-subtle);
+  font-weight: var(--font-medium, 500);
   text-decoration: none;
-  border-radius: var(--radius-sm);
-  padding: var(--space-2) var(--space-4);
-  transition: color 150ms ease, background-color 150ms ease;
 }
 
-:where(.sui-root) .sx-breadcrumb-link:hover {
+.sui-root .sx-breadcrumb-link:hover {
   color: var(--text-default);
-  background: var(--color-tint);
 }
 
-:where(.sui-root) .sx-breadcrumb-link:focus-visible {
-  outline: 2px solid var(--color-brand);
-  outline-offset: 1px;
-}
-
-:where(.sui-root) .sx-breadcrumb-current {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-4);
-  color: var(--text-default);
-  font-weight: 500;
-  padding: var(--space-2) var(--space-4);
-}
-
-:where(.sui-root) .sx-breadcrumb-text {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-4);
-  color: var(--text-subtle);
-  padding: var(--space-2) var(--space-4);
+.sui-root .sx-breadcrumb-link:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
 :where(.sui-root) .sx-breadcrumb-separator {

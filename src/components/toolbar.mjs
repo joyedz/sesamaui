@@ -51,6 +51,7 @@ export function toolbar(options = {}) {
     items: rawItems = [],
     orientation = 'horizontal',
     size = 'base',
+    variant = '',
     attributes = '',
   } = options;
 
@@ -60,5 +61,7 @@ export function toolbar(options = {}) {
 
   const itemsHtml = items.map(item => renderToolbarItem(item, validOrientation)).join('');
 
-  return `<div role="toolbar" class="sx-toolbar sx-toolbar-${validOrientation} sx-toolbar-${validSize}" aria-label="${escapeHTML(ariaLabel)}" aria-orientation="${validOrientation}" data-sui-toolbar${attributes ? ` ${attributes}` : ''}>${itemsHtml}</div>`;
+  const classList = ['sx-toolbar', `sx-toolbar-${validOrientation}`, `sx-toolbar-${validSize}`, variant ? `sx-toolbar-${variant}` : ''].filter(Boolean).join(' ');
+
+  return `<div role="toolbar" class="${classList}" aria-label="${escapeHTML(ariaLabel)}" aria-orientation="${validOrientation}" data-sui-toolbar${attributes ? ` ${attributes}` : ''}>${itemsHtml}</div>`;
 }

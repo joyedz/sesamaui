@@ -82,7 +82,9 @@ export function positionOverlay(trigger, popup, placement = 'bottom', options = 
   popup.style.top = `${top}px`;
   popup.style.margin = '0';
   if (matchWidth) {
-    popup.style.width = `${trigger.getBoundingClientRect().width}px`;
+    const width = `${trigger.getBoundingClientRect().width}px`;
+    popup.style.width = width;
+    popup.style.maxWidth = width;
   }
   popup.dataset.placement = actualPlacement;
   return { left, top, placement: actualPlacement };

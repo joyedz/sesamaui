@@ -85,6 +85,7 @@ export function initCombobox(element) {
   const list = element.querySelector('[data-sui-combobox-list], [role="listbox"]');
   const clearBtn = element.querySelector('[data-combo-clear]');
   const statusEl = element.querySelector('[data-combo-status]');
+  const anchor = (typeof input.closest === 'function' && input.closest('.field')) || input;
 
   if (!input || !list) {
     throw new TypeError('Combobox markup is incomplete');
@@ -110,7 +111,7 @@ export function initCombobox(element) {
       close();
     },
     onReposition: () => {
-      if (isOpen) positionOverlay(input, list, 'bottom');
+      if (isOpen) positionOverlay(anchor, list, 'bottom', { matchWidth: true });
     },
   });
 
@@ -189,7 +190,7 @@ export function initCombobox(element) {
       isOpen = true;
       try { list.showPopover(); } catch {}
       input.setAttribute('aria-expanded', 'true');
-      positionOverlay(input, list, 'bottom');
+      positionOverlay(anchor, list, 'bottom', { matchWidth: true });
       dismissManager.bind();
     }
   }

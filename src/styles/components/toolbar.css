@@ -13,6 +13,14 @@
   box-sizing: border-box;
 }
 
+/* Rail variant: transparent rail with individually raised buttons (canvas zoom). */
+:where(.sui-root) .sx-toolbar-rail {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+
 :where(.sui-root) .sx-toolbar-horizontal,
 :where(.sui-root) .zoom-toolbar:not(.vertical) {
   flex-direction: row;

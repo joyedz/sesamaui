@@ -55,7 +55,8 @@ const icons = {
   "bell": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4\" stroke=\"black\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
   "star": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M11.525 2.2949C11.5688 2.20636 11.6365 2.13183 11.7205 2.07972C11.8044 2.02761 11.9012 2 12 2C12.0988 2 12.1956 2.02761 12.2795 2.07972C12.3635 2.13183 12.4312 2.20636 12.475 2.2949L14.785 6.9739C14.9372 7.28186 15.1618 7.5483 15.4396 7.75035C15.7174 7.95239 16.0401 8.08401 16.38 8.1339L21.546 8.8899C21.6439 8.90408 21.7358 8.94537 21.8115 9.00909C21.8871 9.07282 21.9434 9.15644 21.974 9.2505C22.0046 9.34456 22.0083 9.4453 21.9846 9.54133C21.9609 9.63736 21.9108 9.72485 21.84 9.7939L18.104 13.4319C17.8576 13.672 17.6733 13.9684 17.5668 14.2955C17.4604 14.6227 17.4351 14.9708 17.493 15.3099L18.375 20.4499C18.3923 20.5478 18.3817 20.6485 18.3445 20.7406C18.3073 20.8327 18.2449 20.9125 18.1645 20.9709C18.0842 21.0293 17.989 21.0639 17.8899 21.0708C17.7908 21.0777 17.6917 21.0566 17.604 21.0099L12.986 18.5819C12.6817 18.4221 12.3432 18.3387 11.9995 18.3387C11.6558 18.3387 11.3173 18.4221 11.013 18.5819L6.396 21.0099C6.30833 21.0563 6.2094 21.0772 6.11045 21.0702C6.0115 21.0631 5.91652 21.0285 5.83629 20.9701C5.75607 20.9118 5.69383 20.8321 5.65666 20.7401C5.61948 20.6482 5.60886 20.5476 5.626 20.4499L6.507 15.3109C6.5652 14.9716 6.53998 14.6233 6.43354 14.296C6.32709 13.9686 6.14261 13.6721 5.896 13.4319L2.16 9.7949C2.08859 9.72593 2.03799 9.63829 2.01396 9.54197C1.98993 9.44565 1.99344 9.34451 2.02408 9.25009C2.05472 9.15566 2.11127 9.07174 2.18728 9.00788C2.26329 8.94402 2.3557 8.90279 2.454 8.8889L7.619 8.1339C7.95926 8.08439 8.28239 7.95295 8.56058 7.75088C8.83878 7.54881 9.0637 7.28217 9.216 6.9739L11.525 2.2949Z\" stroke=\"black\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n</svg>\n",
   "share-2": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<circle cx=\"18\" cy=\"5\" r=\"3\" stroke=\"black\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n<circle cx=\"6\" cy=\"12\" r=\"3\" stroke=\"black\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n<circle cx=\"18\" cy=\"19\" r=\"3\" stroke=\"black\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n<path d=\"M8.59 13.51L15.42 17.49M15.41 6.51L8.59 10.49\" stroke=\"black\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n</svg>\n",
-  "calendar": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M8 2V6M16 2V6M3 10H21M5 4H19C20.1046 4 21 4.89543 21 6V20C21 21.1046 20.1046 22 19 22H5C3.89543 22 3 21.1046 3 20V6C3 4.89543 3.89543 4 5 4Z\" stroke=\"black\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n</svg>\n"
+  "calendar": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M8 2V6M16 2V6M3 10H21M5 4H19C20.1046 4 21 4.89543 21 6V20C21 21.1046 20.1046 22 19 22H5C3.89543 22 3 21.1046 3 20V6C3 4.89543 3.89543 4 5 4Z\" stroke=\"black\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n</svg>\n",
+  "grid-2x2": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M12 3V21M3 12H21M5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3Z\" stroke=\"black\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n</svg>"
 };
 
 const aliases = {
@@ -85,8 +86,12 @@ const aliases = {
   tc: 'circle-check',
   panel: 'panel-left',
   home: 'house',
-  filter: 'list-filter'
+  filter: 'list-filter',
+  fields: 'grid-2x2',
+  import: 'arrow-down-to-line'
 };
+
+export const CONTROL_ICON_NAMES = Object.keys(icons);
 
 export function controlIcon(name, size = 16) {
   if (typeof name === 'string' && name.trim().startsWith('<svg')) {

@@ -19,7 +19,7 @@ import {
   requirementGroupRecipe, resourceListRecipe, agentCardRecipe,
   createSkillDialogRecipe, deleteResourceRecipe, dashboardOverviewRecipe,
   revenueChartRecipe, dataWorkspaceRecipe,
-  mount
+  mount, controlIcon, runeIcon, CONTROL_ICON_NAMES
 } from '../src/index.mjs';
 
 /* ---------- shared sample data ---------- */
@@ -71,6 +71,7 @@ function agentRunSteps(state) {
 }
 
 const bannerActions = () => button({ label: 'Review details', variant: 'outline', attributes: 'data-canonical-toast="Details reviewed.|success"' });
+const collapsibleSteps = items => '<ul style="margin:0;padding:0 0 0 8px;list-style:none;display:grid;gap:var(--space-4)">' + items.map(s => `<li style="display:flex;align-items:center;gap:6px">${controlIcon('check', 12)}${s}</li>`).join('') + '</ul>';
 
 const demoBlock = text => `<div style="display:grid;place-items:center;min-height:80px;background:var(--color-recessed);border-radius:var(--radius-md);color:var(--text-subtle);font-size:12px">${text}</div>`;
 const row = (...nodes) => `<div class="sx-row" style="justify-content:center">${nodes.join('')}</div>`;
@@ -89,6 +90,7 @@ const canonical = {
     'ghost': () => button({ label: 'Ghost', variant: 'ghost' }),
     'dashed': () => button({ label: 'Dashed', variant: 'dashed', icon: 'plus' }),
     'destructive': () => button({ label: 'Delete', variant: 'destructive' }),
+    'secondary-destructive': () => button({ label: 'secondary-destructive', variant: 'secondary-destructive' }),
     'Social': () => row(socialButton('google'), socialButton('github')),
     'Link': () => row(
       linkButton('View details', { href: '#' }),
@@ -99,12 +101,16 @@ const canonical = {
     'Sizes': () => row(
       button({ label: 'XS', size: 'xs' }), button({ label: 'SM' }),
       button({ label: 'BASE', size: 'base' }), button({ label: 'LG', size: 'lg' })
+    ) + row(
+      button({ label: 'XS', size: 'xs', icon: 'plus' }), button({ label: 'SM', size: 'sm', icon: 'plus' }),
+      button({ label: 'BASE', size: 'base', icon: 'plus' }), button({ label: 'LG', size: 'lg', icon: 'plus' })
     ),
     'With icon': () => button({ label: 'Create project', icon: 'plus' }),
-    'Square icon button': () => ibtn('plus', 'aria-pressed="false"', 'Add requirement'),
+    'Square icon button': () => iconButton('plus', { variant: 'raised', ariaLabel: 'Add requirement', attributes: 'aria-pressed="false"' }),
     'Outline icon button': () => row(
-      ibtn('kebab', '', 'More actions'), ibtn('plus', '', 'Add item'),
-      iconButton('kebab', { variant: 'outline', ariaLabel: 'More actions unavailable', disabled: true })
+      iconButton('kebab', { variant: 'outline size-base', ariaLabel: 'More actions' }),
+      iconButton('plus', { variant: 'outline size-base', ariaLabel: 'Add item' }),
+      iconButton('kebab', { variant: 'outline size-base', ariaLabel: 'More actions unavailable', disabled: true })
     ),
     'Icon button sizes': () => row(
       iconButton('kebab', { size: 'sm', ariaLabel: 'Small action' }),
@@ -118,8 +124,16 @@ const canonical = {
   },
 
   'Button group': {
-    'Menu button / primary': () => buttonGroup({ split: true, buttons: [{ label: 'Create project', variant: 'primary' }] }),
-    'Menu button / secondary': () => buttonGroup({ split: true, buttons: [{ label: 'New requirement' }] }),
+    'Menu button / primary': () => dropdownMenu({
+      trigger: { label: 'New project', variant: 'primary', icon: 'plus' },
+      ariaLabel: 'Create resource',
+      items: [{ label: 'From template', icon: 'copy' }, { label: 'Blank project', icon: 'plus' }]
+    }),
+    'Menu button / secondary': () => dropdownMenu({
+      trigger: { label: 'New requirement', icon: 'plus' },
+      ariaLabel: 'Create resource',
+      items: [{ label: 'Requirement', icon: 'file-text' }, { label: 'Folder', icon: 'folder' }, { type: 'separator' }, { label: 'Import', icon: 'import' }]
+    }),
     'Connected group': () => buttonGroup({ buttons: ['Day', 'Week', 'Month'] }),
     'Split button': () => buttonGroup({ split: true, buttons: [{ label: 'Create project' }] })
   },
@@ -313,17 +327,34 @@ const canonical = {
   },
 
   'Card': {
-    'Framed': () => card({ title: 'Website redesign', description: 'Plan and track the next release.', actions: button({ label: 'Open', variant: 'secondary' }) }),
-    'Bare': () => card({ title: 'Website redesign' }),
-    'Selected': () => card({ title: 'Website redesign', description: 'Plan and track the next release.', selected: true }),
+    'Framed': () => card({ title: 'Website redesign', description: 'Plan and track the next release.', actions: button({ label: 'Open', variant: 'secondary' }), attributes: 'style="max-width:300px"' }),
+    'Bare': () => card({ title: 'Website redesign', attributes: 'style="max-width:300px"' }),
+    'Selected': () => card({ title: 'Website redesign', description: 'Plan and track the next release.', selected: true, attributes: 'style="max-width:300px"' }),
     'Expandable': () => card({ title: 'Website redesign', actions: ibtn('chevron-right', '', 'Expand item') }),
-    'With status': () => card({ title: 'Website redesign', content: badge({ label: 'Draft' }) })
+    'With status': () => card({ title: 'Website redesign', content: badge({ label: 'Draft' }), attributes: 'style="max-width:300px"' })
   },
 
   'Toolbar': {
-    'Actions': () => toolbar({ items: [{ label: 'Fields', variant: 'ghost' }, { label: 'Filter', variant: 'ghost' }] }),
-    'Vertical zoom controls': () => toolbar({ orientation: 'vertical', items: [{ icon: 'minus', ariaLabel: 'Zoom out' }, { icon: 'plus', ariaLabel: 'Zoom in' }, { icon: 'fit', ariaLabel: 'Fit to screen' }] }),
-    'Horizontal zoom controls': () => toolbar({ items: [{ icon: 'minus', ariaLabel: 'Zoom out' }, { icon: 'plus', ariaLabel: 'Zoom in' }, { icon: 'fit', ariaLabel: 'Fit to screen' }] })
+    'Actions': () => toolbar({ variant: 'rail', items: [{ label: 'Fields', variant: 'ghost', icon: 'fields' }, { label: 'Filter', variant: 'ghost', icon: 'filter' }] }),
+    'Vertical zoom controls': () => toolbar({
+      orientation: 'vertical',
+      variant: 'rail',
+      items: [
+        '<output aria-live="polite">100%</output>',
+        { icon: 'minus', variant: 'raised', ariaLabel: 'Zoom out', attributes: 'data-canvas-zoom="-0.1"' },
+        { icon: 'plus', variant: 'raised', ariaLabel: 'Zoom in', attributes: 'data-canvas-zoom="0.1"' },
+        { icon: 'fit', variant: 'raised', ariaLabel: 'Fit to screen', attributes: 'data-canvas-zoom="fit"' }
+      ]
+    }),
+    'Horizontal zoom controls': () => toolbar({
+      variant: 'rail',
+      items: [
+        '<output aria-live="polite">100%</output>',
+        { icon: 'minus', variant: 'raised', ariaLabel: 'Zoom out', attributes: 'data-canvas-zoom="-0.1"' },
+        { icon: 'plus', variant: 'raised', ariaLabel: 'Zoom in', attributes: 'data-canvas-zoom="0.1"' },
+        { icon: 'fit', variant: 'raised', ariaLabel: 'Fit to screen', attributes: 'data-canvas-zoom="fit"' }
+      ]
+    })
   },
 
   'Message': {
@@ -357,8 +388,8 @@ const canonical = {
   },
 
   'Collapsible': {
-    'Collapsed': () => collapsible({ trigger: 'Execution plan', content: '<ul style="margin:0;padding-left:20px"><li>Update Peak Motor Torque to 420 Nm</li><li>Propagate to child requirements</li></ul>' }),
-    'Expanded': () => collapsible({ trigger: 'Execution plan', open: true, content: '<ul style="margin:0;padding-left:20px"><li>Update Peak Motor Torque to 420 Nm</li><li>Propagate to child requirements</li><li>Regenerate motor housing CAD</li></ul>' })
+    'Collapsed': () => collapsible({ trigger: 'Execution plan', content: collapsibleSteps(['Update Peak Motor Torque to 420 Nm', 'Propagate to child requirements']) }),
+    'Expanded': () => collapsible({ trigger: 'Execution plan', open: true, content: collapsibleSteps(['Update Peak Motor Torque to 420 Nm', 'Propagate to child requirements', 'Regenerate motor housing CAD']) })
   },
 
   'File card': {
@@ -425,7 +456,11 @@ const canonical = {
   },
 
   'Canvas': {
-    'Dotted (default)': () => canvas({ content: card({ title: 'Project brief', description: 'Review the scope.' }) }),
+    'Dotted (default)': () => canvas({
+      content: card({ header: label({ text: 'Project' }), title: 'Project brief' }) +
+        controlIcon('chevron-right', 16) +
+        card({ header: label({ text: 'Project' }), title: 'Design review', selected: true })
+    }),
     'Empty': () => canvas({ content: '<span style="color:var(--text-placeholder);font-size:12px">Add an item to start your workspace.</span>' })
   },
 
@@ -887,6 +922,9 @@ if (typeof originalExamples === 'function') {
     return out;
   };
 }
+
+window.CANONICAL_CONTROL_ICONS = CONTROL_ICON_NAMES;
+if (document.querySelector('#icon-basic-loading')) window.paint();
 
 const originalPaint = window.paint;
 if (typeof originalPaint === 'function') {

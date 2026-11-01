@@ -17,7 +17,7 @@ export function buttonGroup(options = {}) {
     split = false,
     menu: splitMenu = null,
     variant = 'secondary',
-    size = 'base',
+    size = 'sm',
     attributes = '',
   } = options;
 

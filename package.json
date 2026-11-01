@@ -264,8 +264,8 @@
   },
   "scripts": {
     "dev": "node tools/serve.mjs",
-    "check": "node tools/build-legacy-bridge.mjs --check && node tools/build-legacy-css.mjs --check && node tools/check-syntax.cjs",
-    "build": "node tools/build-legacy-bridge.mjs && node tools/build-legacy-css.mjs",
+    "check": "node tools/build-legacy-bridge.mjs --check && node tools/build-legacy-css.mjs --check && node tools/check-syntax.cjs && node tools/build-rune-icons.mjs --check",
+    "build": "node tools/build-legacy-bridge.mjs && node tools/build-legacy-css.mjs && node tools/build-rune-icons.mjs",
     "test": "node --test tests/api.test.mjs tests/css.test.mjs tests/consumer.test.mjs tests/package.test.mjs tests/xss.test.mjs",
     "test:browser": "node tests/browser.cjs",
     "test:a11y": "node tests/a11y.cjs",

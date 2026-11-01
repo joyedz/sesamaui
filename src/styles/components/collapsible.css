@@ -42,6 +42,7 @@
 
 :where(.sui-root) .sx-collapsible-inner {
   padding: var(--space-8) 0;
+  color: var(--text-subtle);
 }
 
 @media (prefers-reduced-motion: reduce) {

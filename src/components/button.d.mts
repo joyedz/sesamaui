@@ -1,4 +1,4 @@
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'dashed' | 'destructive';
+export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'dashed' | 'destructive' | 'secondary-destructive';
 export type ButtonSize = 'xs' | 'sm' | 'base' | 'lg';
 export type ButtonType = 'button' | 'submit' | 'reset';
 export type IconPosition = 'start' | 'end';

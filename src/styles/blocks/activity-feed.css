@@ -1,7 +1,7 @@
 /* Activity Feed block */
 :where(.sui-root) .sb-activity-feed .sb-activity-items,
-:where(.sui-root) .sb-activity-feed,
-:where(.sui-root) .sx-activity-feed {
+.sui-root .sb-activity-feed,
+.sui-root .sx-activity-feed {
   list-style: none;
   margin: 0;
   padding: 0;

@@ -25,16 +25,10 @@
   cursor: pointer;
 }
 
-:where(.sui-root) .chip:hover:not(:disabled) {
+:where(.sui-root) .chip:hover:not(:disabled):not([aria-pressed="true"]):not(.selected) {
   background: var(--color-tint);
 }
 
-:where(.sui-root) .chip[aria-pressed="true"],
-:where(.sui-root) .chip.selected {
-  box-shadow: inset 0 0 0 1px var(--color-brand-hover);
-  color: var(--color-brand-hover);
-  background: var(--color-brand-tint);
-}
 
 :where(.sui-root) .chip:disabled {
   cursor: not-allowed;
@@ -84,6 +78,32 @@
 
 :where(.sui-root) .chip.tone-error {
   --tone: var(--color-danger);
+}
+
+/* Active state wins over tone colors (kept after the tone block). */
+:where(.sui-root) .chip[aria-pressed="true"],
+:where(.sui-root) .chip.selected {
+  --tone: var(--color-brand-hover);
+  box-shadow: inset 0 0 0 1px var(--color-brand-hover);
+  color: var(--color-brand-hover);
+  background: var(--color-brand-tint);
+}
+
+/* Tone-aware active states: success glows green, error glows red — never brand blue. */
+:where(.sui-root) .chip.tone-success[aria-pressed="true"],
+:where(.sui-root) .chip.tone-success.selected {
+  --tone: var(--color-success);
+  box-shadow: inset 0 0 0 1px var(--color-success);
+  color: var(--color-success);
+  background: color-mix(in srgb, var(--color-success) 12%, transparent);
+}
+
+:where(.sui-root) .chip.tone-error[aria-pressed="true"],
+:where(.sui-root) .chip.tone-error.selected {
+  --tone: var(--color-danger);
+  box-shadow: inset 0 0 0 1px var(--color-danger);
+  color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 12%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
