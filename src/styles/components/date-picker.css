@@ -2,7 +2,7 @@
 
 /* Canonical Sesama date picker styles. */
 :where(.sui-root) .sx-date-field{width:100%;padding:0 var(--space-8);gap:var(--space-4);display:flex;align-items:center}
-:where(.sui-root) .sx-date-trigger{flex:1;min-width:0;min-height:var(--control-size-base,30px);padding:var(--space-4) 0;text-align:left;font:inherit;background:none;border:none;cursor:pointer;color:var(--text-default);font-size:var(--font-ui-size);line-height:var(--font-control-line)}
+:where(.sui-root) .sx-date-trigger{flex:1;min-width:0;align-self:stretch;padding:var(--space-4) 0;text-align:left;font:inherit;background:none;border:none;cursor:pointer;color:var(--text-default);font-size:var(--font-ui-size);line-height:var(--font-control-line)}
 :where(.sui-root) .sx-date-trigger>span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 :where(.sui-root) .sx-date-trigger [data-date-display].sx-muted{color:var(--text-placeholder)}
 :where(.sui-root) .sx-date-field:has(:disabled){opacity:.5}

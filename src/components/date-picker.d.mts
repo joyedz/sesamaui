@@ -14,6 +14,7 @@ export interface DatePickerOptions {
   invalid?: boolean;
   helper?: string;
   error?: string;
+  size?: 'sm' | 'base' | 'lg';
   attributes?: string;
 }
 

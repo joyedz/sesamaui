@@ -661,7 +661,8 @@ const canonical = {
     'range': () => datePicker({ label: 'Date range', mode: 'range' }),
     'min and max': () => datePicker({ label: 'Due date', min: '2026-10-31', max: '2026-11-30' }),
     'invalid': () => datePicker({ label: 'Due date', invalid: true, error: 'Choose a due date.' }),
-    'disabled': () => datePicker({ label: 'Due date', disabled: true })
+    'disabled': () => datePicker({ label: 'Due date', disabled: true }),
+    'Sizes': () => `<div class="sx-stack">${['sm', 'base', 'lg'].map(size => `<div class="sx-stack"><span class="sx-help">${{ sm: 'Small · 26px', base: 'Base · 30px', lg: 'Large · 34px' }[size]}</span>${datePicker({ label: '', size })}</div>`).join('')}</div>`
   },
 
   'Tag Input': {
