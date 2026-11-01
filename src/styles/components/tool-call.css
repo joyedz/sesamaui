@@ -49,7 +49,7 @@
 :where(.sui-root) .sx-tool-body strong {
   font-size: var(--font-meta-size, 12px);
   font-weight: 500;
-  color: var(--text-default);
+  color: var(--text-subtle);
 }
 
 :where(.sui-root) .sx-tool-body pre {

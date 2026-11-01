@@ -87,8 +87,8 @@
   justify-content: center;
   width: 12px;
   flex-shrink: 0;
-  color: var(--text-placeholder);
-  transition: transform 150ms ease;
+  color: var(--text-subtle);
+  transition: transform var(--motion-fast) var(--ease-standard);
 }
 
 :where(.sui-root) .ti .sx-tree-chevron svg {
@@ -117,8 +117,7 @@
 :where(.sui-root) .ti.on > .sx-tree-label,
 :where(.sui-root) .ti[data-active="true"] > .sx-tree-label,
 :where(.sui-root) .ti[aria-current="page"] > .sx-tree-label,
-:where(.sui-root) .ti[aria-selected="true"] > .sx-tree-label,
-:where(.sui-root) .ti[data-fold][aria-expanded="true"] > .sx-tree-label {
+:where(.sui-root) .ti[aria-selected="true"] > .sx-tree-label {
   color: var(--text-default);
 }
 

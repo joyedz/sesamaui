@@ -603,7 +603,7 @@ const canonical = {
 
   'Empty State': {
     'no data': () => emptyState({ title: 'No projects yet', description: 'Create your first project to get started.', icon: 'folder', actions: button({ label: 'Create project', variant: 'primary' }) }),
-    'no results': () => emptyState({ title: 'No matching projects', description: 'Try a different search or clear your filters.', icon: 'folder', actions: button({ label: 'Clear filters', variant: 'outline' }) }),
+    'no results': () => emptyState({ title: 'No matching projects', description: 'Try a different search or clear your filters.', icon: 'folder', actions: button({ label: 'Clear filters', variant: 'primary' }) }),
     'error': () => emptyState({ title: 'Projects could not load', description: 'Please try loading the list again.', icon: 'circle-x', actions: button({ label: 'Retry', variant: 'primary' }) }),
     'Compact': () => emptyState({ title: 'No projects yet', description: 'Create your first project to get started.', icon: 'folder', compact: true, actions: button({ label: 'Create project', variant: 'primary' }) })
   },
@@ -638,14 +638,14 @@ const canonical = {
     '24px': () => loader({ size: 24 }),
     '32px': () => loader({ size: 32 }),
     'Accessible label only': () => loader({ size: 16, showLabel: false, label: 'Loading content' }),
-    'Button': () => button({ label: 'Saving…', loading: true })
+    'Button': () => button({ label: 'Saving…', loading: true, variant: 'primary' })
   },
 
   'Skeleton': {
-    'text': () => `<div class="sx-stack">${skeleton({ shape: 'line', count: 3 })}</div>`,
-    'avatar': () => `<div class="sx-row">${skeleton({ shape: 'round', size: 32 })}${skeleton({ shape: 'line', width: '40%' })}</div>`,
-    'card': () => skeleton({ shape: 'card' }),
-    'table': () => `<div class="sx-stack">${skeleton({ shape: 'line', count: 3 })}</div>`,
+    'text': () => `<div class="sx-stack" aria-busy="true"><span class="sx-help" role="status">Loading content</span>${skeleton({ shape: 'line', count: 3 })}</div>`,
+    'avatar': () => `<div class="sx-stack" aria-busy="true"><span class="sx-help" role="status">Loading content</span><div class="sx-row">${skeleton({ shape: 'round', size: 32 })}${skeleton({ shape: 'line', width: '40%' })}</div></div>`,
+    'card': () => `<div class="sx-stack" aria-busy="true"><span class="sx-help" role="status">Loading content</span>${skeleton({ shape: 'card' })}</div>`,
+    'table': () => `<div class="sx-stack" aria-busy="true"><span class="sx-help" role="status">Loading content</span>${skeleton({ shape: 'line', count: 3 })}</div>`,
     'Fill component container': () => `<div style="width:100%;height:160px;border-radius:var(--radius-md)">${skeleton({ shape: 'fill' })}</div>`,
     'Custom dimensions': () => `<div class="sx-row"><div style="width:45%">${skeleton({ shape: 'line', height: 16 })}</div></div>`
   },

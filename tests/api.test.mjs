@@ -2655,7 +2655,7 @@ test('tree, treeItem, treeSection and initTree handle structure, expanding/colla
   const sectionHtml = treeSection('Projects', leafHtml, { actionIcon: 'plus', actionLabel: 'Add project' });
   assert.match(sectionHtml, /<section class="sx-tree-section">/);
   assert.match(sectionHtml, /<h2 class="sx-tree-section-title">Projects<\/h2>/);
-  assert.match(sectionHtml, /class="ibtn" aria-label="Add project"/);
+  assert.match(sectionHtml, /class="ibtn raised" aria-label="Add project"/);
 
   // Tree container
   const treeHtml = tree([

@@ -107,7 +107,7 @@ export function treeSection(titleOrOptions, content = '', options = {}) {
       const icon = controlIcon(options.actionIcon, 14);
       const label = options.actionLabel || `${title} action`;
       const attrs = options.actionAttributes || '';
-      actionHtml = `<button type="button" class="ibtn" aria-label="${escapeHTML(label)}"${attrs ? ` ${attrs}` : ''}>${icon}</button>`;
+      actionHtml = `<button type="button" class="ibtn raised" aria-label="${escapeHTML(label)}"${attrs ? ` ${attrs}` : ''}>${icon}</button>`;
     } else if (options.action) {
       actionHtml = options.action;
     }

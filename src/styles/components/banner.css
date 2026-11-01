@@ -25,7 +25,7 @@
 
 :where(.sui-root) .sx-banner-content b {
   font-weight: 500;
-  line-height: var(--font-ui-line);
+  line-height: var(--font-meta-line);
 }
 
 :where(.sui-root) .sx-banner-content p {
