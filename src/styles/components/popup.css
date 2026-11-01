@@ -19,3 +19,13 @@
 :where(.sui-root) .sx-menu-item{font-size:var(--font-ui-size);font-weight:var(--font-regular)}
 :where(.sui-root) .sx-menu-item{line-height:var(--font-ui-line)}
 :where(.sui-root) .sx-menu-label{font-size:var(--font-meta-size);line-height:var(--font-meta-line);font-weight:var(--font-regular)}
+/* Origin-aware entry: popovers scale from the edge facing their trigger
+   (data-placement is set by positionOverlay). */
+:where(.sui-root) .sx-popup{transition:opacity var(--motion-fast) var(--ease-out),transform var(--motion-fast) var(--ease-out)}
+:where(.sui-root) .sx-popup[data-placement=bottom]{transform-origin:top}
+:where(.sui-root) .sx-popup[data-placement=top]{transform-origin:bottom}
+:where(.sui-root) .sx-popup[data-placement=left]{transform-origin:right}
+:where(.sui-root) .sx-popup[data-placement=right]{transform-origin:left}
+@starting-style{:where(.sui-root) .sx-popup:popover-open{opacity:0;transform:scale(.97)}}
+@media(prefers-reduced-motion:reduce){:where(.sui-root) .sx-popup{transition:opacity var(--motion-fast) var(--ease-standard);transform:none}
+@starting-style{:where(.sui-root) .sx-popup:popover-open{transform:none}}}

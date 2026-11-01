@@ -172,6 +172,16 @@
 .sx-menu-item{font-size:var(--font-ui-size);font-weight:var(--font-regular)}
 .sx-menu-item{line-height:var(--font-ui-line)}
 .sx-menu-label{font-size:var(--font-meta-size);line-height:var(--font-meta-line);font-weight:var(--font-regular)}
+/* Origin-aware entry: popovers scale from the edge facing their trigger
+   (data-placement is set by positionOverlay). */
+.sx-popup{transition:opacity var(--motion-fast) var(--ease-out),transform var(--motion-fast) var(--ease-out)}
+.sx-popup[data-placement=bottom]{transform-origin:top}
+.sx-popup[data-placement=top]{transform-origin:bottom}
+.sx-popup[data-placement=left]{transform-origin:right}
+.sx-popup[data-placement=right]{transform-origin:left}
+@starting-style{.sx-popup:popover-open{opacity:0;transform:scale(.97)}}
+@media(prefers-reduced-motion:reduce){.sx-popup{transition:opacity var(--motion-fast) var(--ease-standard);transform:none}
+@starting-style{.sx-popup:popover-open{transform:none}}}
 
 /* Canonical Sesama modal styles. Legacy compatibility is generated. */
 .ds-modal{border:0;color:var(--text-default);width:min(400px,calc(100vw - 32px));padding:var(--space-16);border-radius:var(--radius-lg);background:var(--color-base);box-shadow:var(--shadow-dialog)}
@@ -193,6 +203,15 @@
 .ds-modal{max-height:calc(100dvh - 48px);overflow:auto}
 .ds-modal .sx-modal-body{overflow:visible;padding:2px;margin:-2px}
 .ds-modal .sx-modal-body-scroll{max-height:45dvh;overflow:auto}
+/* Entry motion: rise + scale(0.97), never from nothing. The command palette is
+   keyboard-first (100+ uses/day) and stays instant. */
+.ds-modal:not(.sx-command){opacity:0;transform:translateY(4px) scale(.97);transition:opacity var(--motion-base) var(--ease-out),transform var(--motion-base) var(--ease-out)}
+.ds-modal[open]{opacity:1;transform:none}
+.ds-modal::backdrop{transition:background-color var(--motion-base) var(--ease-standard)}
+@starting-style{.ds-modal[open]:not(.sx-command){opacity:0;transform:translateY(4px) scale(.97)}
+.ds-modal[open]:not(.sx-command)::backdrop{background:transparent}}
+@media(prefers-reduced-motion:reduce){.ds-modal:not(.sx-command){transition:opacity var(--motion-base) var(--ease-standard);transform:none}
+@starting-style{.ds-modal[open]:not(.sx-command){transform:none}}}
 
 /* Canonical Sesama control styles. Legacy compatibility is generated. */
 .sx-size-xs{min-height:22px!important;height:22px}

@@ -24,7 +24,7 @@
   justify-content: center;
   flex-shrink: 0;
   color: var(--text-placeholder);
-  transition: transform 200ms ease;
+  transition: transform var(--motion-base) var(--ease-out);
 }
 
 :where(.sui-root) .sx-collapsible-trigger[aria-expanded="true"] .sx-collapsible-chevron {

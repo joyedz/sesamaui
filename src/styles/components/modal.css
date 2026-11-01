@@ -21,3 +21,12 @@
 :where(.sui-root) .ds-modal{max-height:calc(100dvh - 48px);overflow:auto}
 :where(.sui-root) .ds-modal .sx-modal-body{overflow:visible;padding:2px;margin:-2px}
 :where(.sui-root) .ds-modal .sx-modal-body-scroll{max-height:45dvh;overflow:auto}
+/* Entry motion: rise + scale(0.97), never from nothing. The command palette is
+   keyboard-first (100+ uses/day) and stays instant. */
+:where(.sui-root) .ds-modal:not(.sx-command){opacity:0;transform:translateY(4px) scale(.97);transition:opacity var(--motion-base) var(--ease-out),transform var(--motion-base) var(--ease-out)}
+:where(.sui-root) .ds-modal[open]{opacity:1;transform:none}
+:where(.sui-root) .ds-modal::backdrop{transition:background-color var(--motion-base) var(--ease-standard)}
+@starting-style{:where(.sui-root) .ds-modal[open]:not(.sx-command){opacity:0;transform:translateY(4px) scale(.97)}
+:where(.sui-root) .ds-modal[open]:not(.sx-command)::backdrop{background:transparent}}
+@media(prefers-reduced-motion:reduce){:where(.sui-root) .ds-modal:not(.sx-command){transition:opacity var(--motion-base) var(--ease-standard);transform:none}
+@starting-style{:where(.sui-root) .ds-modal[open]:not(.sx-command){transform:none}}}
