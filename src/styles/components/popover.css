@@ -7,8 +7,7 @@
 :where(.sui-root) .sx-popover-header{padding:var(--space-8);font-weight:500}
 :where(.sui-root) .sx-popover-body{padding:var(--space-4) var(--space-8) var(--space-8)}
 :where(.sui-root) .sx-popover-footer{display:flex;justify-content:flex-end;padding:var(--space-8);border-top:1px solid var(--color-hairline)}
-:where(.sui-root) .sx-popover-options{max-height:168px;overflow:auto;margin-inline:calc(-1 * var(--space-8));padding:2px 0;scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent}
-:where(.sui-root) .sx-popover-options:is(:hover,:focus-visible,:focus-within){scrollbar-color:var(--scroll-thumb-hover) transparent}
+:where(.sui-root) .sx-popover-options{max-height:168px;overflow:auto;margin-inline:calc(-1 * var(--space-8));padding:2px 0}
 :where(.sui-root) .sx-popover-options::-webkit-scrollbar{width:6px}
 :where(.sui-root) .sx-popover-options::-webkit-scrollbar-track{background:transparent}
 :where(.sui-root) .sx-popover-options::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:999px}

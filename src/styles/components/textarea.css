@@ -22,16 +22,9 @@
   box-shadow: none;
 }
 
-/* Thin scrollbar treatment, matching .sx-scroll-area. */
-:where(.sui-root) .sx-textarea {
-  scrollbar-width: thin;
-  scrollbar-color: var(--scroll-thumb) transparent;
-}
-
-:where(.sui-root) .sx-textarea:is(:hover, :focus, :focus-within) {
-  scrollbar-color: var(--scroll-thumb-hover) transparent;
-}
-
+/* Thin scrollbar treatment, matching .sx-scroll-area. Pure webkit styling:
+   scrollbar-width/color would make Chromium render its native scrollbar
+   with arrow buttons on Windows. */
 :where(.sui-root) .sx-textarea::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -58,12 +51,6 @@
   display: none;
   width: 0;
   height: 0;
-}
-
-@media (forced-colors: active) {
-  :where(.sui-root) .sx-textarea {
-    scrollbar-color: auto;
-  }
 }
 
 :where(.sui-root) .sx-textarea {

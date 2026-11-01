@@ -4,7 +4,11 @@
 /* Canonical Sesama command palette styles. */
 :where(.sui-root) .sx-command{padding:var(--space-16);max-width:480px;border-radius:var(--radius-lg)}
 :where(.sui-root) .sx-command .field{width:100%}
-:where(.sui-root) .sx-command-results{display:grid;gap:var(--space-2);max-height:260px;overflow-y:auto;margin-top:var(--space-12);padding:2px;scrollbar-width:thin}
+:where(.sui-root) .sx-command-results{display:grid;gap:var(--space-2);max-height:260px;overflow-y:auto;margin-top:var(--space-12);padding:2px}
+:where(.sui-root) .sx-command-results::-webkit-scrollbar{width:6px;height:6px}
+:where(.sui-root) .sx-command-results::-webkit-scrollbar-track{background:transparent}
+:where(.sui-root) .sx-command-results::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:999px}
+:where(.sui-root) .sx-command-results::-webkit-scrollbar-button{display:none;width:0;height:0}
 :where(.sui-root) .sx-command-results .active,:where(.sui-root) .sx-command-results [aria-selected="true"]{background:var(--color-tint)}
 :where(.sui-root) .sx-command-results>[role=group]+[role=group]{margin-top:var(--space-8)}
 :where(.sui-root) .sx-command-results .sx-menu-item{white-space:normal;overflow-wrap:anywhere;min-height:28px}

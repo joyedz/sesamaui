@@ -4,6 +4,12 @@
   display: none !important;
 }
 :where(.sui-root) .sx-popup{position:fixed;inset:auto;margin:0;padding:var(--space-4);border:0;border-radius:var(--radius-md);background:var(--color-base);color:var(--text-default);box-shadow:var(--shadow-float);min-width:180px;max-width:min(360px,calc(100vw - 24px));max-height:min(360px,60dvh);overflow:auto;z-index:60;font:inherit}
+/* Thin scrollbar, pure webkit styling (no arrows; see scroll-area.css). */
+:where(.sui-root) .sx-popup::-webkit-scrollbar{width:6px;height:6px}
+:where(.sui-root) .sx-popup::-webkit-scrollbar-track{background:transparent}
+:where(.sui-root) .sx-popup::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:999px}
+:where(.sui-root) .sx-popup::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover)}
+:where(.sui-root) .sx-popup::-webkit-scrollbar-button{display:none;width:0;height:0}
 :where(.sui-root) .sx-popup:popover-open{display:block}
 :where(.sui-root) .sx-menu-item{display:flex;align-items:center;gap:var(--space-8);width:100%;padding:var(--space-6) var(--space-8);min-height:28px;border-radius:var(--radius-sm);white-space:nowrap}
 :where(.sui-root) .sx-menu-item:hover,:where(.sui-root) .sx-menu-item:focus-visible{background:var(--color-tint)}
