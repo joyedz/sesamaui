@@ -77,8 +77,22 @@ export function initBanner(element) {
     element.dispatchEvent(ev);
     if (ev.defaultPrevented) return;
 
-    element.remove();
-    controller.destroy();
+    // Collapse smoothly in the browser; reduced motion or mock elements
+    // without DOM geometry remove instantly.
+    const reducedMotion = typeof view.matchMedia === 'function' && view.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion || typeof element.classList?.add !== 'function' || typeof element.getBoundingClientRect !== 'function') {
+      element.remove();
+      controller.destroy();
+      return;
+    }
+
+    element.style.height = `${element.getBoundingClientRect().height}px`;
+    void element.offsetHeight; // reflow so the collapse transition can run
+    element.classList.add('is-leaving');
+    setTimeout(() => {
+      element.remove();
+      controller.destroy();
+    }, 240);
   }
 
   function onClick(e) {

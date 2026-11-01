@@ -60,6 +60,24 @@
   color: var(--color-warning);
 }
 
+/* Dismissal collapses the banner smoothly: fade + height collapse. */
+:where(.sui-root) .sx-banner.is-leaving {
+  height: 0 !important;
+  opacity: 0;
+  overflow: hidden;
+  padding-block: 0;
+  border-width: 0;
+  pointer-events: none;
+  transition: height var(--motion-base) var(--ease-out), opacity var(--motion-base) var(--ease-out), padding var(--motion-base) var(--ease-standard), border-width var(--motion-base) var(--ease-standard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.sui-root) .sx-banner.is-leaving {
+    transition: opacity var(--motion-base) var(--ease-standard);
+    transform: none;
+  }
+}
+
 :where(.sui-root) .sx-banner-actions {
   display: flex;
   justify-content: flex-start;
