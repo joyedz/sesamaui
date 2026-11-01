@@ -19,9 +19,17 @@ export function menuItem(options = {}) {
     destructive = false,
     role = 'menuitem',
     checked = false,
+    control = 'check',
     href = null,
     attributes = '',
   } = options;
+
+  if (!['check', 'checkbox', 'radio'].includes(control)) {
+    throw new TypeError(`Invalid menu item control: ${control}`);
+  }
+  if ((control === 'checkbox' && role !== 'menuitemcheckbox') || (control === 'radio' && role !== 'menuitemradio')) {
+    throw new TypeError(`Menu item control "${control}" requires role "menuitem${control}"`);
+  }
 
   const isDanger = Boolean(danger || destructive);
   const classes = ['sx-menu-item', isDanger ? 'danger' : ''].filter(Boolean).join(' ');
@@ -30,11 +38,15 @@ export function menuItem(options = {}) {
   const isRadio = role === 'menuitemradio';
   const hasAriaChecked = isCheck || isRadio;
 
+  let leadingControl = '';
+  if (control === 'checkbox' || control === 'radio') {
+    leadingControl = `<span class="sx-${control}-control" aria-hidden="true" data-checked="${Boolean(checked)}"></span>`;
+  }
+
   let checkIndicator = '';
-  if (isCheck) {
-    checkIndicator = `<span class="sx-menu-check" aria-hidden="true">${checked ? controlIcon('check', 14) : ''}</span>`;
-  } else if (isRadio) {
-    checkIndicator = `<span class="sx-menu-radio" aria-hidden="true">${checked ? controlIcon('check', 14) : ''}</span>`;
+  if ((isCheck || isRadio) && control === 'check') {
+    const slotClass = isCheck ? 'sx-menu-check' : 'sx-menu-radio';
+    checkIndicator = `<span class="${slotClass}" aria-hidden="true">${checked ? controlIcon('check', 14) : ''}</span>`;
   }
 
   let iconMarkup = '';
@@ -49,9 +61,9 @@ export function menuItem(options = {}) {
 
   if (href) {
     const disabledAttr = disabled ? ' aria-disabled="true" tabindex="-1"' : '';
-    return `<a id="${escapeHTML(id)}" class="${classes}" role="${role}" href="${disabled ? '#' : escapeHTML(href)}"${disabledAttr} data-sui-menu-item data-sui-menu-id="${escapeHTML(id)}"${ariaCheckedAttr}${attributes ? ` ${attributes}` : ''}>${iconMarkup}${labelMarkup}${checkIndicator}${shortcutMarkup}</a>`;
+    return `<a id="${escapeHTML(id)}" class="${classes}" role="${role}" href="${disabled ? '#' : escapeHTML(href)}"${disabledAttr} data-sui-menu-item data-sui-menu-id="${escapeHTML(id)}"${ariaCheckedAttr}${attributes ? ` ${attributes}` : ''}>${iconMarkup}${leadingControl}${labelMarkup}${checkIndicator}${shortcutMarkup}</a>`;
   }
 
   const disabledAttr = disabled ? ' disabled aria-disabled="true"' : '';
-  return `<button type="button" id="${escapeHTML(id)}" class="${classes}" role="${role}" data-sui-menu-item data-sui-menu-id="${escapeHTML(id)}"${ariaCheckedAttr}${disabledAttr}${attributes ? ` ${attributes}` : ''}>${iconMarkup}${labelMarkup}${checkIndicator}${shortcutMarkup}</button>`;
+  return `<button type="button" id="${escapeHTML(id)}" class="${classes}" role="${role}" data-sui-menu-item data-sui-menu-id="${escapeHTML(id)}"${ariaCheckedAttr}${disabledAttr}${attributes ? ` ${attributes}` : ''}>${iconMarkup}${leadingControl}${labelMarkup}${checkIndicator}${shortcutMarkup}</button>`;
 }

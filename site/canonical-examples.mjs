@@ -544,7 +544,7 @@ const canonical = {
     'grouped': () => menu({ ariaLabel: 'Project actions', groups: [{ label: 'Project', items: [{ label: 'Edit', icon: 'pencil' }, { label: 'Duplicate', icon: 'copy' }] }, { label: 'Manage', items: [{ label: 'Delete', icon: 'trash', danger: true }] }] }),
     'without icons': () => menu({ ariaLabel: 'Project actions', items: [{ label: 'Edit' }, { label: 'Duplicate' }, { type: 'separator' }, { label: 'Delete', danger: true }] }),
     'shortcuts': () => menu({ ariaLabel: 'Project actions', items: [{ label: 'Edit', shortcut: 'Enter' }, { label: 'Duplicate', shortcut: 'D' }, { type: 'separator' }, { label: 'Delete', shortcut: 'Delete', danger: true }] }),
-    'selection': () => menu({ ariaLabel: 'Visibility', groups: [{ label: 'Visibility', items: [{ label: 'Show archived', role: 'menuitemcheckbox' }, { label: 'Show completed', role: 'menuitemcheckbox', checked: true }] }, { label: 'Density', items: [{ label: 'Compact view', role: 'menuitemradio', checked: true }, { label: 'Comfortable view', role: 'menuitemradio' }] }] }),
+    'selection': () => menu({ ariaLabel: 'Visibility', groups: [{ label: 'Show', items: [{ label: 'Show sidebar', role: 'menuitemcheckbox', checked: true }] }, { label: 'Visibility', items: [{ label: 'Show archived', role: 'menuitemcheckbox', control: 'checkbox' }, { label: 'Show completed', role: 'menuitemcheckbox', control: 'checkbox', checked: true }] }, { label: 'Density', items: [{ label: 'Compact view', role: 'menuitemradio', control: 'radio', checked: true }, { label: 'Comfortable view', role: 'menuitemradio', control: 'radio' }] }] }),
     'long list': () => menu({ ariaLabel: 'Projects', items: longList.map(n => ({ label: n, icon: 'folder' })) })
   },
 
@@ -554,7 +554,7 @@ const canonical = {
     'Disabled': () => menu({ ariaLabel: 'Disabled item', items: [{ label: 'Move to workspace', disabled: true }] }),
     'Danger': () => menu({ ariaLabel: 'Danger item', items: [{ label: 'Delete', danger: true }] }),
     'Shortcut': () => menu({ ariaLabel: 'Shortcut item', items: [{ label: 'Duplicate', shortcut: 'D' }] }),
-    'Checkbox and radio': () => menu({ ariaLabel: 'Selection items', groups: [{ label: 'Visibility', items: [{ label: 'Show archived', role: 'menuitemcheckbox' }, { label: 'Show completed', role: 'menuitemcheckbox', checked: true }] }, { label: 'Density', items: [{ label: 'Compact view', role: 'menuitemradio', checked: true }, { label: 'Comfortable view', role: 'menuitemradio' }] }] })
+    'Checkbox and radio': () => menu({ ariaLabel: 'Selection items', groups: [{ label: 'Checkmark', items: [{ label: 'Show sidebar', role: 'menuitemcheckbox', checked: true }] }, { label: 'Checkbox', items: [{ label: 'Show archived', role: 'menuitemcheckbox', control: 'checkbox' }, { label: 'Show completed', role: 'menuitemcheckbox', control: 'checkbox', checked: true }] }, { label: 'Radio', items: [{ label: 'Compact view', role: 'menuitemradio', control: 'radio', checked: true }, { label: 'Comfortable view', role: 'menuitemradio', control: 'radio' }] }] })
   },
 
   'Checkbox': {
@@ -579,7 +579,7 @@ const canonical = {
     'without icons': () => dropdownMenu({ trigger: 'Actions', items: [{ label: 'Edit' }, { label: 'Duplicate' }, { label: 'Delete', danger: true }] }),
     'shortcuts': () => dropdownMenu({ trigger: 'Actions', items: [{ label: 'Edit', shortcut: 'Enter' }, { label: 'Duplicate', shortcut: 'D' }] }),
     'icon trigger': () => dropdownMenu({ trigger: { label: '', icon: 'plus', ariaLabel: 'Create resource' }, items: [{ label: 'New project', icon: 'folder' }] }),
-    'selection': () => dropdownMenu({ trigger: 'View', ariaLabel: 'Visibility', groups: [{ label: 'Visibility', items: [{ label: 'Show archived', role: 'menuitemcheckbox' }, { label: 'Show completed', role: 'menuitemcheckbox', checked: true }] }, { label: 'Density', items: [{ label: 'Compact view', role: 'menuitemradio', checked: true }, { label: 'Comfortable view', role: 'menuitemradio' }] }] }),
+    'selection': () => dropdownMenu({ trigger: 'View', ariaLabel: 'Visibility', groups: [{ label: 'Show', items: [{ label: 'Show sidebar', role: 'menuitemcheckbox', checked: true }] }, { label: 'Visibility', items: [{ label: 'Show archived', role: 'menuitemcheckbox', control: 'checkbox' }, { label: 'Show completed', role: 'menuitemcheckbox', control: 'checkbox', checked: true }] }, { label: 'Density', items: [{ label: 'Compact view', role: 'menuitemradio', control: 'radio', checked: true }, { label: 'Comfortable view', role: 'menuitemradio', control: 'radio' }] }] }),
     'long list': () => dropdownMenu({ trigger: 'Projects', items: longList.map(n => ({ label: n, icon: 'folder' })) })
   },
 

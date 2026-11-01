@@ -152,8 +152,8 @@ export function initDropdownMenu(element) {
       detail,
     }));
 
-    // If it's a regular action or link (not a checkbox that keeps menu open), close
-    if (detail.role !== 'menuitemcheckbox') {
+    // If it's a regular action or link (not a check/radio selection that keeps the menu open), close
+    if (detail.role !== 'menuitemcheckbox' && detail.role !== 'menuitemradio') {
       close(true);
     }
   }

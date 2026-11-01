@@ -82,6 +82,7 @@ export function initMenu(element) {
       if (checkSlot) {
         checkSlot.innerHTML = checked ? controlIcon('check', 14) : '';
       }
+      itemEl.querySelector('.sx-checkbox-control')?.setAttribute('data-checked', String(checked));
     } else if (role === 'menuitemradio') {
       checked = true;
       const group = itemEl.closest('[role="group"]') || element;
@@ -89,10 +90,12 @@ export function initMenu(element) {
         sibling.setAttribute('aria-checked', 'false');
         const radioSlot = sibling.querySelector('.sx-menu-radio');
         if (radioSlot) radioSlot.innerHTML = '';
+        sibling.querySelector('.sx-radio-control')?.setAttribute('data-checked', 'false');
       });
       itemEl.setAttribute('aria-checked', 'true');
       const radioSlot = itemEl.querySelector('.sx-menu-radio');
       if (radioSlot) radioSlot.innerHTML = controlIcon('check', 14);
+      itemEl.querySelector('.sx-radio-control')?.setAttribute('data-checked', 'true');
     }
 
     element.dispatchEvent(new view.CustomEvent('sui:menu:select', {
@@ -100,7 +103,7 @@ export function initMenu(element) {
       detail: { id, label, role, checked, element: itemEl },
     }));
 
-    if (role !== 'menuitemcheckbox' && element.hasAttribute?.('popover') && element.matches?.(':popover-open')) {
+    if (role !== 'menuitemcheckbox' && role !== 'menuitemradio' && element.hasAttribute?.('popover') && element.matches?.(':popover-open')) {
       try { element.hidePopover(); } catch {}
     }
   }

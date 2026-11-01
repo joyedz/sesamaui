@@ -10,6 +10,7 @@ export interface MenuItemOptions {
   destructive?: boolean;
   role?: MenuItemRole;
   checked?: boolean;
+  control?: 'check' | 'checkbox' | 'radio';
   href?: string | null;
   attributes?: string;
 }

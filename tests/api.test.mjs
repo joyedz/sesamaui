@@ -1592,6 +1592,15 @@ test('menuItem renders actions, links, checkboxes, radios, shortcuts, and escapi
   assert.match(radioItem, /aria-checked="false"/);
   assert.match(radioItem, /class="sx-menu-radio"/);
 
+  // Leading checkbox / radio controls (legacy-style selection affordances)
+  const controlCheck = menuItem({label: 'Show archived', role: 'menuitemcheckbox', control: 'checkbox', checked: true});
+  assert.match(controlCheck, /class="sx-checkbox-control" aria-hidden="true" data-checked="true"/);
+  assert.doesNotMatch(controlCheck, /sx-menu-check/);
+  const controlRadio = menuItem({label: 'Compact view', role: 'menuitemradio', control: 'radio', checked: false});
+  assert.match(controlRadio, /class="sx-radio-control" aria-hidden="true" data-checked="false"/);
+  assert.throws(() => menuItem({label: 'X', control: 'checkbox'}), TypeError);
+  assert.throws(() => menuItem({label: 'X', control: 'radio', role: 'menuitemcheckbox'}), TypeError);
+
   // Danger / destructive
   const dangerItem = menuItem({label: 'Delete', danger: true});
   assert.match(dangerItem, /class="sx-menu-item danger"/);
