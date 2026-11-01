@@ -62,7 +62,7 @@ export function commandPalette(options = {}) {
         const iconSlot = c.icon ? controlIcon(c.icon, 16) : '';
         const shortcutSlot = c.shortcut ? `<kbd>${escapeHTML(c.shortcut)}</kbd>` : '';
         const disabledAttr = c.disabled ? ' aria-disabled="true"' : '';
-        return `<div role="option" id="${optionId}" class="sx-menu-item" aria-selected="false"${disabledAttr} data-sui-command-id="${escapeHTML(c.id)}" data-command-action="${escapeHTML(c.action)}">${iconSlot}<span>${escapeHTML(c.label)}</span>${shortcutSlot}</div>`;
+        return `<div role="option" id="${optionId}" class="sx-menu-item" aria-selected="false"${disabledAttr} data-sui-command-id="${escapeHTML(c.id)}" data-sui-command-action="${escapeHTML(c.action)}">${iconSlot}<span>${escapeHTML(c.label)}</span>${shortcutSlot}</div>`;
       }).join('');
       return `<div role="group" aria-label="${escapeHTML(group)}"><div class="sx-menu-label">${escapeHTML(group)}</div>${itemsMarkup}</div>`;
     }).join('');
@@ -71,7 +71,7 @@ export function commandPalette(options = {}) {
   const initialResults = renderList(allCommands.filter(c => !value || c.label.toLowerCase().includes(value.toLowerCase())));
   const commandsJson = escapeHTML(JSON.stringify(allCommands));
 
-  return `<dialog id="${escapeHTML(id)}" class="ds-modal sx-command" data-sui-command-palette data-command data-empty-text="${escapeHTML(emptyText)}" data-sui-commands="${commandsJson}" aria-labelledby="${escapeHTML(id)}-title"${attributes ? ` ${attributes}` : ''}><h2 id="${escapeHTML(id)}-title">${escapeHTML(title)}</h2><div class="field"><input role="combobox" aria-label="${escapeHTML(placeholder)}" aria-controls="${escapeHTML(id)}-results" aria-expanded="true" aria-autocomplete="list" autofocus data-command-search data-sui-command-input placeholder="${escapeHTML(placeholder)}" value="${escapeHTML(value)}"></div><div id="${escapeHTML(id)}-results" class="sx-command-results" role="listbox" aria-label="${escapeHTML(title)}" data-sui-command-results>${initialResults}</div><p class="sx-help">↑ ↓ to navigate · Enter to run · Escape to close</p><div class="actions"><button type="button" class="btn secondary" data-command-close data-sui-command-close>Close</button></div></dialog>`;
+  return `<dialog id="${escapeHTML(id)}" class="ds-modal sx-command" data-sui-command-palette data-empty-text="${escapeHTML(emptyText)}" data-sui-commands="${commandsJson}" aria-labelledby="${escapeHTML(id)}-title"${attributes ? ` ${attributes}` : ''}><h2 id="${escapeHTML(id)}-title">${escapeHTML(title)}</h2><div class="field"><input role="combobox" aria-label="${escapeHTML(placeholder)}" aria-controls="${escapeHTML(id)}-results" aria-expanded="true" aria-autocomplete="list" autofocus data-sui-command-input placeholder="${escapeHTML(placeholder)}" value="${escapeHTML(value)}"></div><div id="${escapeHTML(id)}-results" class="sx-command-results" role="listbox" aria-label="${escapeHTML(title)}" data-sui-command-results>${initialResults}</div><p class="sx-help">↑ ↓ to navigate · Enter to run · Escape to close</p><div class="actions"><button type="button" class="btn secondary" data-sui-command-close>Close</button></div></dialog>`;
 }
 
 const mounted = new WeakMap();
@@ -143,7 +143,7 @@ export function initCommandPalette(dialog) {
         const iconSlot = c.icon ? controlIcon(c.icon, 16) : '';
         const shortcutSlot = c.shortcut ? `<kbd>${escapeHTML(c.shortcut)}</kbd>` : '';
         const disabledAttr = c.disabled ? ' aria-disabled="true"' : '';
-        return `<div role="option" id="${optionId}" class="sx-menu-item" aria-selected="false"${disabledAttr} data-sui-command-id="${escapeHTML(c.id)}" data-command-action="${escapeHTML(c.action)}">${iconSlot}<span>${escapeHTML(c.label)}</span>${shortcutSlot}</div>`;
+        return `<div role="option" id="${optionId}" class="sx-menu-item" aria-selected="false"${disabledAttr} data-sui-command-id="${escapeHTML(c.id)}" data-sui-command-action="${escapeHTML(c.action)}">${iconSlot}<span>${escapeHTML(c.label)}</span>${shortcutSlot}</div>`;
       }).join('');
       return `<div role="group" aria-label="${escapeHTML(group)}"><div class="sx-menu-label">${escapeHTML(group)}</div>${itemsMarkup}</div>`;
     }).join('');
@@ -154,7 +154,7 @@ export function initCommandPalette(dialog) {
   function executeOption(optionEl) {
     if (!optionEl || optionEl.matches('[aria-disabled="true"]')) return;
     const cmdId = optionEl.dataset.suiCommandId;
-    const action = optionEl.dataset.commandAction;
+    const action = optionEl.dataset.suiCommandAction;
     const label = optionEl.querySelector('span')?.textContent || optionEl.textContent.trim();
     const command = rawCommands.find(c => c.id === cmdId) || { id: cmdId, label, action };
 
@@ -234,7 +234,7 @@ export function initCommandPalette(dialog) {
       executeOption(optionEl);
       return;
     }
-    if (event.target.closest('[data-command-close], [data-sui-command-close]')) {
+    if (event.target.closest('[data-sui-command-close]')) {
       close();
     }
   }
@@ -246,7 +246,7 @@ export function initCommandPalette(dialog) {
   // Auto-connect any page triggers targeting this dialog
   const doc = dialog.ownerDocument || globalThis.document;
   const onDocClick = event => {
-    const trigger = event.target.closest?.(`[data-command-open="${dialog.id}"]`);
+    const trigger = event.target.closest?.(`[data-sui-command-open="${dialog.id}"]`);
     if (trigger) {
       open(trigger);
     }
@@ -263,7 +263,7 @@ export function initCommandPalette(dialog) {
     getVisibleCommands() {
       return getVisibleOptions().map(opt => ({
         id: opt.dataset.suiCommandId,
-        action: opt.dataset.commandAction,
+        action: opt.dataset.suiCommandAction,
         label: opt.querySelector('span')?.textContent || opt.textContent.trim(),
       }));
     },
@@ -273,7 +273,7 @@ export function initCommandPalette(dialog) {
         const opt = enabled[activeIndex];
         return {
           id: opt.dataset.suiCommandId,
-          action: opt.dataset.commandAction,
+          action: opt.dataset.suiCommandAction,
           label: opt.querySelector('span')?.textContent || opt.textContent.trim(),
         };
       }

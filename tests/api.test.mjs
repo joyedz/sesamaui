@@ -2022,7 +2022,7 @@ test('commandPalette and initCommandPalette filter commands and handle execution
   assert.match(palHtml, /<dialog [^>]*data-sui-command-palette/);
   assert.match(palHtml, /role="combobox"/);
   assert.match(palHtml, /role="listbox"/);
-  assert.match(palHtml, /data-command-search/);
+  assert.match(palHtml, /data-sui-command-input/);
   assert.match(palHtml, /Create Project/);
   assert.match(palHtml, /Projects/);
 
