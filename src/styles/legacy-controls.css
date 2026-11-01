@@ -205,11 +205,12 @@
 .ds-modal .sx-modal-body-scroll{max-height:45dvh;overflow:auto}
 /* Entry motion: rise + scale(0.97), never from nothing. The command palette is
    keyboard-first (100+ uses/day) and stays instant. */
-.ds-modal:not(.sx-command){opacity:0;transform:translateY(4px) scale(.97);transition:opacity var(--motion-base) var(--ease-out),transform var(--motion-base) var(--ease-out)}
+.ds-modal:not(.sx-command){opacity:0;transform:translateY(4px) scale(.97);transition:opacity var(--motion-base) var(--ease-out),transform var(--motion-base) var(--ease-out),display var(--motion-base) allow-discrete,overlay var(--motion-base) allow-discrete}
 .ds-modal[open]{opacity:1;transform:none}
-.ds-modal::backdrop{transition:background-color var(--motion-base) var(--ease-standard)}
-@starting-style{.ds-modal[open]:not(.sx-command){opacity:0;transform:translateY(4px) scale(.97)}
-.ds-modal[open]:not(.sx-command)::backdrop{background:transparent}}
+.ds-modal::backdrop{background:transparent}
+.ds-modal:not(.sx-command)::backdrop{transition:background-color var(--motion-base) var(--ease-standard),display var(--motion-base) allow-discrete,overlay var(--motion-base) allow-discrete}
+.ds-modal[open]:not(.sx-command)::backdrop{background:color-mix(in srgb,var(--color-contrast) 35%,transparent)}
+@starting-style{.ds-modal[open]:not(.sx-command){opacity:0;transform:translateY(4px) scale(.97)}}
 @media(prefers-reduced-motion:reduce){.ds-modal:not(.sx-command){transition:opacity var(--motion-base) var(--ease-standard);transform:none}
 @starting-style{.ds-modal[open]:not(.sx-command){transform:none}}}
 

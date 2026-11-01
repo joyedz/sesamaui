@@ -125,6 +125,19 @@
 
 :where(.sui-root) .sx-tabpanel {
   outline: none;
+  transition: opacity var(--motion-fast) var(--ease-standard);
+}
+
+@starting-style {
+  :where(.sui-root) .sx-tabpanel:not([hidden]) {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.sui-root) .sx-tabpanel {
+    transition: none;
+  }
 }
 
 :where(.sui-root) .sx-tabpanel:focus-visible {

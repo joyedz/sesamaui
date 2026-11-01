@@ -24,13 +24,21 @@
   background: var(--color-contrast);
 }
 
-:where(.sui-root) .sx-checkbox-layout input[type="radio"]:checked::after {
+:where(.sui-root) .sx-checkbox-layout input[type="radio"]::after {
   content: "";
   display: block;
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: var(--text-inverse);
+  transform: scale(.5);
+  opacity: 0;
+  transition: transform var(--motion-fast) var(--ease-out), opacity var(--motion-fast) var(--ease-out);
+}
+
+:where(.sui-root) .sx-checkbox-layout input[type="radio"]:checked::after {
+  transform: scale(1);
+  opacity: 1;
 }
 
 :where(.sui-root) .sx-checkbox-layout input[type="radio"][aria-invalid="true"] {

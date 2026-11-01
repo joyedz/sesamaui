@@ -7,7 +7,10 @@
 :where(.sui-root) .sx-tagbox[aria-invalid=true]{border-color:var(--color-danger)}
 :where(.sui-root) .sx-tagbox[data-disabled]{opacity:.5}
 :where(.sui-root) .sx-tagbox:not([data-disabled]):hover{background:color-mix(in srgb,var(--color-base),var(--color-contrast) 3%)}
-:where(.sui-root) .sx-tag{display:flex;align-items:center;height:20px;min-width:0;gap:var(--space-4);max-width:100%;padding:var(--space-2) var(--space-6);background:var(--color-recessed);border-radius:var(--radius-xs);font-size:12px;line-height:16px}
+:where(.sui-root) .sx-tag{display:flex;align-items:center;height:20px;min-width:0;gap:var(--space-4);max-width:100%;padding:var(--space-2) var(--space-6);background:var(--color-recessed);border-radius:var(--radius-xs);font-size:12px;line-height:16px;transition:opacity var(--motion-fast) var(--ease-standard),transform var(--motion-fast) var(--ease-standard)}
+@starting-style{:where(.sui-root) .sx-tag{opacity:0;transform:scale(.95)}}
+@media(prefers-reduced-motion:reduce){:where(.sui-root) .sx-tag{transition:opacity var(--motion-fast) var(--ease-standard);transform:none}
+@starting-style{:where(.sui-root) .sx-tag{transform:none}}}
 :where(.sui-root) .sx-tag span{overflow-wrap:anywhere}
 :where(.sui-root) .sx-tag button{width:16px;min-width:16px;height:16px;min-height:16px;padding:0;flex:none;display:grid;place-items:center;border:none;background:none;cursor:pointer;color:inherit;opacity:.7}
 :where(.sui-root) .sx-tag button:hover{opacity:1}

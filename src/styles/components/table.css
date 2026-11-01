@@ -39,6 +39,13 @@
   vertical-align: middle;
   border-bottom: 1px solid var(--color-hairline);
   color: inherit;
+  transition: background-color var(--motion-fast) var(--ease-standard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.sui-root) .sx-table td {
+    transition: none;
+  }
 }
 
 :where(.sui-root) .sx-table tr > :is(th, td):first-child {
