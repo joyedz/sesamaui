@@ -106,7 +106,8 @@ const canonical = {
       button({ label: 'BASE', size: 'base', icon: 'plus' }), button({ label: 'LG', size: 'lg', icon: 'plus' })
     ),
     'With icon': () => button({ label: 'Create project', icon: 'plus' }),
-    'Square icon button': () => iconButton('plus', { variant: 'raised', ariaLabel: 'Add requirement', attributes: 'aria-pressed="false"' }),
+    'Square icon button': () => iconButton('plus', { ariaLabel: 'Add requirement', attributes: 'aria-pressed="false"' }),
+    'Raised icon button': () => iconButton('plus', { variant: 'raised', ariaLabel: 'Add requirement', attributes: 'aria-pressed="false"' }),
     'Outline icon button': () => row(
       iconButton('kebab', { variant: 'outline size-base', ariaLabel: 'More actions' }),
       iconButton('plus', { variant: 'outline size-base', ariaLabel: 'Add item' }),
@@ -307,7 +308,7 @@ const canonical = {
     'With metadata': () => listRow({ title: 'Project overview', trailing: '<span class="sx-help">Updated today</span>' }),
     'With badge': () => listRow({ title: 'Project overview', trailing: badge({ label: 'Draft' }) }),
     'Navigation': () => listRow({ variant: 'navigation', title: 'Project settings', href: '#' }),
-    'With action': () => listRow({ title: 'Project overview', trailing: ibtn('kebab', '', 'Item actions') }),
+    'With action': () => listRow({ title: 'Project overview', trailing: dropdownMenu({ trigger: { label: '', variant: 'ghost', icon: 'kebab', ariaLabel: 'Item actions' }, ariaLabel: 'Item actions', items: [{ label: 'Edit', icon: 'pencil' }, { label: 'Duplicate', icon: 'copy' }, { label: 'Delete', icon: 'trash', danger: true }] }) }),
     'With switch': () => listRow({ title: 'Email notifications', trailing: sw(true, 'Email notifications') }),
     'With checkbox': () => listRow({ variant: 'checkbox', title: 'Website' }),
     'With radio': () => listRow({ variant: 'radio', title: 'Website' }),
