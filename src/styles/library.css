@@ -89,17 +89,17 @@ html:has(dialog[open]),body:has(dialog[open]){overflow:hidden}.sx-calendar-grid>
 .sx-table-actions{display:flex;align-items:center;justify-content:flex-end;gap:var(--space-4);white-space:nowrap}.sx-table .sx-table-action-heading{text-align:right;width:1%;white-space:nowrap}
 
 /* Shared thin scrollbar treatment, with native scrolling and gestures. */
-:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options){scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent}
-:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options):is(:hover,:focus-visible,:focus-within){scrollbar-color:var(--scroll-thumb-hover) transparent}
-:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options)::-webkit-scrollbar{width:6px;height:6px}
-:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options)::-webkit-scrollbar-track{background:transparent}
-:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options)::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:999px}
-:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options)::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover)}
-:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options)::-webkit-scrollbar-corner{background:transparent}
+:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options,.sx-textarea){scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent}
+:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options,.sx-textarea):is(:hover,:focus-visible,:focus-within){scrollbar-color:var(--scroll-thumb-hover) transparent}
+:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options,.sx-textarea)::-webkit-scrollbar{width:6px;height:6px}
+:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options,.sx-textarea)::-webkit-scrollbar-track{background:transparent}
+:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options,.sx-textarea)::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:999px}
+:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options,.sx-textarea)::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover)}
+:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options,.sx-textarea)::-webkit-scrollbar-corner{background:transparent}
 .sx-scroll-area{overflow:auto;max-width:100%;min-width:0;overscroll-behavior:contain}.sx-scroll-demo{width:100%;background:var(--color-base);border-radius:var(--radius-md);box-shadow:var(--shadow-ring)}.sx-scroll-demo-row{padding:var(--space-8) var(--space-12);border-bottom:1px solid var(--color-hairline)}.sx-scroll-demo-tile{display:grid;place-items:center;width:140px;height:80px;background:var(--color-recessed);border-radius:var(--radius-sm);flex:none}
-@media(forced-colors:active){:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options){scrollbar-color:auto}}
+@media(forced-colors:active){:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options,.sx-textarea){scrollbar-color:auto}}
 
-:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options)::-webkit-scrollbar-button{display:none;width:0;height:0}
+:where(.sx-scroll-area,.sx-popup,.sx-menu-preview,.sx-table-wrap,.sx-modal-body-scroll,.ds-modal,.sx-popover-options,.sx-textarea)::-webkit-scrollbar-button{display:none;width:0;height:0}
 
 /* Chromium uses native controls when scrollbar-width/color override WebKit styling. */
 @supports selector(::-webkit-scrollbar){
