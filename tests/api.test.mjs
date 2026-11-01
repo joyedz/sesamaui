@@ -1924,7 +1924,7 @@ test('tooltip and initTooltip handle hover, focus, delay, and escape dismissal',
   tipCtrl.destroy();
 });
 
-test('showToast and initToastRegion manage queue, tones, actions, and handle updates', () => {
+test('showToast and initToastRegion manage queue, tones, actions, and handle updates', async () => {
   const createdItems = [];
   const mockRegionEl = {
     append(item) { createdItems.push(item); },
@@ -1978,8 +1978,10 @@ test('showToast and initToastRegion manage queue, tones, actions, and handle upd
   handle1.update('Save failed', 'error');
   assert.equal(toast1.dataset.tone, 'error');
 
-  // Dismiss handle
+  // Dismiss handle (removal is deferred for the exit animation)
   handle1.dismiss();
+  assert.equal(createdItems.length, 1);
+  await new Promise(resolve => setTimeout(resolve, 260));
   assert.equal(createdItems.length, 0);
 
   regionCtrl.destroy();

@@ -150,14 +150,26 @@ export function initToastRegion(element) {
       if (entry.removed) return;
       entry.removed = true;
       clearTimeout(entry.timer);
-      item.remove();
-      const idx = entries.indexOf(entry);
-      if (idx >= 0) entries.splice(idx, 1);
-      if (globalThis.dsToastEntries) {
-        const gIdx = globalThis.dsToastEntries.indexOf(entry);
-        if (gIdx >= 0) globalThis.dsToastEntries.splice(gIdx, 1);
+
+      const finalize = () => {
+        item.remove();
+        const idx = entries.indexOf(entry);
+        if (idx >= 0) entries.splice(idx, 1);
+        if (globalThis.dsToastEntries) {
+          const gIdx = globalThis.dsToastEntries.indexOf(entry);
+          if (gIdx >= 0) globalThis.dsToastEntries.splice(gIdx, 1);
+        }
+        promote();
+      };
+
+      // Exit: fade + sink with the same interruptible transition, then remove.
+      const reducedMotion = typeof view.matchMedia === 'function' && view.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reducedMotion || typeof item.classList?.add !== 'function') {
+        finalize();
+        return;
       }
-      promote();
+      item.classList.add('is-leaving');
+      setTimeout(finalize, 220);
     }
 
     item.addEventListener('pointerenter', () => {

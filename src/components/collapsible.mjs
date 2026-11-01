@@ -104,7 +104,7 @@ export function initCollapsible(element) {
       // Force reflow
       void content.offsetHeight;
 
-      content.style.transition = 'height 200ms ease';
+      content.style.transition = 'height var(--motion-base) var(--ease-out)';
       content.style.height = `${height}px`;
 
       animTimer = setTimeout(() => {
@@ -117,7 +117,7 @@ export function initCollapsible(element) {
       // Force reflow
       void content.offsetHeight;
 
-      content.style.transition = 'height 200ms ease';
+      content.style.transition = 'height var(--motion-base) var(--ease-out)';
       content.style.height = '0px';
 
       animTimer = setTimeout(() => {

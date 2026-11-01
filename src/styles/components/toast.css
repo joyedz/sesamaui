@@ -19,5 +19,7 @@
 :where(.sui-root) .ds-toast[data-tone="error"]{background:var(--color-danger);color:var(--text-on-brand)}
 :where(.sui-root) .ds-toast .btn.ghost{color:inherit}
 :where(.sui-root) .ds-toast .btn.ghost:hover{color:inherit;background:color-mix(in srgb,currentColor 12%,transparent)}
-@media(prefers-reduced-motion:reduce){:where(.sui-root) .ds-toast{transition:opacity var(--motion-base) var(--ease-standard);transform:none}}
+:where(.sui-root) .ds-toast.is-leaving{opacity:0;transform:translateY(8px);pointer-events:none}
+@media(prefers-reduced-motion:reduce){:where(.sui-root) .ds-toast{transition:opacity var(--motion-base) var(--ease-standard);transform:none}
+:where(.sui-root) .ds-toast.is-leaving{transform:none}}
 @media(prefers-reduced-motion:reduce){@starting-style{:where(.sui-root) .ds-toast{transform:none}}}
