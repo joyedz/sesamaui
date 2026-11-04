@@ -27,7 +27,7 @@ Sesama UI is a dependency-free vanilla HTML/CSS/JavaScript design system. Every 
 npm install sesama-ui
 ```
 
-Published on [npm](https://www.npmjs.com/package/sesama-ui) and mirrored on [GitHub Packages](https://github.com/joyedz/sesamaui/pkgs/npm/%40joyedz%2Fsesama-ui) (`@joyedz/sesama-ui`). During the alpha, pin the `alpha` dist-tag if you want to opt in explicitly: `npm install sesama-ui@alpha`.
+Published on [npm](https://www.npmjs.com/package/sesama-ui) and mirrored on [GitHub Packages](https://github.com/joyedz/sesamaui/pkgs/npm/%40joyedz%2Fsesama-ui) (`@joyedz/sesama-ui`).
 
 ## Quick start
 
@@ -93,11 +93,22 @@ import 'sesama-ui/css/components.css';
 | Navigation | Tabs, Breadcrumbs, Tree, List Row, Toolbar, Collapsible, Pagination |
 | Data and AI | Table, Chart, Wire, Canvas, File Card, Message, Tool Call, Agent Run, Composer |
 
-**20 structural blocks** compose them into application layouts: `appShell`, `workspaceSidebar`, `pageHeader`, `pageLayout`, `pageGrid`, `contentSection`, `dataSection`, `metricCard`, `peopleList`, `activityFeed`, `chartSection`, plus domain recipes for dashboards, reports, and dialogs.
+**11 structural blocks** compose them into application layouts: `appShell`, `workspaceSidebar`, `pageHeader`, `pageLayout`, `pageGrid`, `contentSection`, `dataSection`, `metricCard` / `metricSummary`, `peopleList`, `activityFeed`, `chartSection`, plus the `agentCardRecipe` domain recipe.
 
-Complex widgets — Combobox, Date Picker, Command Palette, Tree, Tag Input — are labeled **experimental** and are prioritized for manual screen-reader review; the rest are stable within the alpha. Maturity details live in the [API contract](docs/COMPONENT-API-PREVIEW.md).
+Complex widgets — Combobox, Date Picker, Command Palette, Tree, Tag Input — are labeled **experimental** and are prioritized for manual screen-reader review; the rest are stable within 0.x. Maturity details live in the [API contract](docs/COMPONENT-API-PREVIEW.md).
 
 Browse every component, variant, and state in the [component catalog](site/Design%20system.html), or try the [Component API preview](demos/Component%20API.html).
+
+## Solid and blur surfaces
+
+ESM builders with a background accept `surface: 'solid' | 'blur'`. Solid remains the default. This option preserves the existing variant/tone and interaction states; nested components keep their own surface.
+
+```js
+composer({ surface: 'blur' });
+card({ surface: 'blur', content: inputField({ label: 'Name', surface: 'solid' }) });
+```
+
+Tune `--surface-opacity` (78%), `--surface-blur` (16px), and `--surface-saturation` (140%). Forced colors and reduced transparency use solid surfaces. See the catalog's **Surface · Solid / Blur** examples and [surface API details](docs/COMPONENT-API-PREVIEW.md#shared-surfaces-esm).
 
 ## Demos
 
@@ -105,16 +116,20 @@ Standalone application examples built with the library:
 
 | Page | Source |
 | --- | --- |
-| Landing | [Sesama landing.html](site/Sesama%20landing.html) |
-| Login | [demos/Login.html](demos/Login.html) |
-| Dashboard | [demos/Dashboard overview.html](demos/Dashboard%20overview.html) |
-| Revenue | [demos/Revenue report.html](demos/Revenue%20report.html) |
-| Orders | [demos/Orders.html](demos/Orders.html) |
-| Customers | [demos/Customers.html](demos/Customers.html) |
-| AI workspace | [demos/AI agents demo.html](demos/AI%20agents%20demo.html) |
-| Issue workspace | [demos/Issue workspace.html](demos/Issue%20workspace.html) |
+| Login | [demos/onboarding/Login.html](demos/onboarding/Login.html) |
+| Dashboard | [demos/dashboard/Dashboard overview.html](demos/dashboard/Dashboard%20overview.html) |
+| Revenue | [demos/dashboard/Revenue report.html](demos/dashboard/Revenue%20report.html) |
+| Orders | [demos/dashboard/Orders.html](demos/dashboard/Orders.html) |
+| Customers | [demos/dashboard/Customers.html](demos/dashboard/Customers.html) |
+| AI workspace | [demos/ai-agent/AI agents demo.html](demos/ai-agent/AI%20agents%20demo.html) |
+| Agent directory | [demos/ai-agent/Agents.html](demos/ai-agent/Agents.html) |
+| Agent Bot | [demos/ai-bot/Agent Bot.html](demos/ai-bot/Agent%20Bot.html) |
+| Issue workspace | [demos/issue/Issue workspace.html](demos/issue/Issue%20workspace.html) |
+| My issues | [demos/issue/My issues.html](demos/issue/My%20issues.html) |
+| Review | [demos/issue/Reviews.html](demos/issue/Reviews.html) |
+| All issues | [demos/issue/All issues.html](demos/issue/All%20issues.html) |
 
-More examples are indexed in [demos/README.md](demos/README.md). Authentication, model responses, and agent execution in the demos are local simulations, not connected services.
+Run `npm run dev` and open http://127.0.0.1:4173 for an index page linking every demo and the catalog. More examples are indexed in [demos/README.md](demos/README.md). Authentication, model responses, and agent execution in the demos are local simulations, not connected services.
 
 ## Documentation
 
@@ -129,7 +144,7 @@ Requires Node.js 22 or later.
 
 ```sh
 npm install
-npm run dev               # static server at http://127.0.0.1:4173
+npm run dev               # static server with a demo index at http://127.0.0.1:4173
 npm run check             # syntax and generated-source consistency
 npm test                  # unit: API contract, CSS scoping, consumer, packaging
 npx playwright install chromium firefox webkit
@@ -139,9 +154,9 @@ npm run test:keyboard     # keyboard navigation
 npm run test:functional   # interaction suites
 ```
 
-Project layout: `src/components/` (component builders), `src/blocks/` (layout blocks), `src/icons/` (icon library), `src/runtime.mjs` (mount runtime), `src/styles/` (tokens, base, component and block stylesheets), `demos/` (application examples), `skills/sesama-ui/` (agent skill).
+Project layout: `src/components/` (component builders), `src/blocks/` (layout blocks), `src/icons/` (icon library), `src/runtime.mjs` (mount runtime), `src/styles/` (tokens, base, component and block stylesheets), `demos/` (application examples grouped by category folders), `skills/sesama-ui/` (agent skill).
 
-Automated checks cover structure, contrast, and interaction. Manual screen-reader review is planned for the beta and is not claimed by these suites.
+Automated checks cover structure, contrast, and interaction. Manual screen-reader review is planned before the 1.0 release and is not claimed by these suites.
 
 ## Contributing
 
@@ -152,15 +167,3 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). To report a security issue, see [SECURIT
 Original Sesama code and documentation are licensed under [MIT](LICENSE). Third-party icons and trademarks retain their own terms; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [NOTICE](NOTICE).
 
 Designed by [zihni.design](https://zihni.design).
-
-
-### Solid and blur surfaces
-
-ESM builders with a background accept `surface: 'solid' | 'blur'`. Solid remains the default. This option preserves the existing variant/tone and interaction states; nested components keep their own surface.
-
-```js
-composer({ surface: 'blur' });
-card({ surface: 'blur', content: inputField({ label: 'Name', surface: 'solid' }) });
-```
-
-Tune `--surface-opacity` (78%), `--surface-blur` (16px), and `--surface-saturation` (140%). Forced colors and reduced transparency use solid surfaces. See the catalog's **Surface · Solid / Blur** examples and [surface API details](docs/COMPONENT-API-PREVIEW.md#shared-surfaces-esm).
