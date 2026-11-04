@@ -8,7 +8,9 @@ First stable release — the `-alpha` suffix is dropped from the package version
 
 - Reorganize `demos/` into category folders — `dashboard/`, `ai-agent/`, `ai-bot/` (formerly `agent-bot/`), `issue/`, `onboarding/` — with the standalone reference demos (Workspace, Component API) staying at the root. Demo routes in `shared/pages.mjs`, cross-page links, test paths, and docs are updated to match.
 
-- Issue Workspace demo keeps its App Shell and sidebar mounted across view changes: switching menus, opening issues, and tab/filter changes now swap only the main column (selection updates in place), removing the per-menu sidebar reload.
+- Issue Workspace demo keeps its App Shell and sidebar mounted across view changes: switching menus, opening issues, and tab/filter changes now swap only the main column (selection updates in place), removing the per-menu sidebar reload. The four category pages (Inbox, My issues, Review, All issues) also switch in page via `?page=` URLs instead of full page loads, with Back/Forward restoring the right section.
+
+- AI Agent demo opens the agent directory as an in-page overlay on both the chat and directory pages — 'All agents', 'New chat', and starting an agent no longer trigger full page loads, so the sidebar never reloads when switching menus.
 
 - Slim the design system catalog's App Shell example down to sidebar + header only, dropping the inner page layout/table composition so the preview focuses on the shell itself. App Shell height becomes configurable via `--shell-height` (default `100dvh`), fixing the preview overflowing its 420px stage.
 

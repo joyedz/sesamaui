@@ -527,7 +527,12 @@ document.addEventListener('click', event => {
   if (issueRoutes.has(key) && key === initialIssuePage && location.search) history.pushState(null, '', location.pathname);
   if (issueRoutes.has(key) && key !== initialIssuePage) {
     event.preventDefault(); event.stopImmediatePropagation();
-    saveIssueState(); location.href = demoRoutes[key];
+    saveIssueState();
+    history.pushState(null, '', '?page=' + key);
+    activeNav = key;
+    view = ['inbox', 'reviews'].includes(key) ? key : 'list';
+    listPage = 1;
+    render();
   }
 }, true);
 function saveIssueState() {
@@ -678,4 +683,8 @@ document.addEventListener('click', event => {
   event.preventDefault();
   event.stopImmediatePropagation();
 }, true);
-window.addEventListener('popstate', () => { const id = new URLSearchParams(location.search).get('issue'); const issue = issues.find(item => item.id === id); selected = issue || selected; activeNav = initialIssuePage; view = issue ? 'detail' : ['inbox','reviews'].includes(initialIssuePage) ? initialIssuePage : 'list'; render(); });
+window.addEventListener('popstate', () => {
+  const page = new URLSearchParams(location.search).get('page');
+  if (page && issueRoutes.has(page)) { activeNav = page; view = ['inbox','reviews'].includes(page) ? page : 'list'; render(); return; }
+  const id = new URLSearchParams(location.search).get('issue'); const issue = issues.find(item => item.id === id); selected = issue || selected; activeNav = initialIssuePage; view = issue ? 'detail' : ['inbox','reviews'].includes(initialIssuePage) ? initialIssuePage : 'list'; render();
+});

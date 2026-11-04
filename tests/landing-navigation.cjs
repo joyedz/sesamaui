@@ -19,7 +19,7 @@ let browser;
   const page = await browser.newPage({ viewport: { width: 1440, height: 960 } });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto(base);
+  await page.goto(base + '/site/Sesama%20landing.html');
   const desktop = page.locator('#lp-header-navigation');
   const demo = desktop.getByRole('button', { name: 'Demo', exact: true });
   await demo.hover();
