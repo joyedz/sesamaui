@@ -735,13 +735,12 @@ const blockSamples = {
     })
   },
   'App Shell': {
-    'Workspace': () => `<div style="height:420px">${appShell({
+    'Workspace': () => `<div style="height:420px;width:100%;--shell-height:100%">${appShell({
       sidebar: workspaceSidebar({
         navigation: [{ label: 'Overview', icon: 'home', key: 'overview', selected: true }, { label: 'Reports', icon: 'grid-3x3', key: 'reports' }],
         projects: [{ label: 'Website launch', icon: 'folder', children: [{ label: 'Review launch checklist', icon: false }] }]
       }),
-      header: pageHeader({ title: 'Reports', icon: 'grid-3x3' }),
-      content: pageLayout(dataSection({ title: 'Products', description: 'Sample data', data: table({ label: 'Products', columns: tableColumns, rows: tableRows }) }), { variant: 'data' })
+      header: pageHeader({ title: 'Reports', icon: 'grid-3x3' })
     })}</div>`
   },
   'Chart Section': {

@@ -1,5 +1,7 @@
 # Changelog
 
+- Slim the design system catalog's App Shell example down to sidebar + header only, dropping the inner page layout/table composition so the preview focuses on the shell itself. App Shell height becomes configurable via `--shell-height` (default `100dvh`), fixing the preview overflowing its 420px stage.
+
 - Fix flaky axe color-contrast false positives in the accessibility suite: modal/popup entry opacity fades were still running when axe sampled colors (fg and bg both composited through partial opacity, e.g. 4.18:1 instead of the real ~6:1). The suite now waits for open overlays to reach settled opacity (plus `animate: false`) before auditing.
 
 - **Breaking (alpha):** remove the seven unused domain recipes — `requirementGroupRecipe`, `resourceListRecipe`, `createSkillDialogRecipe`, `deleteResourceRecipe`, `dashboardOverviewRecipe`, `revenueChartRecipe`, and `dataWorkspaceRecipe`. Compose the same layouts from the structural/content blocks instead. `agentCardRecipe` remains; the design system catalog drops the corresponding block entries and their example pages.
