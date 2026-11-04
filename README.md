@@ -139,20 +139,20 @@ Tune `--surface-opacity` (78%), `--surface-blur` (16px), and `--surface-saturati
 
 Standalone application examples built with the library:
 
-| Page | Source |
-| --- | --- |
-| Login | [demos/onboarding/Login.html](demos/onboarding/Login.html) |
-| Dashboard | [demos/dashboard/Dashboard overview.html](demos/dashboard/Dashboard%20overview.html) |
-| Revenue | [demos/dashboard/Revenue report.html](demos/dashboard/Revenue%20report.html) |
-| Orders | [demos/dashboard/Orders.html](demos/dashboard/Orders.html) |
-| Customers | [demos/dashboard/Customers.html](demos/dashboard/Customers.html) |
-| AI workspace | [demos/ai-agent/AI agents demo.html](demos/ai-agent/AI%20agents%20demo.html) |
-| Agent directory | [demos/ai-agent/Agents.html](demos/ai-agent/Agents.html) |
-| Agent Bot | [demos/ai-bot/Agent Bot.html](demos/ai-bot/Agent%20Bot.html) |
-| Issue workspace | [demos/issue/Issue workspace.html](demos/issue/Issue%20workspace.html) |
-| My issues | [demos/issue/My issues.html](demos/issue/My%20issues.html) |
-| Review | [demos/issue/Reviews.html](demos/issue/Reviews.html) |
-| All issues | [demos/issue/All issues.html](demos/issue/All%20issues.html) |
+| Page | Source | Live Demo |
+| --- | --- | --- |
+| Login | [demos/onboarding/Login.html](demos/onboarding/Login.html) | [Open demo](https://sesamaui.zihni.design/demos/onboarding/Login.html) |
+| Dashboard | [demos/dashboard/Dashboard overview.html](demos/dashboard/Dashboard%20overview.html) | [Open demo](https://sesamaui.zihni.design/demos/dashboard/Dashboard%20overview.html) |
+| Revenue | [demos/dashboard/Revenue report.html](demos/dashboard/Revenue%20report.html) | [Open demo](https://sesamaui.zihni.design/demos/dashboard/Revenue%20report.html) |
+| Orders | [demos/dashboard/Orders.html](demos/dashboard/Orders.html) | [Open demo](https://sesamaui.zihni.design/demos/dashboard/Orders.html) |
+| Customers | [demos/dashboard/Customers.html](demos/dashboard/Customers.html) | [Open demo](https://sesamaui.zihni.design/demos/dashboard/Customers.html) |
+| AI workspace | [demos/ai-agent/AI agents demo.html](demos/ai-agent/AI%20agents%20demo.html) | [Open demo](https://sesamaui.zihni.design/demos/ai-agent/AI%20agents%20demo.html#chat/new) |
+| Agent directory | [demos/ai-agent/Agents.html](demos/ai-agent/Agents.html) | [Open demo](https://sesamaui.zihni.design/demos/ai-agent/Agents.html) |
+| Agent Bot | [demos/ai-bot/Agent Bot.html](demos/ai-bot/Agent%20Bot.html) | [Open demo](https://sesamaui.zihni.design/demos/ai-bot/Agent%20Bot.html) |
+| Issue workspace | [demos/issue/Issue workspace.html](demos/issue/Issue%20workspace.html) | [Open demo](https://sesamaui.zihni.design/demos/issue/Issue%20workspace.html) |
+| My issues | [demos/issue/My issues.html](demos/issue/My%20issues.html) | [Open demo](https://sesamaui.zihni.design/demos/issue/My%20issues.html) |
+| Review | [demos/issue/Reviews.html](demos/issue/Reviews.html) | [Open demo](https://sesamaui.zihni.design/demos/issue/Reviews.html) |
+| All issues | [demos/issue/All issues.html](demos/issue/All%20issues.html) | [Open demo](https://sesamaui.zihni.design/demos/issue/All%20issues.html) |
 
 Run `npm run dev` and open http://127.0.0.1:4173 for an index page linking every demo and the catalog. More examples are indexed in [demos/README.md](demos/README.md). Authentication, model responses, and agent execution in the demos are local simulations, not connected services.
 
