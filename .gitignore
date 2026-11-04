@@ -16,6 +16,7 @@ Thumbs.db
 .*-qa.*
 *.log
 output/
+/marketing/
 # Project landing page — lives with the product project, not in this repo.
 /site/Sesama landing.html
 /site/landing.css

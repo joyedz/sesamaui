@@ -1,6 +1,0 @@
-{
-  "name": "sesama-scene-review", "private": true, "type": "module",
-  "scripts": {"studio": "hyperframes preview --port 4520", "check": "hyperframes lint"},
-  "devDependencies": {"hyperframes": "0.9.3", "gsap": "^3.13.0"},
-  "overrides": {"undici": "^7.30.1"}
-}
