@@ -1,14 +1,24 @@
-# Sesama UI
+<div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/img/sesama-logo-dark.svg">
+    <img src="assets/brand/sesama-logo-final.svg" alt="Sesama" width="240">
+  </picture>
+  <h1>Sesama UI</h1>
+  <p>A shared UI language for dashboards, AI workspaces, and everyday tools.</p>
+  <p>Sesama UI is a dependency-free vanilla HTML/CSS/JavaScript design system. Every component is a pure ES Module builder that renders accessible, semantic HTML strings — in the browser, in Node.js, or at build time — and hydrates through a single <code>mount()</code> runtime with real lifecycles.</p>
+  <p><strong>Status: stable 0.x (<code>0.1.0</code>).</strong> The API may still change in minor releases; experimental components are labeled. See <a href="CHANGELOG.md">CHANGELOG.md</a>.</p>
+</div>
 
-A shared UI language for dashboards, AI workspaces, and everyday tools.
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/img/dashboard-dark.png">
+    <img src="docs/img/dashboard-light.png" alt="Sesama Dashboard Overview with metrics and charts" width="100%">
+  </picture>
+</p>
 
-Sesama UI is a dependency-free vanilla HTML/CSS/JavaScript design system. Every component is a pure ES Module builder that renders accessible, semantic HTML strings — in the browser, in Node.js, or at build time — and hydrates through a single `mount()` runtime with real lifecycles.
-
-> **Status: stable 0.x (`0.1.0`).** The API may still change in minor releases; experimental components are labeled. See [CHANGELOG.md](CHANGELOG.md).
-
-![Sesama UI dashboard in light theme](docs/img/dashboard-light.png)
-
-![Sesama UI dashboard in dark theme](docs/img/dashboard-dark.png)
+| Issue Workspace · My Inbox | AI Agent · New Chat | Agent Bot |
+| --- | --- | --- |
+| ![Issue Workspace My Inbox](docs/img/issue-my-inbox.png) | ![AI Agent New Chat](docs/img/ai-agent-new-chat.png) | ![Agent Bot conversation](docs/img/agent-bot.png) |
 
 ## Features
 
