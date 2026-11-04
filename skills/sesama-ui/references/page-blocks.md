@@ -77,6 +77,8 @@ Provides the desktop/tablet viewport canvas with inset content panels and option
 - `detail`: Optional HTML string for a right-hand detail drawer (300px width).
 - `collapsed`: Boolean flag for initial sidebar rail state.
 - `theme`: Optional theme preset (`'light'` or `'dark'`).
+- Shell height is configurable via `--shell-height` (default `100dvh`). Set it to `100%` (or a fixed height) when embedding the shell inside a sized container, so the shell fills its parent instead of the viewport.
+- Further layout knobs: `--shell-sidebar-width`, `--shell-gap`, `--shell-padding`, `--shell-detail-width`, `--shell-main-radius`.
 
 ### `workspaceSidebar(options)` (alias: `sidebar`)
 Comprehensive workspace navigation supporting brand branding, workspace switching, tree navigation, and project sections:
@@ -87,6 +89,7 @@ Comprehensive workspace navigation supporting brand branding, workspace switchin
 - `user`: `{ name, role, initials, avatarUrl }`.
 - `collapseToggle`: Boolean or custom toggle button options.
 - `themeToggle`: Boolean or custom theme toggle options.
+- `variant`: `'default'` or `'compact'`. Compact renders a 48px icon-only rail (`data-sidebar-compact`): collapsed tree geometry with hidden labels, no expand control, and icon-only navigation/profile slots (pass trusted HTML strings of icon buttons for `navigation` and `profile`, with `tooltipPlacement: 'right'`). Use it for permanently collapsed rails like the Agent Bot team panel.
 
 ### `pageHeader(options)`
 Standard header bar with breadcrumbs/title, badges, and action toolbars:

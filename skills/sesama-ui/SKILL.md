@@ -37,7 +37,7 @@ Read [runtime.md](references/runtime.md) and [page-blocks.md](references/page-bl
 
 - **Typography**: Inter Variable. UI 13px regular 400; parent navigation and headings medium 500; child Tree 400. Content in Message and Composer 14px/22px. Metadata generally 12px/16px. Compact badge/avatar text follows size-specific rules. Read current tokens and selectors before changing values.
 - **Tokens**: Use semantic color, spacing, radius and elevation tokens. Preserve current light/dark behavior via `data-sui-theme="light|dark"`.
-- **Controls**: Controls use shared subtle hover; Composer surface has no hover, its controls do. Disabled controls do not gain hover behavior.
+- **Controls**: Controls use shared subtle hover; Composer surface has no hover, its controls do. Disabled controls do not gain hover behavior. Hover tints read `--color-tint-hover` (falling back to `--color-tint`), and items in a selected state (`aria-current`, `.on`) skip the hover tint. Tint depth maps per surface in the demo palette (`demos/shared/palette.css`): shell/sidebar keep the canvas tint while cards, modals, popups, and main panels use the subtle tint — extend those mappings centrally instead of hardcoding tints per page.
 - **Tree**: Default Tree labels use subtle text; active labels use primary text. Parent indentation and child branches come from Tree itself.
 - **Icons**: Use Rune outline icons through `controlIcon`. Ellipsis additions represent action menus; grip represents drag handles.
 - **Select**: Supports optional label, helper, leading icon and groups. Text-to-chevron gap is 8px. Content can grow, then shrink with ellipsis when constrained.

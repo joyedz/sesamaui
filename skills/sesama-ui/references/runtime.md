@@ -120,4 +120,6 @@ Modern Sesama UI form components are backed by native elements:
   - `sui:table:select`, `sui:table:sort`, `sui:table:rowclick`
   - `sui:modal:close` or `sui:close` with `{ reason, returnValue }`
   - `sui:tab:change` with `{ id }`
+- **Dialog initial focus**: opening a modal moves focus to an `[autofocus]` target, then the first control that is not the close button, then the dialog element itself — the close button never receives the opening focus (its tooltip stays hidden until a keyboard user reaches it).
+- **Tabs indicator**: the sliding thumb is placed instantly on mount and on re-measures (hidden, resize, webfonts settle); it glides only on user-initiated tab switches. Keep tablists mounted when patching tab content — replacing them cuts the glide.
   - `sui:toast:show`, `sui:toast:dismiss`
