@@ -7,7 +7,7 @@
   grid-template-columns: var(--shell-sidebar-width, 240px) minmax(0, 1fr);
   gap: var(--shell-gap, var(--space-8, 8px));
   padding: var(--shell-padding, var(--space-8, 8px));
-  height: 100dvh;
+  height: var(--shell-height, 100dvh);
   min-height: 0;
   background: var(--color-canvas);
   background: color-mix(in srgb, var(--color-canvas) var(--sui-surface-opacity, 100%), transparent);
