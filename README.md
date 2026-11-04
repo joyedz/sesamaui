@@ -1,9 +1,15 @@
 <div align="center">
+  <br>
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/img/sesama-logo-dark.svg">
-    <img src="assets/brand/sesama-logo-final.svg" alt="Sesama" width="240">
+    <img src="assets/brand/sesama-logo-final.svg" alt="Sesama" width="180">
   </picture>
-  <p><br>A shared UI language for dashboards, AI workspaces, and everyday tools.</p>
+  <br>
+  <p>A shared UI language for dashboards, AI workspaces, and everyday tools.</p>
+  <p>
+    <a href="https://github.com/joyedz/sesamaui/actions/workflows/source-checks.yml"><img src="https://github.com/joyedz/sesamaui/actions/workflows/source-checks.yml/badge.svg?branch=main" alt="CI status"></a>
+    <a href="https://github.com/joyedz/sesamaui/releases"><img src="https://img.shields.io/github/v/release/joyedz/sesamaui?style=flat" alt="Latest release"></a>
+  </p>
   <br>
 </div>
 
@@ -14,9 +20,16 @@
   </picture>
 </p>
 
-| Issue Workspace · My Inbox | AI Agent · New Chat | Agent Bot |
-| --- | --- | --- |
-| ![Issue Workspace My Inbox](docs/img/issue-my-inbox.png) | ![AI Agent New Chat](docs/img/ai-agent-new-chat.png) | ![Agent Bot conversation](docs/img/agent-bot.png) |
+<table>
+  <tr>
+    <td width="50%"><img src="docs/img/issue-my-inbox.png" alt="Issue Workspace My Inbox" width="100%"></td>
+    <td width="50%"><img src="docs/img/ai-agent-new-chat.png" alt="AI Agent New Chat" width="100%"></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/img/agent-bot.png" alt="Agent Bot conversation" width="100%"></td>
+    <td width="50%"><img src="docs/img/onboarding-login.png" alt="Sesama onboarding login screen" width="100%"></td>
+  </tr>
+</table>
 
 Sesama UI is a dependency-free vanilla HTML/CSS/JavaScript design system. Every component is a pure ES Module builder that renders accessible, semantic HTML strings — in the browser, in Node.js, or at build time — and hydrates through a single `mount()` runtime with real lifecycles.
 
