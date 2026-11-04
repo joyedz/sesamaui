@@ -6,7 +6,7 @@ import { listRow, controlIcon, runeIcon } from '../src/index.mjs';
 const root=path.resolve(fileURLToPath(new URL('..',import.meta.url))),port=Number(process.env.PORT||4173);
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.woff2':'font/woff2','.md':'text/plain; charset=utf-8'};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const navRow=(title,icon,href)=>listRow({variant:'navigation',appearance:'plain',title,leading:icon==='inbox'?runeIcon('inbox',16):controlIcon(icon,16),href});
+const navRow=(title,icon,href)=>listRow({variant:'navigation',appearance:'plain',title,leading:icon==='inbox'?runeIcon('inbox',16):controlIcon(icon,16),href,attributes:'target="_blank" rel="noopener noreferrer"'});
 async function indexPage(){
   const { demoCategories } = await import('../demos/shared/pages.mjs');
   const section=(title,rows)=>rows.length?`<section><h2>${esc(title)}</h2><div class="idx-menu">${rows.join('')}</div></section>`:'';
