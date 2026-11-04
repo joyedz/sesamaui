@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.0] - 2026-11-04
+
+First stable release — the `-alpha` suffix is dropped from the package version, and `npm publish` now tags `latest`. Pre-releases: [0.1.0-alpha.2](#0100-alpha2---2026-10-31), [0.1.0-alpha.1](#0100-alpha1---2026-10-31). While on 0.x, minor versions may still carry breaking changes; experimental components are labeled in the README, and the manual screen-reader review remains scheduled before 1.0 (see [docs/RELEASE.md](docs/RELEASE.md)).
+
 - `npm run dev` now serves a generated index at `/` listing every demo by category plus the component catalog and Component API preview links (scanned from `demos/` at request time). The project landing page is untracked (`site/Sesama landing.html` and its assets are gitignored); the browser smoke suite skips missing pages so CI works without it.
 
 - Reorganize `demos/` into category folders — `dashboard/`, `ai-agent/`, `ai-bot/` (formerly `agent-bot/`), `issue/`, `onboarding/` — with the standalone reference demos (Workspace, Component API) staying at the root. Demo routes in `shared/pages.mjs`, cross-page links, test paths, and docs are updated to match.
@@ -10,7 +14,7 @@
 
 - Fix flaky axe color-contrast false positives in the accessibility suite: modal/popup entry opacity fades were still running when axe sampled colors (fg and bg both composited through partial opacity, e.g. 4.18:1 instead of the real ~6:1). The suite now waits for open overlays to reach settled opacity (plus `animate: false`) before auditing.
 
-- **Breaking (alpha):** remove the seven unused domain recipes — `requirementGroupRecipe`, `resourceListRecipe`, `createSkillDialogRecipe`, `deleteResourceRecipe`, `dashboardOverviewRecipe`, `revenueChartRecipe`, and `dataWorkspaceRecipe`. Compose the same layouts from the structural/content blocks instead. `agentCardRecipe` remains; the design system catalog drops the corresponding block entries and their example pages.
+- **Breaking:** remove the seven unused domain recipes — `requirementGroupRecipe`, `resourceListRecipe`, `createSkillDialogRecipe`, `deleteResourceRecipe`, `dashboardOverviewRecipe`, `revenueChartRecipe`, and `dataWorkspaceRecipe`. Compose the same layouts from the structural/content blocks instead. `agentCardRecipe` remains; the design system catalog drops the corresponding block entries and their example pages.
 
 - Add a Compact rail example to the design system catalog's Workspace Sidebar page, rendered by the canonical `workspaceSidebar` builder with `variant: 'compact'` and icon-button rail navigation (the pattern used by Agent Bot).
 

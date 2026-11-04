@@ -4,7 +4,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 
 ## Project Overview
 
-Sesama UI is a dependency-free vanilla HTML/CSS/JavaScript design system (npm package `sesama-ui`, alpha). Every component is a pure ES Module "builder" function that returns accessible HTML strings — DOM-free, safe for SSR/build-time — hydrated by a single `mount()` runtime. Requires Node.js >= 22. There is no bundler or transpiler; the source modules are shipped directly to consumers.
+Sesama UI is a dependency-free vanilla HTML/CSS/JavaScript design system (npm package `sesama-ui`). Every component is a pure ES Module "builder" function that returns accessible HTML strings — DOM-free, safe for SSR/build-time — hydrated by a single `mount()` runtime. Requires Node.js >= 22. There is no bundler or transpiler; the source modules are shipped directly to consumers.
 
 ## Commands
 
@@ -67,11 +67,11 @@ Builders escape every text option by default. A documented set of options (e.g. 
 - `site/Design system.html` — component catalog; `demos/**/*.html` — standalone app examples grouped by category folders (`dashboard/`, `ai-agent/`, `ai-bot/`, `issue/`, `onboarding/`), consuming `src/` directly; `demos/Component API.html` — interactive API preview.
 - `tests/*.test.mjs` — Node unit tests without a DOM; `tests/*.cjs` — Playwright suites, each spawning `tools/serve.mjs` on its own default port (overridable via `TEST_PORT`), driving fixtures from `tests/fixtures/`.
 - `skills/sesama-ui/` — the agent skill for building UI with this system; `references/` holds per-domain guides (runtime, page blocks, content blocks, charts, agent workspace).
-- `docs/` — API contract (`COMPONENT-API-PREVIEW.md`), architecture notes (`ALPHA-RELEASE.md`), accessibility report.
+- `docs/` — API contract (`COMPONENT-API-PREVIEW.md`), architecture notes (`RELEASE.md`), accessibility report.
 
 ## Conventions
 
 - Do not restyle component internals (`.sui-button`, `.ti`, `.bubble`, `.sx-table`, …) in page or demo CSS to make private variants. Extend the central builder/CSS instead, and expose shared layout capabilities as configuration variables (e.g. `--message-width`) rather than overriding internal selectors.
 - Preserve established variants, states, and behaviors when adding cases; verify changes in light and dark themes and at narrow widths.
 - Document packaging, API, and accessibility changes in `CHANGELOG.md`. Do not claim axe, screen-reader, or cross-browser results that were not actually run.
-- Alpha status: the API may change before beta. Experimental components are Combobox, Date Picker, Command Palette, Tree, and Tag Input.
+- Version status: 0.x — the API may still change in minor releases. Experimental components are Combobox, Date Picker, Command Palette, Tree, and Tag Input.

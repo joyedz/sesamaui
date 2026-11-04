@@ -1,6 +1,6 @@
 # Sesama — Component specification
 
-Status: implemented in the 0.1.0-alpha.1 ESM library; this document records the design contract each component honors. See the [alpha release guide](ALPHA-RELEASE.md) for the shipped inventory.
+Status: implemented in the 0.1.0 ESM library; this document records the design contract each component honors. See the [release guide](RELEASE.md) for the shipped inventory.
 
 ## Scope and source of truth
 

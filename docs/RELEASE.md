@@ -1,6 +1,6 @@
-# Sesama UI v0.1.0-alpha.1 Release Guide
+# Sesama UI v0.1.0 Release Guide
 
-Sesama UI `0.1.0-alpha.1` marks the completed migration of all 48 design system components and 20 structural blocks from legacy monolithic global scripts into a modern, tree-shakeable, pure ECMAScript Module (ESM) system with full TypeScript type declarations and scoped CSS isolation.
+Sesama UI `0.1.0` marks the completed migration of all 48 component families, 11 structural blocks, and a domain recipe from legacy monolithic global scripts into a modern, tree-shakeable, pure ECMAScript Module (ESM) system with full TypeScript type declarations and scoped CSS isolation.
 
 ---
 
@@ -162,7 +162,7 @@ const session = mount(root);
 
 - **Automated Verification**: Automated tests with `axe-core` across 12 distinct component states, contrast themes (light and dark), 320px mobile reflow, forced colors, and reduced motion pass with **0 violations**.
 - **Keyboard Navigation**: Full keyboard navigation verified across all interactive widgets (Tab stops, Enter/Space activation, Esc popup dismissal, Left/Right/Home/End chart navigation, Arrow-key menu and tree roving tabindex, dialog focus trapping).
-- **Screen Reader Review Note**: While automated structural and ARIA checks pass cleanly, comprehensive manual testing with assistive technologies (NVDA, VoiceOver, JAWS) remains documented as deferred and will be conducted during beta hardening. No blanket WCAG AA certification is claimed for this alpha release.
+- **Screen Reader Review Note**: While automated structural and ARIA checks pass cleanly, comprehensive manual testing with assistive technologies (NVDA, VoiceOver, JAWS) remains documented as deferred and will be conducted before the 1.0 release. No blanket WCAG AA certification is claimed for this release.
 
 ---
 

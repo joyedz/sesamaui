@@ -1,6 +1,6 @@
 {
   "name": "sesama-ui",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0",
   "private": false,
   "description": "A shared UI language for dashboards, AI workspaces, and everyday tools. Pure ESM builders, scoped CSS, zero dependencies.",
   "keywords": [
@@ -276,7 +276,7 @@
     "node": ">=22"
   },
   "publishConfig": {
-    "tag": "alpha"
+    "tag": "latest"
   },
   "license": "MIT",
   "devDependencies": {

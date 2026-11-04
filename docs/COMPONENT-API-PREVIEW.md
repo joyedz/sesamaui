@@ -10,7 +10,7 @@ Select supports `popupAlign: 'start' | 'end'` (default `'start'`). Composer's mo
 
 Select accepts `popupWidth: 'trigger' | 'content'` (default `'trigger'`). Content mode sizes the popup independently of its trigger, constrained to the viewport. Composer uses content mode for repository and model selection; selection changes preserve the draft and attachments.
 
-Sesama UI ships 48 component families and 20 structural blocks as pure ES Module builders with TypeScript declarations. This is an alpha: **the API may change before beta**, and manual screen-reader review is tracked separately in the [accessibility report](ACCESSIBILITY-REPORT.md).
+Sesama UI ships 48 component families , 11 structural blocks, and a domain recipe as pure ES Module builders with TypeScript declarations. This is a 0.x release: **the API may change before beta**, and manual screen-reader review is tracked separately in the [accessibility report](ACCESSIBILITY-REPORT.md).
 
 ## Design system reference
 
@@ -28,7 +28,7 @@ All families pass the automated suites (unit, axe, keyboard, functional). Comple
 - **Tree** — nested roving tabindex, folder state
 - **Tag Input** — composite field with tag list
 
-The remaining families follow simpler, well-understood contracts and are considered **stable within the alpha**; their markup and options may still change before beta.
+The remaining families follow simpler, well-understood contracts and are considered **stable within 0.x**; their markup and options may still change before beta.
 
 Run `npm run dev` and open [`/demos/Component%20API.html`](../demos/Component%20API.html) to try it.
 
