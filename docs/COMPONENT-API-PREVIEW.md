@@ -1,5 +1,15 @@
 # Component API contract
 
+## Getting started with the API
+
+Install the package with `npm install sesama-ui` and import builders and `mount` from `sesama-ui`. In an unbundled browser page, serve the library over HTTP and import from a relative URL such as `../src/index.mjs` in a module script.
+
+Builders return HTML strings and run without a DOM. Insert their output under `.sui-root`, then call `mount(root)` in the browser to activate interactions. Use `session.refresh()` after replacing markup and `session.destroy()` when removing the application.
+
+Open the [interactive API preview](../demos/Component%20API.html) for runnable examples or browse the [component catalog](../site/Design%20system.html#components-button) for variants and component-specific examples.
+
+## Component behavior notes
+
 Use `iconButton('star', { variant: 'favorite', pressed: true, ariaLabel: 'Remove from favorites' })` for a filled selected favorite. Applications own toggle state and accessible-label updates; `pressed: false` renders the outline state.
 
 Input and Input Field accept `clearable: true` (default false). The clear button is hidden for empty, disabled, or readonly inputs. Clearing emits native bubbling `input` and `change` events and returns focus to the input.
@@ -10,7 +20,7 @@ Select supports `popupAlign: 'start' | 'end'` (default `'start'`). Composer's mo
 
 Select accepts `popupWidth: 'trigger' | 'content'` (default `'trigger'`). Content mode sizes the popup independently of its trigger, constrained to the viewport. Composer uses content mode for repository and model selection; selection changes preserve the draft and attachments.
 
-Sesama UI ships 48 component families , 11 structural blocks, and a domain recipe as pure ES Module builders with TypeScript declarations. This is a 0.x release: **the API may change before beta**, and manual screen-reader review is tracked separately in the [accessibility report](ACCESSIBILITY-REPORT.md).
+Sesama UI ships components, structural blocks, and domain recipes as pure ES Module builders with TypeScript declarations. This is a 0.x release: **the API may change before beta**, and manual screen-reader review is tracked separately in the [accessibility report](ACCESSIBILITY-REPORT.md).
 
 ## Design system reference
 
@@ -29,8 +39,6 @@ All families pass the automated suites (unit, axe, keyboard, functional). Comple
 - **Tag Input** — composite field with tag list
 
 The remaining families follow simpler, well-understood contracts and are considered **stable within 0.x**; their markup and options may still change before beta.
-
-Run `npm run dev` and open [`/demos/Component%20API.html`](../demos/Component%20API.html) to try it.
 
 ## Source layout
 
