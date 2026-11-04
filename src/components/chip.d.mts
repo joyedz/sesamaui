@@ -1,7 +1,10 @@
+import type { Surface } from '../surface.d.mts';
 export type ChipTone = 'neutral' | 'informative' | 'success' | 'warning' | 'error';
 export type ChipVariant = 'static' | 'selectable' | 'removable';
 
 export interface ChipOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   label?: string;
   tone?: ChipTone;
   variant?: ChipVariant;

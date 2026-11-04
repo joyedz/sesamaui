@@ -32,6 +32,7 @@
   white-space: nowrap;
   transition: background-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard), box-shadow var(--motion-fast) var(--ease-standard);
 }
+:where(.sui-root) .sx-tab-label { min-width:0; max-width:var(--tab-label-max-width,none); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 :where(.sui-root) .sx-tab:focus-visible {
   outline: 2px solid var(--color-brand);
@@ -47,10 +48,11 @@
 /* Segmented variant */
 :where(.sui-root) .sx-tablist.seg {
   gap: 2px;
-  padding: 2px;
+  padding: var(--tabs-list-padding,2px);
   width: fit-content;
   border-radius: var(--radius-md);
   background: var(--color-recessed);
+  background: color-mix(in srgb, var(--color-recessed) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-tablist.seg .sx-tab {
@@ -64,11 +66,45 @@
   color: var(--text-default);
 }
 
+/* Sliding active indicator: one surface glides behind the active tab (the tab's
+   own colors keep transitioning; only the surface moves). */
+:where(.sui-root) .sx-tab-thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: var(--radius-sm);
+  background: var(--color-tint);
+  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
+  z-index: 0;
+  transition: left var(--motion-base) var(--ease-out), width var(--motion-base) var(--ease-out);
+}
+
+:where(.sui-root) .sx-tablist.seg .sx-tab-thumb {
+  top: var(--tabs-list-padding,2px);
+  height: calc(100% - 2 * var(--tabs-list-padding,2px));
+  background: var(--color-base);
+  background: color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);
+  box-shadow: var(--shadow-ring);
+}
+
+:where(.sui-root) .sx-tablist.seg .sx-tab,
+:where(.sui-root) .sx-tablist.pill .sx-tab {
+  position: relative;
+  z-index: 1;
+}
+
 :where(.sui-root) .sx-tablist.seg .sx-tab.on,
 :where(.sui-root) .sx-tablist.seg .sx-tab[aria-selected="true"] {
-  background: var(--color-base);
+  background: transparent;
   color: var(--text-default);
-  box-shadow: var(--shadow-ring);
+  box-shadow: none;
+}
+
+:where(.sui-root) .sx-tablist.pill .sx-tab.on,
+:where(.sui-root) .sx-tablist.pill .sx-tab[aria-selected="true"] {
+  background: transparent;
+  color: var(--text-default);
 }
 
 /* Pill variant */
@@ -85,12 +121,14 @@
 
 :where(.sui-root) .sx-tablist.pill .sx-tab:hover:not(:disabled) {
   background: var(--color-tint);
+  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
   color: var(--text-default);
 }
 
 :where(.sui-root) .sx-tablist.pill .sx-tab.on,
 :where(.sui-root) .sx-tablist.pill .sx-tab[aria-selected="true"] {
   background: var(--color-tint);
+  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
   color: var(--text-default);
 }
 
@@ -119,13 +157,35 @@
 }
 
 /* Tabpanels */
+:where(.sui-root) .sx-tablist.line .sx-tab-thumb {
+  top: auto;
+  bottom: 0;
+  width: 1px;
+  height: 2px;
+  border-radius: 0;
+  background: var(--color-brand);
+  background: color-mix(in srgb, var(--color-brand) var(--sui-surface-opacity, 100%), transparent);
+  transform-origin: left center;
+  transition: transform var(--motion-base) var(--ease-out);
+}
+
+:where(.sui-root) .sx-tablist.line .sx-tab[aria-selected="true"] {
+  border-bottom-color: transparent;
+}
+
+:where(.sui-root) .sx-tabs[data-keyboard] .sx-tab-thumb,
+:where(.sui-root) .sx-tabs[data-keyboard] .sx-tabpanel,
+:where(.sui-root) .sx-tabs[data-keyboard] .sx-tab {
+  transition: none;
+}
+
 :where(.sui-root) .sx-tabpanels {
   width: 100%;
 }
 
 :where(.sui-root) .sx-tabpanel {
   outline: none;
-  transition: opacity var(--motion-fast) var(--ease-standard);
+  transition: opacity var(--motion-base) var(--ease-standard);
 }
 
 @starting-style {
@@ -135,7 +195,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :where(.sui-root) .sx-tabpanel {
+  :where(.sui-root) .sx-tablist.line .sx-tab-thumb,
+  :where(.sui-root) .sx-tab,
+  :where(.sui-root) .sx-tabpanel,
+  :where(.sui-root) .sx-tab-thumb {
     transition: none;
   }
 }

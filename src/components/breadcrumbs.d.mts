@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 export interface BreadcrumbItem {
   label: string;
   href?: string;
@@ -6,6 +7,8 @@ export interface BreadcrumbItem {
 }
 
 export interface BreadcrumbsOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   items?: BreadcrumbItem[];
   separator?: string;
   maxItems?: number;

@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from '../components/shared.mjs';
 import { escapeHTML, uid } from '../components/shared.mjs';
 import { listRow } from '../components/list-row.mjs';
 import { avatar } from '../components/avatar.mjs';
@@ -9,7 +10,7 @@ import { statusDot } from '../components/status-dot.mjs';
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function peopleList(options = {}) {
+function buildPeopleList(options = {}) {
   const {
     id = uid('people-list'),
     title = '',
@@ -70,4 +71,10 @@ export function peopleList(options = {}) {
   }).join('');
 
   return `<div class="${classList}" data-sui-people-list id="${escapeHTML(id)}" ${extraAttrs.join(' ')}>${headerHTML}<ul class="sb-people-list-items">${itemsHTML}</ul></div>`;
+}
+
+
+export function peopleList(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildPeopleList(...args), mode, ["@root"]);
 }

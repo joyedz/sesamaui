@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML, uid } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
@@ -56,7 +57,9 @@ function inferType(name = '') {
  * @param {Object} options
  * @returns {string} HTML string
  */
-export function fileCard(options = {}) {
+function buildFileCard(options = {}) {
+  const variant = options.variant || 'default';
+  if (!['default', 'attachment'].includes(variant)) throw new TypeError(`Invalid file card variant: ${variant}`);
   const id = options.id || uid('file');
   const name = options.name || 'Untitled';
   const type = options.type || inferType(name);
@@ -65,7 +68,7 @@ export function fileCard(options = {}) {
   const iconName = options.iconName || FILE_TYPE_ICONS[type] || 'file';
   const expanded = Boolean(options.expanded);
   const removable = Boolean(options.removable);
-  const classes = ['fcard', 'sx-file-card', options.classes].filter(Boolean).join(' ');
+  const classes = ['fcard', 'sx-file-card', variant === 'attachment' ? 'sx-file-attachment' : '', options.classes].filter(Boolean).join(' ');
 
   let actionHTML = '';
   if (removable) {
@@ -103,13 +106,13 @@ export function fileCard(options = {}) {
     }
   }
 
-  return `<div class="${classes}" data-sui-file-card id="${escapeHTML(id)}" data-file-id="${escapeHTML(id)}" ${src ? `data-file-src="${escapeHTML(src)}"` : ''} data-file-type="${escapeHTML(type)}" ${extraAttrs.join(' ')}><div class="fhead sx-file-head"><button type="button" class="sx-file-open" data-file-preview aria-expanded="${expanded}" aria-label="Preview ${escapeHTML(name)}">${controlIcon(iconName, 16)}<span class="sx-file-name">${escapeHTML(name)}</span>${size ? `<span class="sx-file-size sx-help">${escapeHTML(size)}</span>` : ''}</button>${actionHTML}</div><div class="fprev sx-file-preview" data-file-preview-body ${expanded ? '' : 'hidden'}>${previewHTML}</div></div>`;
+  return `<div class="${classes}" data-sui-file-card id="${escapeHTML(id)}" data-file-id="${escapeHTML(id)}" ${src ? `data-file-src="${escapeHTML(src)}"` : ''} data-file-type="${escapeHTML(type)}" ${extraAttrs.join(' ')}><div class="fhead sx-file-head"><button type="button" class="sx-file-open" data-file-preview aria-expanded="${expanded}" aria-label="Preview ${escapeHTML(name)}">${variant === 'attachment' ? `<span class="sx-file-visual" aria-hidden="true">${controlIcon(iconName, 24)}</span><span class="sx-file-copy"><span class="sx-file-name" title="${escapeHTML(name)}">${escapeHTML(name)}</span>${size ? `<span class="sx-file-size">${escapeHTML(size)}</span>` : ''}</span>` : `${controlIcon(iconName, 16)}<span class="sx-file-name">${escapeHTML(name)}</span>${size ? `<span class="sx-file-size sx-help">${escapeHTML(size)}</span>` : ''}`} </button>${variant === 'attachment' ? `<div class="sx-file-actions">${actionHTML}</div>` : actionHTML}</div><div class="fprev sx-file-preview" data-file-preview-body ${expanded ? '' : 'hidden'}>${previewHTML}</div></div>`;
 }
 
 /**
  * Convenience wrapper for file attachment.
  */
-export function fileAttachment(options = {}) {
+function buildFileAttachment(options = {}) {
   return fileCard(options);
 }
 
@@ -135,19 +138,66 @@ export function initFileCard(element) {
     return previewBtn?.getAttribute('aria-expanded') === 'true';
   }
 
-  function toggle(expand) {
-    const next = typeof expand === 'boolean' ? expand : !isExpanded();
-    if (previewBtn) {
-      previewBtn.setAttribute('aria-expanded', String(next));
+  const view = element.ownerDocument?.defaultView || globalThis;
+  let motion = null;
+  let openDuration = 200;
+  let closeDuration = 140;
+  let destroyed = false;
+
+  function settlePreview() {
+    if (motion) {
+      motion.onfinish = null;
+      motion.cancel();
+      motion = null;
     }
-    if (previewBody) {
-      if (next) {
-        previewBody.removeAttribute('hidden');
+    if (!previewBody) return;
+    if (isExpanded()) previewBody.removeAttribute('hidden');
+    else previewBody.setAttribute('hidden', '');
+  }
+
+  function toggle(expand, animate = false) {
+    if (destroyed) return;
+    const next = typeof expand === 'boolean' ? expand : !isExpanded();
+    previewBtn?.setAttribute('aria-expanded', String(next));
+    const reduced = view.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (!animate || reduced || !previewBody || typeof element.animate !== 'function') {
+      settlePreview();
+    } else if (motion) {
+      // Reverse the same timeline from its current visual position.
+      motion.playbackRate = next ? 1 : -openDuration / closeDuration;
+      motion.play();
+    } else {
+      const style = view.getComputedStyle(element);
+      const milliseconds = (token, fallback) => {
+        const value = style.getPropertyValue(token).trim();
+        return value ? Math.max(0, parseFloat(value) * (value.endsWith('ms') ? 1 : 1000)) : fallback;
+      };
+      openDuration = milliseconds('--motion-base', 200);
+      closeDuration = milliseconds('--motion-fast', 140);
+      if (!openDuration || !closeDuration) {
+        settlePreview();
       } else {
+        // Measure both endpoints once. During playback, only the visual reveal
+        // and position animate; text, icons, and the page avoid per-frame layout.
         previewBody.setAttribute('hidden', '');
+        const collapsed = element.getBoundingClientRect();
+        previewBody.removeAttribute('hidden');
+        const expanded = element.getBoundingClientRect();
+        const inset = Math.max(0, expanded.height - collapsed.height);
+        const offset = collapsed.top - expanded.top;
+        const radius = style.borderRadius;
+        motion = element.animate([
+          { transform: `translateY(${offset}px)`, clipPath: `inset(-2px -2px ${inset - 2}px -2px round ${radius})` },
+          { transform: 'translateY(0px)', clipPath: `inset(-2px round ${radius})` }
+        ], { duration: openDuration, easing: style.getPropertyValue('--ease-out').trim(), fill: 'both' });
+        motion.onfinish = settlePreview;
+        if (!next) {
+          motion.currentTime = openDuration;
+          motion.playbackRate = -openDuration / closeDuration;
+        }
       }
     }
-    element.dispatchEvent(new CustomEvent('sui:file:toggle', {
+    element.dispatchEvent(new view.CustomEvent('sui:file:toggle', {
       bubbles: true,
       detail: { id: fileId, name: fileName, expanded: next }
     }));
@@ -155,7 +205,8 @@ export function initFileCard(element) {
 
   function handlePreviewClick(e) {
     e.preventDefault();
-    toggle();
+    // Native keyboard clicks have detail=0 and must respond immediately.
+    toggle(undefined, e.detail > 0);
   }
 
   function handleRemoveClick(e) {
@@ -179,6 +230,9 @@ export function initFileCard(element) {
     isExpanded,
     toggle,
     destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      settlePreview();
       if (previewBtn) previewBtn.removeEventListener('click', handlePreviewClick);
       if (removeBtn) removeBtn.removeEventListener('click', handleRemoveClick);
       instances.delete(element);
@@ -187,4 +241,15 @@ export function initFileCard(element) {
 
   instances.set(element, controller);
   return controller;
+}
+
+
+export function fileCard(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildFileCard(...args), mode, ["@root"]);
+}
+
+export function fileAttachment(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildFileAttachment(...args), mode, ["@root"]);
 }

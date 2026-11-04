@@ -1,6 +1,7 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { uid, escapeHTML } from './shared.mjs';
 
-export function radio(options = {}) {
+function buildRadio(options = {}) {
   const opts = typeof options === 'string' ? { label: options } : options;
   const {
     id = uid(),
@@ -120,4 +121,10 @@ export function initRadio(element) {
 
   mounted.set(input, controller);
   return controller;
+}
+
+
+export function radio(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildRadio(...args), mode, ["@input"]);
 }

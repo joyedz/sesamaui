@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from '../components/shared.mjs';
 import { escapeHTML, uid } from '../components/shared.mjs';
 
 /**
@@ -7,7 +8,7 @@ import { escapeHTML, uid } from '../components/shared.mjs';
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function pageGrid(items = [], options = {}) {
+function buildPageGrid(items = [], options = {}) {
   let opts = {};
   let itemList = [];
   let rawContent = '';
@@ -69,4 +70,10 @@ export function pageGrid(items = [], options = {}) {
   }
 
   return `<div class="${classList}" data-sui-page-grid id="${escapeHTML(id)}" ${extraAttrs.join(' ')}>${bodyHTML}</div>`;
+}
+
+
+export function pageGrid(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildPageGrid(...args), mode, ["@root"]);
 }

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Surface variants</title>
+  <link rel="stylesheet" href="../../src/styles/components.css">
+  <link rel="stylesheet" href="../../src/styles/blocks.css">
+  <style>
+    body { margin:0; padding:24px; min-height:100dvh; }
+    main { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:24px; }
+    .sample { min-width:0; display:grid; align-content:start; gap:16px; padding:20px; border-radius:16px; background:linear-gradient(145deg,var(--color-base),color-mix(in srgb,var(--color-brand) 42%,var(--color-base))); }
+    .controls { display:flex; flex-wrap:wrap; gap:8px; }
+    .stack { display:grid; gap:12px; }
+    .sidebar-frame { display:grid; width:min(240px,100%); height:340px; overflow:hidden; border-radius:12px; }
+    h1 { font-size:24px; } h2 { font-size:16px; margin:0; }
+  </style>
+</head>
+<body class="sui-root" data-sui-theme="light">
+  <h1>Surface variants</h1>
+  <main id="examples"></main>
+  <script type="module">
+    import * as UI from '../../src/index.mjs';
+    window.UI = UI;
+    document.getElementById('examples').innerHTML = ['solid','blur'].map(surface => `<section class="sample" id="${surface}">
+      <h2>${surface}</h2>
+      <div class="controls">${UI.button({label:surface+' primary',variant:'primary',surface})}${UI.button({label:surface+' secondary',surface})}${UI.button({label:surface+' danger',variant:'danger',surface})}${UI.button({label:surface+' disabled',disabled:true,surface})}${UI.iconButton('plus',{accessibleLabel:surface+' add',variant:'raised',surface})}</div>
+      ${UI.inputField({id:surface+'-input',label:surface+' email',type:'email',surface})}
+      ${UI.select({name:surface+'-team',label:surface+' team',options:['Design','Engineering'],value:'Design',surface})}
+      ${UI.textarea({label:surface+' description',surface})}
+      ${UI.card({title:surface+' card',content:'<div class="stack">'+UI.inputField({label:surface+' nested input'})+UI.button({label:surface+' nested solid',surface:'solid'})+'</div>',surface})}
+      ${UI.composer({id:surface+'-composer',placeholder:surface+' message',surface})}
+      ${UI.popover({trigger:surface+' popover',content:'<div class="sx-pop-content">'+UI.button({label:surface+' panel action'})+'</div>',surface})}
+      ${UI.button({label:surface+' modal',attributes:'data-open-modal="'+surface+'-modal"'})}
+      ${UI.modal({id:surface+'-modal',title:surface+' dialog',content:UI.inputField({label:surface+' dialog field'}),surface})}
+      <div class="sidebar-frame">${UI.workspaceSidebar({navigation:[{key:surface+'-overview',label:'Overview',icon:'home',selected:true}],surface})}</div>
+    </section>`).join('');
+    UI.mount(document.body);
+    document.addEventListener('click',event=>{const trigger=event.target.closest('[data-open-modal]');if(trigger)UI.initModal(document.getElementById(trigger.dataset.openModal)).open(trigger)});
+    window.surfaceReady = true;
+  </script>
+</body>
+</html>

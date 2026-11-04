@@ -1,0 +1,129 @@
+:where(.sui-root) .bot-stack { display:flex; flex-direction:column; gap:var(--bot-stack-gap,var(--space-16)); min-width:0; }
+:where(.sui-root) .bot-row { display:flex; align-items:center; gap:var(--space-8); flex-wrap:wrap; }
+:where(.sui-root) .bot-toolbar { display:flex; align-items:center; justify-content:space-between; gap:var(--space-12); flex-wrap:wrap; }
+:where(.sui-root) .bot-thread { display:flex; flex-direction:column; gap:var(--space-24); --message-width:100%; }
+:where(.sui-root) .bot-message { white-space:pre-wrap; overflow-wrap:anywhere; }
+:where(.sui-root) .bot-compose { max-width:768px; width:100%; margin:auto; padding:2px var(--space-12); }
+:where(.sui-root) .bot-welcome { padding-block:var(--space-32); }
+:where(.sui-root) .bot-heading { font-size:24px; line-height:1.3; font-weight:500; margin:0; letter-spacing:-.5px; }
+:where(.sui-root) .bot-muted { color:var(--text-subtle); font-size:12px; line-height:18px; margin:0; }
+:where(.sui-root) .bot-section-title { font-size:13px; font-weight:500; margin:0; }
+:where(.sui-root) .bot-form { max-width:640px; margin-inline:auto; width:100%; }
+:where(.sui-root) .bot-task-list { display:flex; flex-direction:column; gap:var(--space-12); }
+:where(.sui-root) .bot-task-link { color:var(--text-default); font-weight:500; text-decoration:none; overflow-wrap:anywhere; }
+:where(.sui-root) .bot-task-link:hover { color:var(--color-brand); }
+:where(.sui-root) .bot-preview { margin:0; white-space:pre-wrap; overflow-wrap:anywhere; font:inherit; line-height:1.7; }
+:where(.sui-root) .bot-output { --file-card-max-width:100%; }
+:where(.sui-root) .bot-agent-mark { display:flex; align-items:center; gap:var(--space-12); }
+:where(.sui-root) .bot-sidebar-footer { display:flex; align-items:center; gap:var(--space-8); padding:var(--space-8); font-size:12px; }
+:where(.sui-root) .bot-profile-name { flex:1; min-width:0; white-space:nowrap; }
+:where(.sui-root) .is-collapsed:not(.is-peeking) .bot-sidebar-footer { flex-wrap:wrap; justify-content:center; padding-inline:0; }
+:where(.sui-root) .is-collapsed:not(.is-peeking) .bot-profile-name { display:none; }
+:where(.sui-root) .bot-announcement { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+:where(.sui-root) .bot-thread-picker { max-width:300px; }
+@media (max-width:760px) {
+  :where(.sui-root) .bot-heading { font-size:21px; }
+  :where(.sui-root) .bot-compose { padding-inline:2px; }
+  :where(.sui-root) .bot-thread-picker { max-width:100%; }
+}
+:where(.sui-root).bot-page { margin:0; overflow:hidden; }
+
+/* Reference workspace composition; all control internals remain centralized. */
+:where(.sui-root).bot-page {
+  --shell-sidebar-width:332px;
+  --page-header-padding:6px 12px;
+  --sidebar-header-height:42px;
+  --page-header-min-height:38px;
+  --shell-gap:8px;
+  --shell-padding:8px;
+  --shell-main-radius:var(--radius-md);
+  --shell-main-shadow:inset 0 0 0 1px var(--color-hairline);
+  --sidebar-divider:0;
+  --sidebar-compact-divider:1px solid var(--color-hairline);
+  --sidebar-background:var(--color-canvas);
+  --shell-footer-padding:8px;
+  --composer-max-width:100%;
+  --composer-radius:16px;
+}
+:where(.sui-root) .bot-rail-top,
+:where(.sui-root) .bot-rail-bottom { display:flex; flex-direction:column; align-items:center; gap:8px; }
+:where(.sui-root) .bot-rail-bottom { margin-top:auto; }
+:where(.sui-root).bot-page .sx-shell-rail {
+  justify-self: start;
+  inline-size: 48px;
+  margin-block: calc(-1 * var(--shell-padding));
+  margin-inline-start: calc(-1 * var(--shell-padding));
+}
+:where(.sui-root) #bot-compact-sidebar {
+  position: relative;
+  inset: auto;
+}
+:where(.sui-root).bot-page #bot-sidebar {
+  margin-inline-start: -12px;
+}
+@media (min-width: 761px) {
+  :where(.sui-root).bot-page :is(.sx-shell-with-rail:not(.is-collapsed), .sx-shell-with-rail.is-peeking) > #bot-sidebar {
+    width: calc(var(--shell-sidebar-width) + 12px);
+  }
+}
+@media (max-width: 760px) {
+  :where(.sui-root).bot-page #bot-sidebar {
+    margin-inline-start: -8px;
+  }
+}
+:where(.sui-root) #bot-compact-sidebar [data-bot-nav][aria-current="page"] {
+  color: var(--text-default);
+  background: var(--color-tint);
+  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
+  box-shadow: none;
+}
+:where(.sui-root) .bot-agent-mark { height:var(--sidebar-header-height,38px); font-size:13px; }
+:where(.sui-root) .bot-agent-group { --avatar-radius:12px; --list-row-description-white-space:nowrap; --list-row-padding:4px 8px; --list-row-gap:6px; --list-row-min-height:56px; --list-row-title-weight:500; --list-row-copy-gap:2px; display:grid; gap:0; margin-bottom:8px; }
+:where(.sui-root) .bot-agent-group > h2 { display:flex; align-items:center; min-height:28px; padding:4px 8px; font-size:12px; }
+:where(.sui-root) .bot-agent-list { display:grid; gap:6px; }
+:where(.sui-root) .bot-avatar { display:inline-flex; flex:none; --avatar-radius:0; --avatar-background:transparent; }
+:where(.sui-root) .bot-agent-identity { display:flex; align-items:center; gap:12px; }
+:where(.sui-root) .bot-model-picker { min-width:0; max-width:190px; }
+:where(.sui-root) .bot-tab-bar { display:flex; align-items:center; gap:4px; min-width:0; }
+:where(.sui-root) .bot-header-tabs { min-width:0; max-width:100%; --tab-label-max-width:160px; }
+:where(.sui-root) .bot-team-toggle { display:none; }
+:where(.sui-root) .bot-thread-switcher { max-width:280px; }
+:where(.sui-root) .bot-date { margin:12px 0 4px; text-align:center; font-size:12px; color:var(--text-subtle); }
+:where(.sui-root) .bot-conversation-layout { max-width:1200px; padding:12px 14px 24px; }
+:where(.sui-root) .bot-compose { max-width:1200px; padding:2px 14px; margin-bottom:8px; }
+:where(.sui-root) .bot-thread { gap:32px; --message-bubble-max-width:min(85%,720px); --bot-turn-max-width:min(85%,720px); }
+:where(.sui-root) .bot-chat-scroll { --chat-fade-top:0px; --chat-fade-bottom:0px; mask-image:linear-gradient(to bottom,transparent 0,#000 var(--chat-fade-top),#000 calc(100% - var(--chat-fade-bottom)),transparent 100%); }
+:where(.sui-root) .bot-chat-scroll.has-scroll-above { --chat-fade-top:28px; }
+:where(.sui-root) .bot-chat-scroll.has-scroll-below { --chat-fade-bottom:36px; }
+:where(.sui-root) .bot-sidebar-footer { padding-bottom:12px; }
+@media(max-width:1000px) { :where(.sui-root).bot-page { --shell-sidebar-width:280px; } }
+@media(max-width:760px) {
+  :where(.sui-root) .bot-team-toggle { display:block; }
+  :where(.sui-root) .bot-model-picker { max-width:125px; }
+  :where(.sui-root) .bot-thread { --message-bubble-max-width:95%; --bot-turn-max-width:95%; }
+  :where(.sui-root) .bot-conversation-layout { padding-inline:12px; }
+}
+
+:where(.sui-root) .bot-agent-turn { display:grid; width:fit-content; min-width:0; max-width:var(--bot-turn-max-width,85%); --bot-stack-gap:8px; --agent-run-margin:0; --message-bubble-max-width:100%; --message-bubble-width:100%; }
+
+:where(.sui-root) .bot-rich-response { display:grid; gap:12px; min-width:0; }
+:where(.sui-root) .bot-rich-response :is(h3,p,ul,pre) { margin:0; }
+:where(.sui-root) .bot-rich-response h3 { font-size:14px; line-height:22px; font-weight:500; }
+:where(.sui-root) .bot-rich-response ul { padding-left:20px; }
+:where(.sui-root) .bot-rich-response li + li { margin-top:4px; }
+:where(.sui-root) .bot-response-table { min-width:0; max-width:100%; overflow:auto; }
+:where(.sui-root) .bot-code-block { display:grid; gap:8px; min-width:0; padding:12px; border-radius:8px; background:var(--color-canvas); }
+:where(.sui-root) .bot-code-block pre { overflow:auto; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:12px; line-height:20px; }
+:where(.sui-root) .bot-response-sources { display:grid; gap:6px; color:var(--text-subtle); font-size:12px; line-height:18px; }
+
+/* Agent settings composes the App Shell detail slot and central form/list controls. */
+:where(.sui-root).bot-page { --shell-detail-width:360px; --shell-detail-padding:0px; }
+:where(.sui-root) .bot-settings-panel { display:flex; flex-direction:column; height:100%; min-height:0; --page-header-padding:10px 16px; --page-header-min-height:48px; }
+:where(.sui-root) .bot-settings-content { flex:1; min-height:0; overflow:auto; padding:16px; overscroll-behavior:contain; }
+:where(.sui-root) .bot-settings-avatar { display:flex; justify-content:center; padding:8px 0 16px; }
+:where(.sui-root) .bot-settings-group { display:grid; gap:2px; --list-row-padding:8px 4px; --list-row-gap:8px; --list-row-min-height:40px; }
+:where(.sui-root) .bot-settings-group > h3 { margin:12px 4px 6px; font-size:12px; font-weight:500; }
+:where(.sui-root) .bot-setting-value { font-size:12px; color:var(--text-subtle); white-space:nowrap; }
+:where(.sui-root) .bot-settings-footer { display:flex; justify-content:flex-end; gap:8px; padding:12px 16px; border-top:1px solid var(--color-hairline); }
+
+:where(.sui-root) .bot-setting-control { display:flex; align-items:center; flex:none; min-width:0; max-width:65%; }

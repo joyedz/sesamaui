@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../src/styles/components.css">
   <link rel="stylesheet" href="../src/styles/blocks.css">
   <link rel="stylesheet" href="../src/styles/fonts.css">
+  <link rel="stylesheet" href="shared/palette.css">
   <style>
     body { margin: 0; background: var(--color-canvas); }
     .demo-header { padding: var(--space-16) var(--space-24); border-bottom: 1px solid var(--color-hairline); display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); }
@@ -162,9 +163,10 @@
       }
     });
 
-    document.addEventListener('change', e => {
-      if (e.target.matches('[data-page-size]')) {
-        size = Number(e.target.value);
+    document.addEventListener('sui:pagination:change', e => {
+      const nextSize = Number(e.detail?.pageSize);
+      if (nextSize && nextSize !== size) {
+        size = nextSize;
         page = 1;
         render();
       }

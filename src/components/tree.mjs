@@ -1,5 +1,7 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML, uid as uniqueId } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
+import { iconButton } from './button.mjs';
 
 /**
  * Pure functional builder for a single Tree Item.
@@ -7,13 +9,16 @@ import { controlIcon } from '../icons/controls.mjs';
  * @param {object} options
  * @returns {string} HTML string
  */
-export function treeItem(options = {}) {
+function buildTreeItem(options = {}) {
   const id = options.id || options.key || uniqueId('ti');
   const label = options.label !== undefined ? options.label : (options.n || '');
   const iconName = options.icon !== undefined ? options.icon : options.i;
   const rawChildren = options.children || options.k;
   const children = Array.isArray(rawChildren) ? rawChildren : null;
-  const isFolder = Boolean(children && children.length > 0);
+  const content = options.content || '';
+  const section = options.layout === 'section';
+  if (options.layout && !['default', 'section'].includes(options.layout)) throw new TypeError('Invalid tree item layout');
+  const isFolder = Boolean((children && children.length > 0) || content);
   const isExpanded = options.expanded !== undefined
     ? Boolean(options.expanded)
     : (options.o !== undefined ? options.o !== 0 : true);
@@ -26,7 +31,7 @@ export function treeItem(options = {}) {
     ? ''
     : `<span class="c">${controlIcon(iconName || 'file-text', 14)}</span>`;
 
-  const chevronHtml = isFolder
+  const chevronHtml = isFolder && !section
     ? `<span class="sx-tree-chevron" aria-hidden="true">${controlIcon('chevron-down', 12)}</span>`
     : '';
 
@@ -35,9 +40,9 @@ export function treeItem(options = {}) {
   let buttonHtml = '';
   if (isFolder) {
     // Folders do not receive active page styling unless explicitly active
-    const activeClass = isActive ? ' on' : '';
+    const activeClass = (section ? ' sx-tree-section-item' : '') + (isActive ? ' on' : '');
     const activeAttr = isActive ? ' data-active="true" aria-current="page"' : '';
-    buttonHtml = `<button type="button" class="ti${activeClass}" data-fold data-tree-id="${escapeHTML(id)}" aria-expanded="${isExpanded ? 'true' : 'false'}" data-tree-key="${escapeHTML(id)}"${activeAttr}${attributes ? ` ${attributes}` : ''}>${chevronHtml}${iconHtml}${labelHtml}</button>`;
+    buttonHtml = `<button type="button" class="ti${activeClass}" data-fold data-tree-id="${escapeHTML(id)}" aria-expanded="${isExpanded ? 'true' : 'false'}" data-tree-key="${escapeHTML(id)}"${activeAttr}${attributes ? ` ${attributes}` : ''}>${section ? labelHtml + iconHtml : chevronHtml + iconHtml + labelHtml}</button>`;
   } else {
     const activeClass = isActive ? ' on' : '';
     const activeAttr = isActive ? ' data-active="true" aria-current="page"' : '';
@@ -54,8 +59,10 @@ export function treeItem(options = {}) {
   }
 
   if (isFolder) {
-    const branchHtml = children.map(c => treeItem(c)).join('');
-    return `${rowHtml}<div class="br" data-branch data-branch-for="${escapeHTML(id)}"${isExpanded ? '' : ' hidden'}><i></i><div>${branchHtml}</div></div>`;
+    const branchHtml = content || children.map(c => treeItem(c)).join('');
+    // Collapsed/expanded is an attribute (not hidden) so the branch height can
+    // animate with the shared Collapsible motion tokens.
+    return `${rowHtml}<div class="br${section ? ' sx-tree-section-branch' : ''}"${section ? ' role="group"' : ''} data-branch data-branch-for="${escapeHTML(id)}"${isExpanded ? ' data-open' : ''}><i></i><div>${branchHtml}</div></div>`;
   }
 
   return rowHtml;
@@ -67,7 +74,7 @@ export function treeItem(options = {}) {
  * @param {object|Array} options
  * @returns {string} HTML string
  */
-export function tree(options = {}) {
+function buildTree(options = {}) {
   let items = [];
   let ariaLabel = 'Navigation tree';
   let attributes = '';
@@ -92,7 +99,7 @@ export function tree(options = {}) {
  * @param {object} [options]
  * @returns {string} HTML string
  */
-export function treeSection(titleOrOptions, content = '', options = {}) {
+function buildTreeSection(titleOrOptions, content = '', options = {}) {
   let title = '';
   let body = content;
   let actionHtml = '';
@@ -104,10 +111,9 @@ export function treeSection(titleOrOptions, content = '', options = {}) {
   } else {
     title = String(titleOrOptions || '');
     if (options.actionIcon) {
-      const icon = controlIcon(options.actionIcon, 14);
       const label = options.actionLabel || `${title} action`;
       const attrs = options.actionAttributes || '';
-      actionHtml = `<button type="button" class="ibtn raised" aria-label="${escapeHTML(label)}"${attrs ? ` ${attrs}` : ''}>${icon}</button>`;
+      actionHtml = iconButton(options.actionIcon, { label, attributes: attrs });
     } else if (options.action) {
       actionHtml = options.action;
     }
@@ -147,7 +153,7 @@ export function initTree(element) {
       if (!branch) return true;
       let curr = branch;
       while (curr && curr !== element) {
-        if (curr.hidden || curr.style.display === 'none') return false;
+        if (!curr.hasAttribute('data-open') || curr.hidden || curr.style.display === 'none') return false;
         curr = curr.parentElement?.closest('[data-branch]');
       }
       return true;
@@ -165,7 +171,7 @@ export function initTree(element) {
     const nextState = forceState !== null ? forceState : !currentState;
 
     buttonEl.setAttribute('aria-expanded', String(nextState));
-    branch.hidden = !nextState;
+    branch.toggleAttribute('data-open', nextState);
 
     element.dispatchEvent(new view.CustomEvent('sui:tree:toggle', {
       bubbles: true,
@@ -311,4 +317,20 @@ export function initTree(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function treeItem(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildTreeItem(...args), mode, ["@root"]);
+}
+
+export function tree(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildTree(...args), mode, ["@root"]);
+}
+
+export function treeSection(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildTreeSection(...args), mode, ["@root"]);
 }

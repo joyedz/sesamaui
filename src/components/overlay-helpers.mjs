@@ -12,7 +12,10 @@ export function computePlacement(trigger, popup, placement = 'bottom', options =
   const winHeight = view.innerHeight || 768;
 
   const r = trigger.getBoundingClientRect();
-  const p = popup.getBoundingClientRect();
+  const bounds = popup.getBoundingClientRect();
+  // Entry transforms shrink the visual bounds. Place the final layout size so
+  // panels remain centered and inside the viewport after the transition ends.
+  const p = { width: popup.offsetWidth || bounds.width, height: popup.offsetHeight || bounds.height };
 
   const spaceBelow = winHeight - r.bottom;
   const spaceAbove = r.top;

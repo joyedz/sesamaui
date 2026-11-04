@@ -1,6 +1,9 @@
+import type { Surface } from '../surface.d.mts';
 import { ContentSectionVariant } from './content-section.d.mts';
 
 export interface DataSectionOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   title?: string;
   description?: string;

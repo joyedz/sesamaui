@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "errorCount": 0,
+  "warningCount": 1,
+  "infoCount": 0,
+  "findings": [
+    {
+      "code": "duplicate_media_discovery_risk",
+      "severity": "warning",
+      "message": "Detected 2 matching img entries with the same source/start/duration.",
+      "fixHint": "Avoid duplicated media nodes that can be discovered twice during compilation.",
+      "snippet": "img src=assets/base44-09.jpg data-start= data-duration=",
+      "file": "C:\\Users\\abdil\\projects\\sesama-ui\\marketing\\review\\index.html"
+    }
+  ],
+  "filesScanned": 1,
+  "_meta": {
+    "version": "0.9.3",
+    "latestVersion": "0.9.3",
+    "updateAvailable": false
+  }
+}

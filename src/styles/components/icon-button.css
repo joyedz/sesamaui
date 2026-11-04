@@ -1,10 +1,13 @@
 @import url("../base.css");
+@import url("tooltip.css");
 /* Canonical Sesama icon-button styles. Legacy compatibility is generated. */
-:where(.sui-root) .ibtn:hover:not(:disabled){background:var(--color-tint)}
+:where(.sui-root) .ibtn.favorite[aria-pressed="true"] { color: var(--text-default); }
+:where(.sui-root) .ibtn.favorite[aria-pressed="true"] > svg { fill: currentColor; }
+:where(.sui-root) .ibtn:hover:not(:disabled){background:var(--color-tint);background:color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent)}
 :where(.sui-root) .ibtn:active{transform:translateY(1px)}
 :where(.sui-root) .ibtn{display:grid;place-items:center;width:24px;height:24px;border-radius:var(--radius-sm);color:var(--text-placeholder)}
 :where(.sui-root) .ibtn:hover:not(:disabled){color:var(--text-default)}
-:where(.sui-root) .ibtn.raised{background:var(--color-base);box-shadow:var(--shadow-ring)}
+:where(.sui-root) .ibtn.raised{background:var(--color-base);background:color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);box-shadow:var(--shadow-ring)}
 :where(.sui-root) .ibtn.on{color:var(--color-brand-hover);box-shadow:0 0 0 1px var(--color-brand-hover)}
 :where(.sui-root) .ibtn.circle{border-radius:50%}
 :where(.sui-root) .ibtn{transition:background-color var(--motion-fast) var(--ease-standard),color var(--motion-fast) var(--ease-standard)}
@@ -15,12 +18,14 @@
 :where(.sui-root) .ibtn.size-base{width:28px;height:28px}
 :where(.sui-root) .ibtn.size-lg{width:32px;height:32px}
 :where(.sui-root) .ibtn.size-lg>svg{width:18px;height:18px}
-:where(.sui-root) .ibtn.outline{background:var(--color-base);color:var(--text-default);box-shadow:inset 0 0 0 1px var(--color-hairline)}
-:where(.sui-root) .ibtn.outline:hover:not(:disabled){background:color-mix(in srgb,var(--color-base),var(--color-contrast) 3%)}
+:where(.sui-root) .ibtn.outline{background:var(--color-base);background:color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);color:var(--text-default);box-shadow:inset 0 0 0 1px var(--color-hairline)}
+:where(.sui-root) .ibtn.outline:hover:not(:disabled){background:color-mix(in srgb,var(--color-base),var(--color-contrast) 3%);background:color-mix(in srgb, color-mix(in srgb,var(--color-base),var(--color-contrast) 3%) var(--sui-surface-opacity, 100%), transparent)}
 :where(.sui-root) .ibtn.outline[aria-expanded=true]{box-shadow:inset 0 0 0 1px var(--color-brand-hover)}
 :where(.sui-root) .ibtn:disabled{opacity:.5;cursor:not-allowed}
-:where(.sui-root) .ibtn.outline:disabled:hover:not(:disabled){background:var(--color-base)}
+:where(.sui-root) .ibtn.outline:disabled:hover:not(:disabled){background:var(--color-base);background:color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent)}
 :where(.sui-root) .ibtn.size-sm{width:var(--control-size-sm);height:var(--control-size-sm)}
 :where(.sui-root) .ibtn.size-base{width:var(--control-size-base);height:var(--control-size-base)}
 :where(.sui-root) .ibtn.size-lg{width:var(--control-size-lg);height:var(--control-size-lg)}
 :where(.sui-root) .ibtn.outline{box-shadow:inset 0 0 0 1px var(--color-control-edge)}
+
+:where(.sui-root) .ibtn.size-xs{width:var(--control-size-xs);height:var(--control-size-xs)}

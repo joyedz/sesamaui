@@ -3,8 +3,8 @@
 /* Canonical Sesama combobox styles. */
 :where(.sui-root) .sx-combo{position:relative}
 :where(.sui-root) .sx-combo-list [role=option]{cursor:pointer}
-:where(.sui-root) .sx-combo-list [aria-selected=true]{background:var(--color-brand-tint)}
-:where(.sui-root) .sx-combo-list .active{background:var(--color-tint);outline:none}
+:where(.sui-root) .sx-combo-list [aria-selected=true]{background:var(--color-brand-tint);background:color-mix(in srgb, var(--color-brand-tint) var(--sui-surface-opacity, 100%), transparent)}
+:where(.sui-root) .sx-combo-list .active{background:var(--color-tint);background:color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);outline:none}
 :where(.sui-root) .sx-combo-list [aria-disabled=true]{opacity:.5;cursor:not-allowed}
 :where(.sui-root) .sx-combo-clear{flex:none}
 /* Loading / no-results status text inside the combobox list only. */

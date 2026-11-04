@@ -1,3 +1,4 @@
+import { surfaceMode } from './shared.mjs';
 import { uid, escapeHTML } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
@@ -64,6 +65,8 @@ export function initToastRegion(element) {
   }
 
   function addToast(options) {
+    const requestedSurface = surfaceMode([options]);
+    const surface = requestedSurface || 'solid';
     if (destroyed) return { dismiss() {}, update() {} };
 
     const message = options.message || '';
@@ -75,11 +78,12 @@ export function initToastRegion(element) {
     const action = options.action || null;
 
     // Duplicate check: if an active non-removed toast with identical message and tone exists, return its handle
-    const existing = entries.find(e => !e.removed && e.message === message && e.tone === tone);
+    const existing = entries.find(e => !e.removed && e.message === message && e.tone === tone && e.surface === surface);
     if (existing) return existing.handle;
 
     const item = doc.createElement('div');
     item.className = 'ds-toast';
+    if (requestedSurface !== undefined) item.dataset.suiSurface = surface;
     item.dataset.tone = tone;
     item.hidden = true;
     item.setAttribute('aria-atomic', 'true');
@@ -119,6 +123,7 @@ export function initToastRegion(element) {
     element.append(item);
 
     const entry = {
+      surface,
       message,
       title,
       tone,

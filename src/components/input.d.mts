@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 export type InputSize = 'sm' | 'base' | 'lg';
 export type InputType = 'text' | 'email' | 'password' | 'tel' | 'url' | 'search' | 'number';
 
@@ -23,6 +24,12 @@ export interface FormController<T extends HTMLElement = HTMLInputElement> extend
 export interface InputController extends FormController<HTMLInputElement> {}
 
 export interface InputOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
+  clearable?: boolean;
+  /** Optional leading control icon name. */
+  icon?: string;
+  ariaLabel?: string;
   id?: string;
   name?: string;
   label?: string;
@@ -35,6 +42,8 @@ export interface InputOptions {
 }
 
 export interface InputFieldOptions extends InputOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   ariaLabel?: string;
   autocomplete?: string;
   readonly?: boolean;

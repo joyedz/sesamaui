@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { uid, escapeHTML } from './shared.mjs';
 import { menuItem } from './menu-item.mjs';
 import { controlIcon } from '../icons/controls.mjs';
@@ -9,7 +10,7 @@ import { getNextFocusableIndex, positionOverlay } from './overlay-helpers.mjs';
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function menu(options = {}) {
+function buildMenu(options = {}) {
   const {
     id = uid(),
     ariaLabel = 'Menu',
@@ -226,4 +227,10 @@ export function initMenu(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function menu(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildMenu(...args), mode, ["@root"]);
 }

@@ -1,6 +1,11 @@
+import type { Surface } from '../surface.d.mts';
 export interface AppShellOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   sidebar?: string;
+  /** Trusted HTML for a persistent global icon rail. */
+  rail?: string;
   header?: string;
   content?: string;
   footer?: string;
@@ -16,7 +21,7 @@ export interface AppShellController {
   setCollapsed(collapsed: boolean): void;
   isPeeking(): boolean;
   setPeeking(peeking: boolean): void;
-  setDetail(detailHtml?: string): void;
+  setDetail(detailHtml?: string, options?: { animate?: boolean }): void | Promise<void>;
   destroy(): void;
 }
 

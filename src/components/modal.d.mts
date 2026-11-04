@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 export type ModalSize = 'sm' | 'base' | 'lg' | 'xl';
 
 export interface Controller {
@@ -7,6 +8,8 @@ export interface Controller {
 
 /** content and actions are trusted application HTML, never untrusted user text. */
 export interface ModalOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   title?: string;
   description?: string;
@@ -14,6 +17,8 @@ export interface ModalOptions {
   actions?: string;
   size?: ModalSize;
   locked?: boolean;
+  /** Scroll the body inside a fixed header/footer instead of the whole dialog. */
+  bodyScroll?: boolean;
 }
 
 export interface ModalController extends Controller {

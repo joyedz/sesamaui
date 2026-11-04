@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 import { TreeItem } from '../components/tree.d.mts';
 
 export interface WorkspaceItem {
@@ -11,13 +12,20 @@ export interface WorkspaceGroup {
 }
 
 export interface WorkspaceSidebarOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
+  variant?: 'default' | 'conversation' | 'compact';
   workspace?: string;
   workspaces?: WorkspaceItem[];
   workspaceSelector?: string;
+  /** Trusted header action HTML replacing the default sidebar toggle. */
+  headerAction?: string;
   navigation?: TreeItem[] | string;
   groups?: WorkspaceGroup[];
   projects?: TreeItem[] | string;
+  /** Label for the secondary navigation section. Defaults to Projects. */
+  projectsTitle?: string;
   projectActions?: string | object;
   profile?: string;
   profileName?: string;

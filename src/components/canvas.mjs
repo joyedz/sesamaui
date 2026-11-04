@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML, uid } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 import { toolbar } from './toolbar.mjs';
@@ -21,7 +22,7 @@ function renderZoomToolbar() {
  * @param {object} [options]
  * @returns {string} HTML string
  */
-export function canvas(options = {}) {
+function buildCanvas(options = {}) {
   const {
     id = uid('sui-canvas'),
     toolbar: showToolbar = true,
@@ -270,4 +271,10 @@ export function initCanvas(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function canvas(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildCanvas(...args), mode, ["@root"]);
 }

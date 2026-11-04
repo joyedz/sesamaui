@@ -1,4 +1,21 @@
 /* Workspace Sidebar block */
+:where(.sui-root) .sb-app-shell.is-collapsed:not(.is-peeking) .sb-projects > .sx-tree-section,
+:where(.sui-root) .sb-app-shell.is-collapsed:not(.is-peeking) .sb-projects > .sx-tree-section * {
+  visibility: hidden !important;
+  pointer-events: none;
+}
+
+/* Permanently compact navigation reuses the collapsed Tree geometry. */
+:where(.sui-root) .sx-sidebar-compact { position:relative; width:48px; height:100%; padding:0 8px 8px; gap:8px; background:var(--color-canvas); flex:none; }
+:where(.sui-root) .sx-sidebar-compact::after { content:""; position:absolute; inset:0 0 0 auto; border-right:var(--sidebar-compact-divider,0); pointer-events:none; }
+:where(.sui-root) .sx-sidebar-compact .sb-compact-brand { display:grid; place-items:center; height:38px; flex:none; color:var(--text-subtle); }
+:where(.sui-root) .sb-compact-brand > svg { width:28px; height:26px; }
+:where(.sui-root) .sx-sidebar-compact .ti { width:32px; height:32px; justify-content:center; padding:0; }
+:where(.sui-root) .sx-sidebar-compact .sx-tree-label { display:none; }
+:where(.sui-root) .sx-sidebar-compact .sb-compact-footer { margin-top:auto; display:flex; flex-direction:column; align-items:center; gap:10px; }
+:where(.sui-root) .sb-app-shell.is-collapsed:not(.is-peeking) .sb-sidebar [data-branch] > i {
+  visibility: hidden;
+}
 :where(.sui-root) .sb-sidebar,
 :where(.sui-root) .sx-workspace-sidebar {
   display: flex;
@@ -9,12 +26,44 @@
   min-height: 0;
   overflow: hidden;
   background: var(--color-canvas);
+  background: color-mix(in srgb, var(--color-canvas) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sb-sidebar-top {
-  display: flex;
-  align-items: center;
+  display: grid;
+  justify-items: stretch;
   gap: var(--space-4, 4px);
+}
+
+:where(.sui-root) .sb-sidebar-top > [data-shell-toggle] {
+  justify-self: start;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  margin-bottom: var(--space-8);
+}
+:where(.sui-root) .sb-sidebar-logo > svg { width: 30px; height: 30px; }
+:where(.sui-root) .sb-sidebar-logo,
+:where(.sui-root) .sb-sidebar-toggle-icon { grid-area: 1 / 1; display: flex; }
+:where(.sui-root) .sb-sidebar-toggle-icon { opacity: 0; }
+:where(.sui-root) [data-shell-toggle][aria-expanded="false"] .sb-sidebar-toggle-icon > svg { transform: scaleX(-1); }
+:where(.sui-root) .sb-app-shell.is-sidebar-hovered .sb-sidebar-logo { opacity: 0; }
+:where(.sui-root) .sb-app-shell.is-sidebar-hovered .sb-sidebar-toggle-icon { opacity: 1; }
+:where(.sui-root) .sb-sidebar:has(:focus-visible) .sb-sidebar-logo { opacity: 0; }
+:where(.sui-root) .sb-sidebar:has(:focus-visible) .sb-sidebar-toggle-icon { opacity: 1; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  :where(.sui-root) .sb-sidebar-logo,
+  :where(.sui-root) .sb-sidebar-toggle-icon {
+    transition: opacity var(--motion-fast) var(--ease-standard);
+  }
+  :where(.sui-root) .sb-sidebar:has(:focus-visible) .sb-sidebar-logo,
+  :where(.sui-root) .sb-sidebar:has(:focus-visible) .sb-sidebar-toggle-icon {
+    transition: none;
+  }
+}
+@media (hover: none) {
+  :where(.sui-root) .sb-sidebar-logo { opacity: 0; }
+  :where(.sui-root) .sb-sidebar-toggle-icon { opacity: 1; }
 }
 
 :where(.sui-root) .sb-sidebar-top > .field,
@@ -35,12 +84,29 @@
 :where(.sui-root) .sb-navigation {
   min-width: 0;
 }
+:where(.sui-root) .sb-navigation > [data-sui-input-field] { max-width:none; }
+
+/* Keep rail glyphs on the same vertical anchors as their expanded rows. */
+:where(.sui-root) .sb-sidebar .ti {
+  height: 32px;
+  min-height: 32px;
+  padding-block: var(--space-6);
+}
+:where(.sui-root) .sb-sidebar .ti .c {
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+:where(.sui-root) .sb-sidebar .ti .c > svg { width: 16px; height: 16px; }
+:where(.sui-root) .sb-sidebar-top { min-height: 74px; }
+:where(.sui-root) .sb-profile-trigger { min-height: 32px; }
 
 :where(.sui-root) .sb-navigation > .sx-tree-section {
   margin-top: var(--space-16, 16px);
 }
 
 :where(.sui-root) .sb-projects {
+  position: relative;
   flex: 1;
   min-height: 0;
   overflow: auto;
@@ -70,6 +136,7 @@
 
 :where(.sui-root) .sb-profile-trigger:hover {
   background: var(--color-tint);
+  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sb-profile-trigger .sx-avatar {
@@ -100,32 +167,68 @@
 
 :where(.sui-root) .sb-projects-rail {
   display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 28px;
 }
 
 @media (min-width: 761px) {
+  :where(.sui-root) .sb-app-shell > .sb-sidebar {
+    position: absolute;
+    inset: 8px auto 8px 8px;
+    width: 240px;
+    z-index: 10;
+    isolation: isolate;
+    transition: width var(--motion-base) ease-in-out;
+  }
+
+  /* Cover the shell outline without changing the sidebar's layout geometry. */
+  :where(.sui-root) .sb-app-shell.is-collapsed > .sb-sidebar::before {
+    content: '';
+    position: absolute;
+    inset: -8px 0 -8px -8px;
+    background: var(--color-canvas);
+    background: color-mix(in srgb, var(--color-canvas) var(--sui-surface-opacity, 100%), transparent);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  :where(.sui-root) .sb-app-shell.is-collapsed > .sb-sidebar { overflow: visible; }
+
+  :where(.sui-root) .sb-sidebar .sx-tree-label,
+  :where(.sui-root) .sb-profile-info { white-space: nowrap; }
+
+
+  :where(.sui-root) .sb-app-shell:not(.is-collapsed) .sb-sidebar :is(.sx-tree-label, .sb-profile-info),
+  :where(.sui-root) .sb-app-shell.is-peeking .sb-sidebar :is(.sx-tree-label, .sb-profile-info) {
+    animation: sui-sidebar-label-reveal var(--motion-base) ease-out both;
+  }
   :where(.sui-root) :is(.sb-app-shell.is-collapsed, .is-collapsed) > .sb-sidebar {
     position: absolute;
     inset: 8px auto 8px 8px;
     width: 48px;
     z-index: 10;
-    transition: width 320ms var(--ease-out);
+    transition: width var(--motion-base) ease-in-out;
   }
 
   :where(.sui-root) :is(.sb-app-shell.is-collapsed.is-peeking, .is-collapsed.is-peeking) > .sb-sidebar {
     width: 240px;
-    box-shadow: var(--shadow-float);
+    box-shadow: none;
   }
 
   :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-sidebar-top {
-    justify-content: center;
+    justify-content: stretch;
   }
 
   :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-sidebar-top > :not([data-shell-toggle]) {
-    display: none !important;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-sidebar .sx-tree-section-header {
-    display: none !important;
+    visibility: hidden;
   }
 
   :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-sidebar .ti {
@@ -133,7 +236,7 @@
     padding-inline: 0 !important;
     width: 32px;
     height: 32px;
-    margin-inline: auto;
+    margin-inline: 0;
   }
 
   :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-sidebar .ti :is(.sp, .sx-tree-spacer, .sx-tree-chevron, .sx-tree-label, .sx-tree-actions) {
@@ -148,7 +251,7 @@
   }
 
   :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-projects > .sx-tree-section {
-    display: none !important;
+    visibility: hidden;
   }
 
   :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-projects-rail {
@@ -158,11 +261,11 @@
   }
 
   :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-profile {
-    justify-content: center !important;
+    justify-content: flex-start !important;
   }
 
   :where(.sui-root) :is(.sb-app-shell.is-collapsed:not(.is-peeking), .is-collapsed:not(.is-peeking)) .sb-profile-trigger {
-    justify-content: center !important;
+    justify-content: flex-start !important;
     padding: 0 !important;
     flex: none !important;
   }
@@ -190,15 +293,16 @@
   }
 
   :where(.sui-root) .sb-app-shell.is-collapsed .sb-sidebar-top {
-    justify-content: center;
+    justify-content: stretch;
   }
 
   :where(.sui-root) .sb-app-shell.is-collapsed .sb-sidebar-top > :not([data-shell-toggle]) {
-    display: none !important;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   :where(.sui-root) .sb-app-shell.is-collapsed .sb-sidebar .sx-tree-section-header {
-    display: none !important;
+    visibility: hidden;
   }
 
   :where(.sui-root) .sb-app-shell.is-collapsed .sb-sidebar .ti {
@@ -206,7 +310,7 @@
     padding-inline: 0 !important;
     width: 32px;
     height: 32px;
-    margin-inline: auto;
+    margin-inline: 0;
   }
 
   :where(.sui-root) .sb-app-shell.is-collapsed .sb-sidebar .ti :is(.sp, .sx-tree-spacer, .sx-tree-chevron, .sx-tree-label, .sx-tree-actions) {
@@ -221,7 +325,7 @@
   }
 
   :where(.sui-root) .sb-app-shell.is-collapsed .sb-projects > .sx-tree-section {
-    display: none !important;
+    visibility: hidden;
   }
 
   :where(.sui-root) .sb-app-shell.is-collapsed .sb-projects-rail {
@@ -231,11 +335,11 @@
   }
 
   :where(.sui-root) .sb-app-shell.is-collapsed .sb-profile {
-    justify-content: center !important;
+    justify-content: flex-start !important;
   }
 
   :where(.sui-root) .sb-app-shell.is-collapsed .sb-profile-trigger {
-    justify-content: center !important;
+    justify-content: flex-start !important;
     padding: 0 !important;
     flex: none !important;
   }
@@ -250,7 +354,44 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  :where(.sui-root) .sb-sidebar :is(.sx-tree-label, .sb-profile-info) { animation: none !important; }
   :where(.sui-root) .sb-sidebar {
     transition: none !important;
   }
 }
+
+@keyframes sui-sidebar-label-reveal {
+  0%, 70% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Conversation navigation uses a compact workspace bar and flat row collection. */
+:where(.sui-root) .sx-sidebar-conversation { padding:0 8px; gap:8px; background:var(--sidebar-background,var(--color-base)); border-right:var(--sidebar-divider,1px solid var(--color-hairline)); }
+:where(.sui-root) .sx-sidebar-conversation .sb-sidebar-top { display:flex; flex-direction:row-reverse; align-items:center; min-height:var(--sidebar-header-height,38px); gap:8px; }
+:where(.sui-root) .sx-sidebar-conversation .sb-sidebar-top > :not([data-shell-toggle]):not([data-sidebar-header-action]):not([role="tooltip"]):not(:has(> [data-sidebar-header-action])) { flex:1; min-width:0; --select-inline-width:100%; }
+:where(.sui-root) .sx-sidebar-conversation .sb-sidebar-top > [data-shell-toggle] { margin:0; width:24px; height:24px; }
+:where(.sui-root) .sx-sidebar-conversation .sb-sidebar-logo { display:none; }
+:where(.sui-root) .sx-sidebar-conversation .sb-sidebar-toggle-icon { opacity:1; }
+:where(.sui-root) .sx-sidebar-conversation .sx-tree-section-header { padding-inline:8px; }
+
+:where(.sui-root) .sb-app-shell[data-sidebar-keyboard],
+:where(.sui-root) .sb-app-shell[data-sidebar-keyboard] > .sb-sidebar {
+  transition: none !important;
+}
+:where(.sui-root) .sb-app-shell[data-sidebar-keyboard] .sb-sidebar :is(.sx-tree-label, .sb-profile-info) {
+  animation: none !important;
+}
+
+/* Rail workspaces place their conversation panel beside the global rail. */
+@media(min-width:761px) {
+ :where(.sui-root) .sb-app-shell.sx-shell-with-rail > .sb-sidebar { inset:0 auto var(--shell-padding,8px) calc(48px + var(--shell-gap,8px)); width:var(--shell-sidebar-width,280px); }
+ :where(.sui-root) .sx-shell-with-rail.is-collapsed:not(.is-peeking) > .sb-sidebar { width:48px; }
+ :where(.sui-root) .sx-shell-with-rail.is-peeking > .sb-sidebar { width:var(--shell-sidebar-width,280px); }
+}
+@media(max-width:760px) {
+ :where(.sui-root) .sb-app-shell.sx-shell-with-rail > .sb-sidebar { inset:var(--shell-padding,8px) auto var(--shell-padding,8px) calc(44px + var(--shell-padding,8px)); width:min(var(--shell-sidebar-width,280px),calc(100% - 44px)); }
+}
+
+:where(.sui-root) .sx-sidebar-conversation .sb-sidebar-top > [data-sidebar-header-action] { flex:none; margin:0; width:24px; height:24px; }
+:where(.sui-root) .sx-sidebar-conversation .sb-sidebar-top > :has(> [data-sidebar-header-action]) { flex:0 0 24px; width:24px; min-width:24px; }
+:where(.sui-root) .sx-sidebar-conversation .sb-sidebar-top > :has(> [data-sidebar-header-action]) > [data-sidebar-header-action] { width:24px; height:24px; }

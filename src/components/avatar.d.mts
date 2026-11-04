@@ -1,7 +1,10 @@
+import type { Surface } from '../surface.d.mts';
 export type AvatarPresetSize = 'sm' | 'base' | 'lg';
 export type AvatarSize = number | AvatarPresetSize;
 
 export interface AvatarOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   name?: string;
   initials?: string;
   image?: string;

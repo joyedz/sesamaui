@@ -1,5 +1,7 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML, uid } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
+import { select, initSelect } from './select.mjs';
 
 function renderPaginationNumbers(currentPage, totalPages) {
   const pages = Math.max(1, totalPages);
@@ -24,7 +26,7 @@ function renderPaginationNumbers(currentPage, totalPages) {
  * @param {object} [options]
  * @returns {string} HTML string
  */
-export function pagination(options = {}) {
+function buildPagination(options = {}) {
   const {
     page = 1,
     pageSize = 10,
@@ -44,8 +46,16 @@ export function pagination(options = {}) {
   let sizeSelectHtml = '';
   if (Array.isArray(pageSizeOptions) && pageSizeOptions.length > 0) {
     const opts = [...new Set([...pageSizeOptions, validSize])].sort((a, b) => a - b);
-    const optionsHtml = opts.map(n => `<option value="${n}"${n === validSize ? ' selected' : ''}>${n}</option>`).join('');
-    sizeSelectHtml = `<label class="sx-row"><span>Rows</span><span class="sx-pagination-size"><select class="sx-select" data-page-size aria-label="Rows per page">${optionsHtml}</select>${controlIcon('chevron-down', 12)}</span></label>`;
+    // Rows-per-page reuses the canonical Select pattern: styled trigger plus
+    // a listbox popover with the shared menu surface (no native dropdown).
+    const rowsSelect = select({
+      name: 'pagination-size',
+      ariaLabel: 'Rows per page',
+      hideLabel: true,
+      value: String(validSize),
+      options: opts.map(n => ({ label: String(n), value: String(n) }))
+    });
+    sizeSelectHtml = `<span class="sx-row"><span>Rows</span><span class="sx-pagination-size">${rowsSelect}</span></span>`;
   }
 
   let summaryHtml = '';
@@ -89,6 +99,24 @@ export function initPagination(element) {
   const view = element.ownerDocument?.defaultView || globalThis;
   let destroyed = false;
 
+  // Rows-per-page selector: the canonical Select controller owns the trigger
+  // and listbox; its sui:change event flows into the pagination state.
+  const sizeSelectRoot = element.querySelector('.sx-pagination-size [data-sui-select]');
+  let sizeController = null;
+  if (sizeSelectRoot) {
+    sizeController = initSelect(sizeSelectRoot);
+    sizeSelectRoot.addEventListener('sui:change', event => {
+      if (destroyed) return;
+      const nextSize = Number(event.detail?.value);
+      if (nextSize && nextSize !== currentSize) {
+        currentSize = nextSize;
+        currentPage = 1;
+        updateUI();
+        emitChange();
+      }
+    });
+  }
+
   let config = {};
   try {
     config = JSON.parse(element.dataset.suiPaginationConfig || '{}');
@@ -125,9 +153,9 @@ export function initPagination(element) {
       summaryEl.textContent = `Page ${currentPage} of ${totalPages} · ${currentTotal} items`;
     }
 
-    const selectEl = element.querySelector('[data-page-size]');
-    if (selectEl && Number(selectEl.value) !== currentSize) {
-      selectEl.value = String(currentSize);
+    if (sizeController) {
+      // Ignore sizes outside pageSizeOptions (e.g. programmatic setPageSize).
+      try { sizeController.setValue(String(currentSize)); } catch {}
     }
 
     element.dataset.suiPaginationConfig = JSON.stringify({
@@ -178,22 +206,7 @@ export function initPagination(element) {
     }
   }
 
-  function onChange(event) {
-    if (destroyed) return;
-    const select = event.target.closest('[data-page-size]');
-    if (select && element.contains(select)) {
-      const newSize = Number(select.value);
-      if (newSize && newSize !== currentSize) {
-        currentSize = newSize;
-        currentPage = 1;
-        updateUI();
-        emitChange();
-      }
-    }
-  }
-
   element.addEventListener('click', onClick);
-  element.addEventListener('change', onChange);
 
   const controller = {
     setPage(p) {
@@ -221,12 +234,18 @@ export function initPagination(element) {
     destroy() {
       if (destroyed) return;
       destroyed = true;
+      sizeController?.destroy();
       element.removeEventListener('click', onClick);
-      element.removeEventListener('change', onChange);
       mounted.delete(element);
     },
   };
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function pagination(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildPagination(...args), mode, ["@root"]);
 }

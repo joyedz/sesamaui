@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 export type ToolCallState = 'queued' | 'running' | 'completed' | 'failed' | 'cancelled';
 
 export interface ToolCallDetails {
@@ -7,6 +8,8 @@ export interface ToolCallDetails {
 }
 
 export interface ToolCallOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   name?: string;
   icon?: string;

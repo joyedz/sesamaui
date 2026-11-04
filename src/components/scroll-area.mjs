@@ -1,8 +1,9 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML } from './shared.mjs';
 
 const VALID_ORIENTATIONS = ['vertical', 'horizontal', 'both'];
 
-export function scrollArea(options = {}) {
+function buildScrollArea(options = {}) {
   const {
     content = '',
     orientation = 'vertical',
@@ -73,4 +74,10 @@ export function initScrollArea(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function scrollArea(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildScrollArea(...args), mode, ["@root"]);
 }

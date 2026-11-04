@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { uid, escapeHTML } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
@@ -24,7 +25,7 @@ function normalizeCommand(cmd, idx) {
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function commandPalette(options = {}) {
+function buildCommandPalette(options = {}) {
   const {
     id = uid(),
     title = 'Commands',
@@ -298,4 +299,10 @@ export function initCommandPalette(dialog) {
 
   mounted.set(dialog, controller);
   return controller;
+}
+
+
+export function commandPalette(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildCommandPalette(...args), mode, ["@dialog"]);
 }

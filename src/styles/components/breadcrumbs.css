@@ -70,4 +70,5 @@
 :where(.sui-root) .sx-breadcrumb-ellipsis:hover {
   color: var(--text-default);
   background: var(--color-tint);
+  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
 }

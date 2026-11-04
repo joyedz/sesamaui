@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 export type ListRowVariant =
   | 'plain'
   | 'basic'
@@ -14,8 +15,13 @@ export type ListRowVariant =
   | 'disabled';
 
 export interface ListRowOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
+  appearance?: 'default' | 'plain';
   variant?: ListRowVariant;
   title?: string;
+  /** Escaped badge text beside the title; description retains the full copy width. */
+  titleBadge?: string;
   description?: string;
   descriptionHTML?: string;
   leading?: string;

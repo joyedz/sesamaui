@@ -1,10 +1,11 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
 const VALID_TONES = ['neutral', 'informative', 'success', 'warning', 'error', 'disabled'];
 const VALID_SIZES = ['sm', 'base'];
 
-export function badge(options = {}) {
+function buildBadge(options = {}) {
   const opts = typeof options === 'string' ? { label: options } : options;
   const {
     label = '',
@@ -31,4 +32,10 @@ export function badge(options = {}) {
   ].filter(Boolean).join(' ');
 
   return `<span ${attrs}>${iconMarkup}${labelMarkup}</span>`;
+}
+
+
+export function badge(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildBadge(...args), mode, ["@root"]);
 }

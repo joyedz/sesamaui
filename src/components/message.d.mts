@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 import { FileCardOptions } from './file-card.mjs';
 
 export type MessageRole = 'user' | 'agent' | 'comment';
@@ -28,7 +29,10 @@ export interface MessageAction {
 }
 
 export interface MessageOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
+  appearance?: 'default' | 'bubble';
   sender?: MessageSender | string;
   role?: MessageRole;
   time?: string;
@@ -36,6 +40,7 @@ export interface MessageOptions {
   quote?: MessageQuote;
   replyTo?: MessageQuote;
   attachments?: (FileCardOptions | string)[] | string;
+  /** Own messages default to Copy. Pass [] to omit actions. */
   actions?: (MessageAction | string)[] | string;
   status?: MessageStatus;
   state?: string;

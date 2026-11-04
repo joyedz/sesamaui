@@ -1,6 +1,10 @@
-export type TextareaSize = 'sm' | 'base' | 'lg';
+import type { Surface } from '../surface.d.mts';
+import type { InputSize } from './input.mjs';
+export type TextareaSize = InputSize;
 
 export interface TextareaOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   name?: string;
   label?: string;

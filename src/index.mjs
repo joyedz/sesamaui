@@ -56,16 +56,7 @@ export {peopleList} from './blocks/people-list.mjs';
 export {activityFeed} from './blocks/activity-feed.mjs';
 export {metricCard, metricSummary} from './blocks/metric-card.mjs';
 export {chartSection} from './blocks/chart-section.mjs';
-export {
-  requirementGroupRecipe,
-  resourceListRecipe,
-  agentCardRecipe,
-  createSkillDialogRecipe,
-  deleteResourceRecipe,
-  dashboardOverviewRecipe,
-  revenueChartRecipe,
-  dataWorkspaceRecipe
-} from './blocks/recipes.mjs';
+export {agentCardRecipe} from './blocks/recipes.mjs';
 export {controlIcon, CONTROL_ICON_NAMES} from './icons/controls.mjs';
 export {runeIcon, RUNE_ICON_NAMES} from './icons/rune-icons.mjs';
 export {escapeHTML, uid} from './components/shared.mjs';

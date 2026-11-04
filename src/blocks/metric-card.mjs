@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from '../components/shared.mjs';
 import { escapeHTML, uid } from '../components/shared.mjs';
 
 const VALID_TONES = ['success', 'error', 'neutral'];
@@ -8,7 +9,7 @@ const VALID_TONES = ['success', 'error', 'neutral'];
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function metricSummary(options = {}) {
+function buildMetricSummary(options = {}) {
   // If passed an array of metrics or summary container options
   if (Array.isArray(options.metrics)) {
     const { columns = 3, metrics = [], classes = '' } = options;
@@ -49,7 +50,7 @@ export function metricSummary(options = {}) {
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function metricCard(options = {}) {
+function buildMetricCard(options = {}) {
   const {
     id = uid('metric'),
     label = '',
@@ -97,4 +98,15 @@ export function metricCard(options = {}) {
   const footerHTML = footer ? `<div class="sb-metric-footer">${footer}</div>` : '';
 
   return `<section class="${classList}" data-sui-metric-card id="${escapeHTML(id)}" ${state === 'loading' ? 'aria-busy="true"' : ''} ${extraAttrs.join(' ')}>${headerHTML}${contentHTML}${footerHTML}</section>`;
+}
+
+
+export function metricSummary(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildMetricSummary(...args), mode, ["@root"]);
+}
+
+export function metricCard(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildMetricCard(...args), mode, ["@root"]);
 }

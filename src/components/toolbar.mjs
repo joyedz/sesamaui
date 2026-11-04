@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML } from './shared.mjs';
 import { button, iconButton } from './button.mjs';
 
@@ -45,7 +46,7 @@ function renderToolbarItem(item, orientation) {
  * @param {object} [options]
  * @returns {string} HTML string
  */
-export function toolbar(options = {}) {
+function buildToolbar(options = {}) {
   const {
     ariaLabel = 'Toolbar',
     items: rawItems = [],
@@ -64,4 +65,10 @@ export function toolbar(options = {}) {
   const classList = ['sx-toolbar', `sx-toolbar-${validOrientation}`, `sx-toolbar-${validSize}`, variant ? `sx-toolbar-${variant}` : ''].filter(Boolean).join(' ');
 
   return `<div role="toolbar" class="${classList}" aria-label="${escapeHTML(ariaLabel)}" aria-orientation="${validOrientation}" data-sui-toolbar${attributes ? ` ${attributes}` : ''}>${itemsHtml}</div>`;
+}
+
+
+export function toolbar(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildToolbar(...args), mode, ["@root"]);
 }

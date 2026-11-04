@@ -1,0 +1,21 @@
+/* Opt-in surface treatment. Color and state still belong to each component. */
+:where(.sui-root) [data-sui-surface="solid"] {
+  --sui-surface-opacity: 100%;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+:where(.sui-root) [data-sui-surface="blur"] {
+  --sui-surface-opacity: var(--surface-opacity);
+  -webkit-backdrop-filter: blur(var(--surface-blur)) saturate(var(--surface-saturation));
+  backdrop-filter: blur(var(--surface-blur)) saturate(var(--surface-saturation));
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :where(.sui-root) [data-sui-surface="blur"] { --sui-surface-opacity: 100%; }
+}
+@media (forced-colors: active), (prefers-reduced-transparency: reduce) {
+  :where(.sui-root) [data-sui-surface="blur"] {
+    --sui-surface-opacity: 100%;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

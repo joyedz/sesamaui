@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 export interface PersonItem {
   id?: string;
   name: string;
@@ -13,6 +14,8 @@ export interface PersonItem {
 export type PeopleListItem = PersonItem;
 
 export interface PeopleListOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   title?: string;
   count?: number;

@@ -5,6 +5,7 @@
   width: 100%;
   border-radius: var(--radius-md);
   background: var(--color-base);
+  background: color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);
   box-shadow: var(--shadow-ring);
   color: var(--text-default);
   transition: box-shadow var(--motion-fast) var(--ease-standard);
@@ -29,6 +30,7 @@
 
 :where(.sui-root) .card.variant-recessed {
   background: var(--color-recessed);
+  background: color-mix(in srgb, var(--color-recessed) var(--sui-surface-opacity, 100%), transparent);
   box-shadow: none;
 }
 
@@ -86,4 +88,12 @@
   display: flex;
   align-items: center;
   gap: var(--space-8);
+}
+
+:where(.sui-root) .sx-card-expand {
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
 }

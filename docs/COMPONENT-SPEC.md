@@ -26,7 +26,7 @@ Home remains a responsive gallery of square cells separated by thin hairlines. E
 
 Every component page has: purpose; when to use; anatomy; examples mapped individually by variant/state; live preview; exact HTML/CSS/JS dependencies for that preview; keyboard behavior; accessibility; limitations. Helper text is optional and appears only when explicitly provided. Errors appear only when invalid. Do not bundle helper copy automatically into password or phone inputs.
 
-Until the API phase, replace misleading API Reference sections with Implementation notes or mark proposed contracts clearly as deferred. Existing demonstration code that only emits a toast must be identified as a demo action.
+The Components catalog uses canonical ESM builders as its only reference. Document package imports, scoped styles, mount/refresh/destroy lifecycle, and generated markup for each variant. Keep application-only demo actions identified. Blocks retain their existing documentation until migrated separately.
 
 Each example must have unique IDs, accessible names, and the same markup as its usage snippet. Direct hashes, reload, Back/Forward, and sidebar active state must work for every page. Keep legacy routes as aliases when renaming or merging components.
 

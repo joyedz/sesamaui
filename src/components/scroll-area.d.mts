@@ -1,6 +1,9 @@
+import type { Surface } from '../surface.d.mts';
 export type ScrollAreaOrientation = 'vertical' | 'horizontal' | 'both';
 
 export interface ScrollAreaOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   content?: string;
   orientation?: ScrollAreaOrientation;
   tabindex?: number;

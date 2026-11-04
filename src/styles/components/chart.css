@@ -64,6 +64,7 @@
   z-index: 4;
   pointer-events: none;
   background: var(--color-base);
+  background: color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);
   color: var(--text-default);
   padding: 8px 12px;
   border-radius: var(--radius-md);

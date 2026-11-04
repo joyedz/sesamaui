@@ -1,6 +1,9 @@
+import type { Surface } from '../surface.d.mts';
 export type MenuItemRole = 'menuitem' | 'menuitemcheckbox' | 'menuitemradio';
 
 export interface MenuItemOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   label: string;
   icon?: string | null;

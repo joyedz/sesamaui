@@ -5,12 +5,14 @@
   display: grid;
   place-items: center;
   flex: none;
-  border-radius: 50%;
+  border-radius: var(--avatar-radius, 50%);
   overflow: hidden;
-  background: var(--color-recessed);
+  background: var(--avatar-background, var(--avatar-palette-background, var(--color-recessed)));
+  background: color-mix(in srgb, var(--avatar-background, var(--avatar-palette-background, var(--color-recessed))) var(--sui-surface-opacity, 100%), transparent);
   font-size: 10px;
-  font-weight: 500;
-  color: var(--text-subtle);
+  font-weight: 600;
+  color: var(--avatar-palette-foreground, var(--text-default));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--avatar-palette-foreground, transparent) 32%, transparent);
   border: 0;
   padding: 0;
   cursor: default;

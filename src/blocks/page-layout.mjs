@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from '../components/shared.mjs';
 import { escapeHTML, uid } from '../components/shared.mjs';
 
 const VALID_VARIANTS = ['dashboard', 'data', 'conversation', 'default'];
@@ -9,7 +10,7 @@ const VALID_VARIANTS = ['dashboard', 'data', 'conversation', 'default'];
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function pageLayout(content = '', options = {}) {
+function buildPageLayout(content = '', options = {}) {
   let opts = {};
   let mainContent = '';
 
@@ -60,4 +61,10 @@ export function pageLayout(content = '', options = {}) {
   }
 
   return `<div class="${classList}" data-sui-page-layout data-layout-variant="${escapeHTML(variant)}" id="${escapeHTML(id)}" ${extraAttrs.join(' ')}>${bodyHTML}</div>`;
+}
+
+
+export function pageLayout(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildPageLayout(...args), mode, ["@root"]);
 }

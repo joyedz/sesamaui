@@ -1,7 +1,8 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
-export function emptyState(options = {}) {
+function buildEmptyState(options = {}) {
   const opts = typeof options === 'string' ? { title: options } : options;
   const {
     title = '',
@@ -29,4 +30,10 @@ export function emptyState(options = {}) {
   ].filter(Boolean).join(' ');
 
   return `<div ${attrs}>${iconMarkup}${titleMarkup}${descMarkup}${actionsMarkup}</div>`;
+}
+
+
+export function emptyState(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildEmptyState(...args), mode, ["@root"]);
 }

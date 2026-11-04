@@ -1,3 +1,5 @@
+import { applySurface, surfaceMode } from './shared.mjs';
+import { INPUT_SIZES } from './shared.mjs';
 import { uid, escapeHTML } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 import { positionOverlay, createDismissManager } from './overlay-helpers.mjs';
@@ -51,7 +53,7 @@ function formatValueDisplay(value, isRange) {
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function datePicker(options = {}) {
+function buildDatePicker(options = {}) {
   const {
     id = uid(),
     name = 'date',
@@ -70,7 +72,7 @@ export function datePicker(options = {}) {
     attributes = '',
   } = options;
 
-  if (size && !['sm', 'base', 'lg'].includes(size)) {
+  if (size && !INPUT_SIZES.includes(size)) {
     throw new TypeError('Invalid date picker size');
   }
 
@@ -431,4 +433,10 @@ export function initDatePicker(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function datePicker(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildDatePicker(...args), mode, ["sx-date-field", "sx-calendar|sx-popup"]);
 }

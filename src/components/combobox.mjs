@@ -1,3 +1,5 @@
+import { applySurface, surfaceMode } from './shared.mjs';
+import { INPUT_SIZES } from './shared.mjs';
 import { uid, escapeHTML } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 import { positionOverlay, createDismissManager } from './overlay-helpers.mjs';
@@ -23,7 +25,7 @@ function normalizeOption(opt, index) {
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function combobox(options = {}) {
+function buildCombobox(options = {}) {
   const {
     id = uid(),
     name = 'combobox',
@@ -39,8 +41,11 @@ export function combobox(options = {}) {
     error = '',
     loading = false,
     clearable = true,
+    size = 'base',
     attributes = '',
   } = options;
+
+  if (!INPUT_SIZES.includes(size)) throw new TypeError('Invalid combobox size');
 
   let allOptions = [];
   if (groups && Array.isArray(groups)) {
@@ -65,7 +70,7 @@ export function combobox(options = {}) {
     ? `<button type="button" class="sx-combo-clear ibtn" data-combo-clear aria-label="Clear ${escapeHTML(label || 'selection')}" ${!value || disabled ? 'hidden' : ''}>${controlIcon('x', 14)}</button>`
     : '';
 
-  return `<div class="sx form-field sx-combo" data-sui-combobox data-name="${escapeHTML(name)}" data-value="${escapeHTML(value)}" data-mode="${loading ? 'loading' : 'default'}" data-sui-options="${optionsJson}" ${disabled ? 'data-disabled' : ''} ${required ? 'data-required' : ''}${attributes ? ` ${attributes}` : ''}>${label ? `<label class="form-label" for="${escapeHTML(id)}">${escapeHTML(label)}</label>` : ''}<div class="field sx-input-shell"><input id="${escapeHTML(id)}" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="${escapeHTML(id)}-list" autocomplete="off" placeholder="${escapeHTML(placeholder)}" value="${escapeHTML(displayLabel)}" data-sui-combobox-input ${disabled ? 'disabled' : ''} ${isInvalid ? 'aria-invalid="true" aria-describedby="' + escapeHTML(id) + '-error"' : ''}>${clearBtn}</div><input data-sui-combobox-hidden type="text" class="sui-sr-only" tabindex="-1" aria-hidden="true" name="${escapeHTML(name)}" value="${escapeHTML(value)}" ${required ? 'required' : ''}><div id="${escapeHTML(id)}-list" class="sx-popup sx-combo-list" popover="manual" role="listbox" aria-label="${escapeHTML(label || 'Projects')}" data-sui-combobox-list></div>${isInvalid ? `<span id="${escapeHTML(id)}-error" class="form-error">${escapeHTML(error || 'Choose an available option.')}</span>` : helper ? `<span id="${escapeHTML(id)}-help" class="form-help">${escapeHTML(helper)}</span>` : ''}<span class="sui-sr-only" data-combo-status role="status" aria-live="polite"></span></div>`;
+  return `<div class="sx form-field sx-combo" data-sui-combobox data-name="${escapeHTML(name)}" data-value="${escapeHTML(value)}" data-mode="${loading ? 'loading' : 'default'}" data-sui-options="${optionsJson}" ${disabled ? 'data-disabled' : ''} ${required ? 'data-required' : ''}${attributes ? ` ${attributes}` : ''}>${label ? `<label class="form-label" for="${escapeHTML(id)}">${escapeHTML(label)}</label>` : ''}<div class="field sx-input-shell sx-size-${size}"><input id="${escapeHTML(id)}" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="${escapeHTML(id)}-list" autocomplete="off" placeholder="${escapeHTML(placeholder)}" value="${escapeHTML(displayLabel)}" data-sui-combobox-input ${disabled ? 'disabled' : ''} ${isInvalid ? 'aria-invalid="true" aria-describedby="' + escapeHTML(id) + '-error"' : ''}>${clearBtn}</div><input data-sui-combobox-hidden type="text" class="sui-sr-only" tabindex="-1" aria-hidden="true" name="${escapeHTML(name)}" value="${escapeHTML(value)}" ${required ? 'required' : ''}><div id="${escapeHTML(id)}-list" class="sx-popup sx-combo-list" popover="manual" role="listbox" aria-label="${escapeHTML(label || 'Projects')}" data-sui-combobox-list></div>${isInvalid ? `<span id="${escapeHTML(id)}-error" class="form-error">${escapeHTML(error || 'Choose an available option.')}</span>` : helper ? `<span id="${escapeHTML(id)}-help" class="form-help">${escapeHTML(helper)}</span>` : ''}<span class="sui-sr-only" data-combo-status role="status" aria-live="polite"></span></div>`;
 }
 
 const mounted = new WeakMap();
@@ -389,4 +394,10 @@ export function initCombobox(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function combobox(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildCombobox(...args), mode, ["sx-combobox-trigger|sx-combobox-control|field", "sx-combobox-options|sx-popup"]);
 }

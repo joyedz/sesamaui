@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { uid, escapeHTML } from './shared.mjs';
 import { button } from './button.mjs';
 import { controlIcon } from '../icons/controls.mjs';
@@ -10,7 +11,7 @@ import { initDropdownMenu } from './dropdown-menu.mjs';
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function buttonGroup(options = {}) {
+function buildButtonGroup(options = {}) {
   const {
     id = uid(),
     buttons = [],
@@ -97,4 +98,10 @@ export function initButtonGroup(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function buttonGroup(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildButtonGroup(...args), mode, ["sx-button-group"]);
 }

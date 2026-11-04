@@ -1,4 +1,6 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML, uid as uniqueId } from './shared.mjs';
+import { badge } from './badge.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
 const VALID_VARIANTS = new Set([
@@ -23,10 +25,12 @@ const VALID_VARIANTS = new Set([
  * @param {object} [options]
  * @returns {string} HTML string
  */
-export function listRow(options = {}) {
+function buildListRow(options = {}) {
   const {
     variant = 'basic',
+    appearance = 'default',
     title = '',
+    titleBadge = '',
     description = '',
     descriptionHTML = '',
     leading: rawLeading,
@@ -86,9 +90,12 @@ export function listRow(options = {}) {
     ? `<span class="sx-help">${descriptionHTML}</span>`
     : defaultDesc ? `<span class="sx-help">${escapeHTML(defaultDesc)}</span>` : '';
 
-  const copyHtml = `<span class="sx-list-copy"><span class="sx-list-title">${escapeHTML(defaultTitle)}</span>${descContent}</span>`;
+  const titleHTML = `<span class="sx-list-title">${escapeHTML(defaultTitle)}</span>`;
+  const headingHTML = titleBadge ? `<span class="sx-list-heading">${titleHTML}${badge({ label: titleBadge })}</span>` : titleHTML;
+  const copyHtml = `<span class="sx-list-copy">${headingHTML}${descContent}</span>`;
 
   const classes = ['lrow', 'sx-list-row'];
+  if (appearance === 'plain') classes.push('sx-list-row-flat');
   if (validVariant === 'plain') classes.push('sx-list-row-plain');
   if (validVariant === 'navigation') classes.push('sx-list-link');
   if (isDisabled) classes.push('off');
@@ -114,4 +121,10 @@ export function listRow(options = {}) {
   }
 
   return `<div ${classAttr}${disabledAttr}${extraAttrs}>${leadingHtml}${copyHtml}${trailingHtml}</div>`;
+}
+
+
+export function listRow(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildListRow(...args), mode, ["@root"]);
 }

@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 import { ToolCallOptions, ToolCallState } from './tool-call.mjs';
 
 export interface AgentRunThinkingStep {
@@ -21,6 +22,8 @@ export type AgentRunStep =
   | AgentRunProgressStep;
 
 export interface AgentRunOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   title?: string;
   state?: ToolCallState;

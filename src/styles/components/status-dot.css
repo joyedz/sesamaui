@@ -14,30 +14,37 @@
   height: var(--status-dot-size, 8px);
   border-radius: 50%;
   background: var(--color-neutral);
+  background: color-mix(in srgb, var(--color-neutral) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-status-dot[data-tone="neutral"] {
   background: var(--color-neutral);
+  background: color-mix(in srgb, var(--color-neutral) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-status-dot[data-tone="informative"] {
   background: var(--color-brand-hover);
+  background: color-mix(in srgb, var(--color-brand-hover) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-status-dot[data-tone="success"] {
   background: var(--color-success);
+  background: color-mix(in srgb, var(--color-success) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-status-dot[data-tone="warning"] {
   background: var(--color-warning-solid);
+  background: color-mix(in srgb, var(--color-warning-solid) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-status-dot[data-tone="error"] {
   background: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-status-dot[data-tone="disabled"] {
   background: var(--text-placeholder);
+  background: color-mix(in srgb, var(--text-placeholder) var(--sui-surface-opacity, 100%), transparent);
   opacity: 0.45;
 }
 

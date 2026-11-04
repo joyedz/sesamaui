@@ -1,3 +1,5 @@
+import { applySurface, surfaceMode } from './shared.mjs';
+import { INPUT_SIZES } from './shared.mjs';
 import { uid, escapeHTML } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
@@ -14,7 +16,7 @@ function renderTag(text, locked = false) {
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function tagInput(options = {}) {
+function buildTagInput(options = {}) {
   const {
     id = uid(),
     name = 'tags',
@@ -27,15 +29,17 @@ export function tagInput(options = {}) {
     invalid = false,
     helper = '',
     error = '',
+    size = 'base',
     attributes = '',
   } = options;
 
+  if (!INPUT_SIZES.includes(size)) throw new TypeError('Invalid tag input size');
   const isInvalid = Boolean(invalid || error);
   const tagList = Array.isArray(tags) ? tags : [];
   const tagsHtml = tagList.map(t => renderTag(t, disabled || readonly)).join('');
   const tagsJson = escapeHTML(JSON.stringify(tagList));
 
-  return `<div class="sx form-field sx-tag-input" data-sui-tag-input data-tag-demo data-name="${escapeHTML(name)}" data-max="${Number(maxTags)}" data-initial-tags="${tagsJson}" ${disabled ? 'data-disabled' : ''} ${readonly ? 'data-readonly' : ''}${attributes ? ` ${attributes}` : ''}>${label ? `<label class="form-label" for="${escapeHTML(id)}">${escapeHTML(label)}</label>` : ''}<div class="sx-tagbox" data-tagbox data-max="${Number(maxTags)}" ${disabled ? 'data-disabled' : ''} ${readonly ? 'data-readonly' : ''} ${isInvalid ? 'aria-invalid="true"' : ''}>${tagsHtml}<input id="${escapeHTML(id)}" aria-describedby="${escapeHTML(id)}-status" aria-label="${escapeHTML(label || 'Add tag')}" placeholder="${escapeHTML(placeholder)}" ${disabled ? 'disabled' : ''} ${readonly ? 'readonly' : ''} data-sui-tag-input-field></div><input data-sui-tag-input-hidden type="hidden" name="${escapeHTML(name)}" value="${escapeHTML(tagList.join(','))}"><span id="${escapeHTML(id)}-status" class="${isInvalid ? 'form-error' : 'sx-help'}" role="status" data-tag-status>${escapeHTML(error || helper || 'Press Enter to add a tag.')}</span></div>`;
+  return `<div class="sx form-field sx-tag-input" data-sui-tag-input data-tag-demo data-name="${escapeHTML(name)}" data-max="${Number(maxTags)}" data-initial-tags="${tagsJson}" ${disabled ? 'data-disabled' : ''} ${readonly ? 'data-readonly' : ''}${attributes ? ` ${attributes}` : ''}>${label ? `<label class="form-label" for="${escapeHTML(id)}">${escapeHTML(label)}</label>` : ''}<div class="sx-tagbox sx-size-${size}" data-tagbox data-max="${Number(maxTags)}" ${disabled ? 'data-disabled' : ''} ${readonly ? 'data-readonly' : ''} ${isInvalid ? 'aria-invalid="true"' : ''}>${tagsHtml}<input id="${escapeHTML(id)}" aria-describedby="${escapeHTML(id)}-status" aria-label="${escapeHTML(label || 'Add tag')}" placeholder="${escapeHTML(placeholder)}" ${disabled ? 'disabled' : ''} ${readonly ? 'readonly' : ''} data-sui-tag-input-field></div><input data-sui-tag-input-hidden type="hidden" name="${escapeHTML(name)}" value="${escapeHTML(tagList.join(','))}"><span id="${escapeHTML(id)}-status" class="${isInvalid ? 'form-error' : 'sx-help'}" role="status" data-tag-status>${escapeHTML(error || helper || 'Press Enter to add a tag.')}</span></div>`;
 }
 
 const mounted = new WeakMap();
@@ -204,4 +208,10 @@ export function initTagInput(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function tagInput(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildTagInput(...args), mode, ["sx-tagbox"]);
 }

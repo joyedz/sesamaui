@@ -1,5 +1,96 @@
 # Changelog
 
+- **Breaking (alpha):** remove the seven unused domain recipes — `requirementGroupRecipe`, `resourceListRecipe`, `createSkillDialogRecipe`, `deleteResourceRecipe`, `dashboardOverviewRecipe`, `revenueChartRecipe`, and `dataWorkspaceRecipe`. Compose the same layouts from the structural/content blocks instead. `agentCardRecipe` remains; the design system catalog drops the corresponding block entries and their example pages.
+
+- Add a Compact rail example to the design system catalog's Workspace Sidebar page, rendered by the canonical `workspaceSidebar` builder with `variant: 'compact'` and icon-button rail navigation (the pattern used by Agent Bot).
+
+- Design system catalog Blocks pages now render their examples exclusively from the canonical ESM builders (`src/blocks/*`), replacing the previous legacy-first previews with appended ESM comparisons. Legacy examples remain only as a fallback for block entries without a canonical example map.
+
+- Standardize the five automatic avatar palettes across ESM and legacy demos. Initials use paired foreground and background colors for each theme, with a thin tinted edge to distinguish the avatar from hovered or selected rows.
+
+- Cap Agent Bot conversation and composer layouts at 880px. Add ten-message example conversations for each agent with sample tool runs, comparison tables, code, evidence gaps, and source notes. Existing saved chats/drafts are retained; examples migrate once. Live simulated replies use the same structured response renderer with escaped text.
+
+- Keep Agent Bot run details and responses in one compact turn: 8px spacing, matching run/bubble widths, and artifacts after the response. Add shared `--agent-run-margin` and `--message-bubble-width` layout variables while preserving component defaults.
+
+- Agent sidebar search fills the navigation width, uses the placeholder Search, and includes the shared search icon. Input/Input Field accepts an optional leading `icon`; sidebar navigation removes the standalone form's width cap.
+
+- Add original transparent 3D bot portraits for Atlas, Forge, and Scout in Agent Bot's sidebar, primary tabs, and settings. Tabs accepts a trusted `leading` slot for central Avatar markup; Avatar exposes `--avatar-background` while preserving existing defaults.
+
+- Replace Agent Bot's Launch workspace selector with persistent chat tabs in the header. A plus button beside the pill tabs opens a new chat; new chat tabs use a symmetric left/right fork icon; existing threads/drafts stay available. Page Header supports trusted `titleContent`; Tabs can reference an application-managed shared `panelId`.
+
+- Agent sidebar groups now use shared Tree section folders with trailing folder icons, flush search alignment, expand/collapse, and locally saved group state. Tree supports optional section layout and trusted rich branch content; default tree items are unchanged.
+
+- Tighten Agent Bot sidebar spacing, remove the empty secondary-section heading, and align role badges beside agent names so message previews retain their width. List Row supports escaped `titleBadge` text and copy-gap/title-weight layout variables; existing row defaults are preserved.
+
+- Agent Bot's left navigation now consumes Workspace Sidebar `variant: 'compact'`: permanent collapsed Tree geometry, no expand control or hover/focus expansion. The adjacent agent list remains a separate panel; mobile opens it from the conversation header.
+
+- Align Agent Bot with the supplied conversation workspace reference: persistent icon rail, wide agent sidebar with message previews and search, dark neutral surfaces, compact header/model picker, incoming/outgoing message bubbles, and a full-width compact composer. Keep the three-feature scope and saved work.
+- Add optional App Shell `rail`, Workspace Sidebar `variant: 'conversation'`, Composer `compact` / `showContext` / `showModel` / trusted `leading` slot, and Message `appearance: 'bubble'`. Existing defaults stay unchanged. Shared shell/header, avatar-radius, and list-row layout variables support the composition centrally.
+- Popover resolves its explicit content panel before nested tooltip popovers, so an Icon Button trigger can retain its tooltip without opening the wrong panel.
+
+- Add a separate ESM Agent Bot demo with persistent agent chat, tasks, and settings. Include staged local responses, cancellation/retry/interrupted-run recovery, sample pricing approval, and brief preview/download. Register it in the landing Demo menu while preserving the existing AI demos.
+
+- Workspace Sidebar accepts `projectsTitle` to label its secondary navigation section (default: Projects); Agent Bot uses Your team. Existing sidebar defaults are preserved.
+
+- File Card exposes `--file-card-max-width` (default 250px) so document previews can use their container width without page-level component overrides.
+
+- Adapt supplied Linear references into Issue Workspace: personal issue tabs and status groups, Reviews split view, initiative hierarchy table, and Projects roadmap with filters. Use central Sesama controls, a consistent current user, and shared issue detail structure. Keep review/code and roadmap data local to the demo.
+
+- App Shell automatically collapses its sidebar at viewport widths of 760px or less, restores the prior desktop state when widening, and retains manual toggle access on narrow screens.
+
+- Add My inbox to Issue Workspace with Rune inbox icon, All/Unread/Snoozed tabs, local notification selection, issue preview, read state, and manual snooze/restore actions.
+
+- Align Issue Workspace with central ESM controls and modal builders, clearable search, favorite appearance, and Composer send events. Recreate runtime sessions safely after render, preserve shell collapse, remove obsolete Select handlers and component CSS overrides, and include new-issue assignees in Select options.
+
+- Refine sidebar rail/preview/pinned motion with 200ms transitions, delayed label reveal, stable sidebar positioning and 16px navigation glyphs. Hover previews do not shift main content; keyboard toggles and reduced motion stay immediate.
+
+- Update canonical logo and sidebar symbol from the supplied Sesama SVG. Preserve workspace-selector space in collapsed sidebars so navigation icons retain their vertical positions.
+
+- Workspace Sidebar places its toggle in the top logo position. The Sesama mark switches to hide/expand on sidebar hover or keyboard focus; touch devices show the toggle directly.
+
+- Fix Workspace Sidebar initializing a second delegated Tree controller around nested trees, which toggled project branches twice under mount().
+
+- Icon Button adds a `favorite` appearance using existing `pressed` state: selected stars fill with current color. Add interactive off/on/disabled examples under Button → Toggle / Favorite and adopt it in All agents.
+
+- Replace repetitive sample runs in the AI Agent demo with plain chat responses and specialized research/coding activity examples. Activity is explicitly simulated and elapsed time is measured rather than hardcoded.
+
+- Re-measure Tabs indicators when a hidden container becomes visible. All agents no longer autofocuses search and restores Agent Card information with right-aligned actions.
+
+- Reserve clear-button space inside Input so showing or hiding X does not change field dimensions.
+
+- Input and Input Field support `clearable: true`, with an accessible clear button that appears for editable nonempty values, emits input/change, and restores input focus. Enable it for Search agents.
+
+- Tabs line variant gains a shared sliding underline using transform and existing motion tokens; keyboard navigation and reduced-motion preferences switch immediately.
+
+- Refine All agents with a single-line page header, content-level description and creation action, simpler central Card composition, and an in-shell agent creation form.
+
+- Add a local All agents directory to the AI Agent demo with search, favorites, ownership filters, agent details, prompt drafts, creation, and Start chat. Align Agent Card recipe typography with semantic tokens and keep its avatar status indicator compact.
+
+- Migrate the AI Agent demo shell and workspace sidebar to central ESM blocks, sharing collapse, hover, theme, profile, and project navigation styling with other demos.
+
+- Tighten Message content-to-actions spacing to the component's standard 8px gap.
+
+- Own Message instances now default to a Copy action; explicit `actions` override it and `actions: []` hides it. The agent demo consumes this central default.
+
+- Composer model triggers now fit their label without ellipsis, while repository labels can shrink. Narrow toolbars wrap controls to retain complete model names.
+
+- Select adds `popupAlign: 'start' | 'end'`; Composer model menus align to the trigger's right edge and grow leftward within viewport bounds.
+
+- Apply compact, shrinkable trigger sizing to Composer repository selection, matching model selection while keeping content-sized popups.
+
+
+- Clarify Composer's default context selector as a repository branch using `sesama-ui / main` and a descriptive accessible label.
+
+- Soften Composer placeholder color in light and dark themes to distinguish it from entered text.
+
+- Tighten Message action rows by removing the extra button gap and soften idle icon color; preserve control targets and hover/focus feedback.
+
+- Message actions use a quieter semantic icon color, retain 14px glyphs, and use the standard small control size (26px) with clear hover and keyboard-focus color.
+
+- Message: use 12px content-to-actions and embedded-details spacing. On desktop, reveal actions on hover or keyboard focus, retaining the latest sibling agent response's actions. Touch controls remain visible and action rows retain their space.
+
+- Fix agent Message bubbles to fill their configured message width, including short responses.
+
 All notable changes to the Sesama UI project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -7,11 +98,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Icon Button tooltips are now automatic and use the accessible action label. Embedded icon buttons receive the same tooltip behavior through the mount runtime without layout wrappers. Explicit Tooltip composition overrides the automatic tooltip without duplication.
+- Input controls share Input's `sm`/`base`/`lg` size contract (26/30/34px). Select no longer accepts XS; Combobox now supports all three Input sizes. Type declarations and catalog documentation follow the same contract. Icon Button XS now matches the main Button's 22px size and 12px glyph.
+- Components catalog now uses ESM as its only reference, with package imports, runnable module examples, rendered markup, and lifecycle documentation for all 48 families. Removed legacy Component preview definitions and comparison suffixes; Blocks retain their existing examples and documentation.
+
 ### Added
+- Dropdown Menu `menuIndicator` adds the separator and trailing chevron used by the single menu-button pattern. Card `expandAction` provides a trusted HTML slot centered on the trailing edge, matching the expandable resource card.
 - Full Rune icon set is now available as canonical ESM: `runeIcon(name, size)` + `RUNE_ICON_NAMES` (224 glyphs, generated from `assets/rune-icons` via `tools/build-rune-icons.mjs`, hooked into `npm run build`/`check`) — opt-in import (`sesama-ui/icons/rune-icons`) so component consumers keep the 36KB curated control set (`controlIcon`, 56 glyphs + 28 aliases, now exposing `CONTROL_ICON_NAMES`).
-- Design system catalog now renders an equivalent "(ESM)" example directly below every legacy variant example, built with the canonical builders from `src/index.mjs` (`site/canonical-examples.mjs`); legacy previews remain for comparison. The Icons page now shows both sets: Basic (control icons) and Full (Rune set), with a shared search.
+- Blocks retain equivalent "(ESM)" examples below their legacy variants, built with canonical builders from `src/index.mjs` (`site/canonical-examples.mjs`). The Icons page now shows both sets: Basic (control icons) and Full (Rune set), with a shared search.
 
 ### Fixed
+- File Card motion no longer creates a temporary scrollbar in catalog preview stages. Generated icon tooltips are hosted at the nearest system root so component header styles cannot override their label color or truncate it.
+- File Card reveals its frame and preview together using a reversible transform/clip timeline, with faster exit, immediate keyboard/programmatic changes, reduced-motion support, and animation cleanup on destroy. STEP examples consistently use `motor.step`.
 - Input fields no longer render a double focus outline (stacked inset ring + outer outline); a single inset focus ring remains.
 - Message action icons use compact 20px hit areas with 14px icons and sit 8px below the message text instead of 16px.
 - Recipes now use real builder signatures: badge `tone`, `statusDot({ tone, label })`, avatar initials from `name`, list row `description`, table column `header`, Select `name`/`ariaLabel`, and card `classes` (removing duplicate `class` attributes); Card gains a `classes` option.
@@ -52,6 +151,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - People List rows use the plain appearance (no card background inside bordered sections).
 - Chart hover info is placed beside the hovered point, bar top or donut segment instead of covering it; donut segments highlight on hover.
 - AI agents demo sidebar collapse keeps main content visible and animates like the dashboard app shell.
+- Message sender names are optional for every role: a message without `sender` renders no header, including agent messages (previously agent messages always showed the 'Sesama Agent' identity header). The catalog AI-agent examples and the AI agents demo pass the identity explicitly.
+- Message builder no longer throws when an agent message omits `sender` (`options.sender?.name` fallback to 'Sesama Agent'). The TypeError crashed every AI-agent ESM catalog example — response, thinking, streaming and tool result now render their (ESM) pairs.
+- Tabs get their signature motion: a sliding active indicator (`.sx-tab-thumb`) glides between tabs in the segmented and pill lists (the tab's own colors keep transitioning; reduced motion jumps instantly) and the panel fade consolidates on the base motion duration. Stale unmatched Tabs example keys removed.
+- Tag Input gains a `size` option (`sm` / `base` / `lg`) using the Input Field control heights (26/30/34px); the catalog shows a Sizes example (legacy and ESM).
+- Icon button gains a `tooltip` option (with `tooltipPlacement`): the button is wrapped in the canonical Tooltip pattern (`sx-tooltip-wrap` + hover/focus popover) so sighted users get the text the screen reader hears — wired in the catalog icon-button examples and the Orders/Customers row actions; tooltips now show on any component or demo that opts in, not only the Tooltip page (mount initializes them everywhere).
+- Tree Item (ESM) expand/collapse was dead in the catalog: the legacy global fold handler double-toggled canonical trees (the controller collapsed the branch, the document handler re-expanded it). The legacy handler now skips trees owned by `[data-sui-tree]`, and branch expansion is standardized on the Collapsible motion: the branch height slides open/closed on the shared motion tokens (`interpolate-size`, instant fallback) with opacity/visibility, keyboard navigation skips collapsed branches, and reduced motion toggles instantly.
+- Switch gains an `ariaLabel` option for the bare-switch pattern (no visible label, named via aria-label like the legacy demo) — the catalog Switch ESM examples drop their visible labels that collided in the narrow stage.
+- Table header row is transparent by default (no opaque title bar; `stickyHeader` is opt-in for the sticky opaque header) while keeping the ESM typography and colors; gains a `stickyFirstColumn` option (pinned first column with `sticky-left` cells and separate borders, legacy parity); and the catalog Table ESM examples mirror the legacy variant set — default, with actions (Edit + kebab menu), compact, selection (checkboxes), fixed layout, sticky header (25 rows), sticky column, table-shaped loading skeleton, empty state and error state (stale unmatched keys removed).
+- Skeleton builder supports mixed-shape compositions: `items` renders several shapes (per-item width/height/size/radius; nested arrays become side-by-side rows) under ONE status region, and `bare: true` emits raw shape divs for app-level compositions that own the status wrapper. The catalog Skeleton ESM examples align with legacy: text (two lines + short tail), single round avatar, card, table rows of full+short lines, fill inside a sized container, and the custom-dimensions profile (round avatar beside two lines) — the previous examples invented extra shapes or lost the profile/a11y composition.
+- Select gains a `loading` state (disabled trigger with `aria-busy` and a 'Loading projects…' value, like the legacy demo) and the `xs` size (control-size tokens ladder xs 22 / sm 26 / base 30 / lg 34 now render real height differences); the catalog Select ESM examples align with the legacy set — same 'Project' label, 'Choose project' placeholder, default options with the disabled 'Archived project' entry, grouped Design/Engineering structure, 40-option long list, and the four-step Sizes ladder (stale unmatched keys removed, missing `loading` pair added).
+- Pagination rows-per-page selector uses the canonical Select pattern (`.sx-select-trigger` + listbox popover with the shared menu surface, selected checkmark, full keyboard navigation and scroll repositioning) instead of a bare native `<select>`; the native select survives only as the hidden form value slot, `setPageSize()` stays in sync with the trigger, and `sui:pagination:change` (with `pageSize`) replaces the old `[data-page-size]` change hook for integrations.
+- Modal gains a `bodyScroll` option: with `bodyScroll: true` only the title and action footer stay fixed while the body scrolls inside (`.sx-modal-body-scroll`, max-height 45dvh) instead of the whole dialog scrolling the title away — the catalog long content example (legacy and ESM) demonstrates it.
+- Modal anatomy normalized to one shape: the description is always the first child of `.sx-modal-body` (previously a sibling `<p>` between header and body in dialogs without bodyScroll). Visual position is unchanged; consumers keying on `dialog > p` should query `.sx-modal-body` instead (alpha API note).
+- Pagination rows dropdown sizes to its option content (number + selected checkmark with their 8px gap, ~54px) instead of inheriting the shared 180px popup `min-width` — scoped to the pagination selector only, still left-aligned with the field.
+- Modal scroll lock no longer drifts the page behind an open dialog: the lock targets the viewport (`html:has(dialog[open])`) with `scrollbar-gutter: stable` instead of also hiding `body` overflow — the scrollbar disappearing no longer reflows the page, and sticky sidebars (catalog nav, app shells) keep their anchor while a modal is open.
+- Catalog Modal ESM examples mirror the legacy anatomy ("Project details" + description + Cancel/Confirm footer) instead of a bare title, so size variants and composition variants (Select, Popover, Combobox, Dropdown) show the complete dialog.
+- Agent Run and Tool Call blocks in Message examples sit the standard 8px below the profile header: the catalog's usage-code disclosure spacing (`margin-top: 12px`) no longer leaks onto component `<details>` inside example stages.
+- Message action icons sit in the message's flush left column (the sender avatar edge, like the agent response reference) at a consistent position in every variant instead of drifting between the message edge and the bubble text edge; outgoing rows mirror this on the right edge (legacy gets the same treatment).
+- Agent message content sits the standard 8px below the name row: the transparent agent bubble no longer adds its own top padding on top of the message grid gap, which doubled the visual spacing (legacy gets the same fix).
+- Message AI-agent ESM examples match legacy: the response example keeps the legacy intro sentence before the step list, the streaming example includes the Start/Stop demo controls (the example root carries the legacy `data-agent-message` hook so the demo handler finds it), the tool result example mirrors the legacy two-step run and full summary, and builder action events (`sui:message:copy`, `sui:message:retry`, `sui:message:action`) surface demo toasts like the legacy tooltips.
+- Catalog pages opened directly via a component hash now render the ESM comparison examples immediately: the canonical module repaints detail pages on load (previously only the Icons page repainted), so the (ESM) pairs no longer appear only after navigating away and back.
 
 ## [0.1.0-alpha.2] - 2026-10-31
 
@@ -93,3 +213,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 - Monolithic script globals (`SESAMA_UI`, `SESAMA_BLOCKS`, `SESAMA_CHARTS`) are now legacy bridge artifacts generated from canonical source modules.
+
+### Demo navigation and preferences
+
+- Configure Pages and landing previews through four categories in `demos/shared/pages.mjs`.
+- Connect separate Dashboard, AI Agent, Issue Workspace, and Onboarding pages through shared navigation; retain previous reference URLs.
+- Persist category sidebar collapse/branches, reporting filters, issue filters/tabs, and chat draft/route with optional localStorage.
+
+- Preserve the original Sales/Revenue layouts and restore Sales, Team, and Projects sidebar examples; placeholder items do not navigate or show notifications.
+
+- Remove the Sales reporting demo and its entry from the Dashboard demo menu.
+
+- Keep the Dashboard shell and sidebar mounted when navigating Overview, Revenue, Orders, and Customers. Swap only the main content; preserve direct URLs, refresh, and browser history.
+- Dispose page listeners, controllers, and dialogs on navigation; remember Orders/Customers filters and pagination.
+
+- Update the ESM login demo to the final Sesama logo used on the landing page, with an accessible home link and theme-aware color.
+
+- Open landing navigation on mouse hover; present Demo in category columns with native navigation links. Preserve touch tap, keyboard access, Escape, and outside dismissal.
+- Add Popover `align` (`start`, `center`, `end`) and shared size/padding CSS variables for wider content panels, retaining existing defaults.
+
+- Keep legacy overlay handlers from repositioning ESM Popovers, and place overlays using their final layout size during entry transitions so panels stay within the viewport.
+
+- Use brand-colored text and icons for hover/keyboard focus in landing dropdown links, through the shared List Row `--list-row-hover-color` token.
+
+- Match landing dropdown descriptions to the brand hover color and use a 6% brand background via shared List Row hover tokens.
+
+- Retry catalog statistics through an iframe handshake to prevent empty counts when the catalog loads before the landing module.
+- Correct shared Switch label spacing to accommodate its 32px control.
+
+
+- Keep landing statistics as simple cards without hover previews and match their 8px outer corner radius to the following section.
+
+- Increase Composer corner radius to 24px across ESM and legacy consumers, configurable via `--composer-radius`.
+
+- Add a theme-aware pastel gradient to AI Agent New Chat and cycle typed/erased placeholder suggestions until the user edits. Suggestions never enter the draft, pause in the background, and remain static with reduced motion.
+
+- Refine New Chat to a blue-to-white gradient that reaches the page surface at 75% from the bottom, leaving the upper quarter plain.
+
+### Shared solid and blur surfaces
+
+- Add the optional `surface: 'solid' | 'blur'` contract and exported `Surface` type to ESM component/block options; preserve default builder markup and component variants/states.
+- Share opacity, blur, and saturation tokens; keep nested surfaces independent and fall back to solid for unsupported blur, forced colors, and reduced transparency.
+- Add catalog comparisons and use a blurred Composer on AI Agent New Chat.
+- Extend API, visual-interaction, and theme checks for the shared surface behavior.
+
+- Keep decorative tooltips from consuming Escape intended for their enclosing modal/menu; preserve one-press modal dismissal and focus restoration.
+
+- Reserve vertical focus-ring space around AI Agent Composer, prevent its wrapper from shrinking, and allow New Chat to scroll on short screens instead of clipping controls.
+
+- Add an opt-in File Card `attachment` variant with stacked filename/size, a larger file visual, and compact trailing actions. Agent Bot attachments use it inside message bubbles with preview, download, and open actions.
+
+- Agent Bot reading/composer width is capped at 1200px. Message actions appear on hover/focus, with explicit latest-agent-message visibility for grouped run layouts; outgoing messages include copy actions.
+
+- Compact Agent Bot list vertical padding and avatar/text spacing using shared List Row gap/padding variables; avatar sizes are preserved.
+
+- Set the shared dark-theme `--color-base` token to `#101010`; Agent Bot inherits the global base token.
+
+- Workspace Sidebar accepts trusted `headerAction` HTML to replace its default collapse control. Agent Bot shows an example Add agent (+) action beside the workspace selector.
+
+- Modal backdrops use a shared neutral dark `--color-overlay` token in both themes, avoiding a white veil in dark mode.
+
+- Agent Bot Edit Agent opens the App Shell right detail panel, retaining chat route/draft. Reference-style identity, Brain/Knows/Does/Rules and notification groups reuse shared fields, selects, rows, switches, collapsibles and header. Preferences save locally; supporting links remain simulated. App Shell exposes `--shell-detail-width` and `--shell-detail-padding` with unchanged defaults.
+
+- Agent settings content uses Sesama Scroll Area. App Shell `setDetail(html, { animate: true })` supports interruptible slide/fade entry and exit with shared motion tokens, reduced-motion handling, and immediate default behavior.
+
+- Bot rows expose a shared context menu on right-click or Shift+F10. Agent settings edits the targeted bot without switching chat; Delete agent shows simulated success feedback and preserves demo bots.
+
+- Curate shared dark-theme toast colors with muted status surfaces, brighter semantic icons, readable neutral text and a subtle edge. Light-theme toast colors and all interactions remain unchanged.

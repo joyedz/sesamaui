@@ -8,14 +8,5 @@ export { pageGrid } from './page-grid.mjs';
 export { pageHeader } from './page-header.mjs';
 export { pageLayout } from './page-layout.mjs';
 export { peopleList } from './people-list.mjs';
-export {
-  requirementGroupRecipe,
-  resourceListRecipe,
-  agentCardRecipe,
-  createSkillDialogRecipe,
-  deleteResourceRecipe,
-  dashboardOverviewRecipe,
-  revenueChartRecipe,
-  dataWorkspaceRecipe
-} from './recipes.mjs';
+export {agentCardRecipe} from './recipes.mjs';
 export { workspaceSidebar, sidebar, initWorkspaceSidebar } from './workspace-sidebar.mjs';

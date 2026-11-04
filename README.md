@@ -152,3 +152,15 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). To report a security issue, see [SECURIT
 Original Sesama code and documentation are licensed under [MIT](LICENSE). Third-party icons and trademarks retain their own terms; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [NOTICE](NOTICE).
 
 Designed by [zihni.design](https://zihni.design).
+
+
+### Solid and blur surfaces
+
+ESM builders with a background accept `surface: 'solid' | 'blur'`. Solid remains the default. This option preserves the existing variant/tone and interaction states; nested components keep their own surface.
+
+```js
+composer({ surface: 'blur' });
+card({ surface: 'blur', content: inputField({ label: 'Name', surface: 'solid' }) });
+```
+
+Tune `--surface-opacity` (78%), `--surface-blur` (16px), and `--surface-saturation` (140%). Forced colors and reduced transparency use solid surfaces. See the catalog's **Surface · Solid / Blur** examples and [surface API details](docs/COMPONENT-API-PREVIEW.md#shared-surfaces-esm).

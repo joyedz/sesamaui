@@ -2,13 +2,14 @@
 :where(.sui-root) .sx-list-row {
   display: flex;
   align-items: center;
-  gap: var(--space-12);
-  min-height: 40px;
+  gap: var(--list-row-gap,var(--space-12));
+  min-height: var(--list-row-min-height,40px);
   width: 100%;
   max-width: 100%;
-  padding: var(--space-8) var(--space-12);
+  padding: var(--list-row-padding,var(--space-8) var(--space-12));
   border-radius: var(--radius-md);
   background: var(--color-base);
+  background: color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);
   box-shadow: var(--shadow-ring);
   color: var(--text-default);
   font-family: inherit;
@@ -27,7 +28,16 @@
 :where(.sui-root) .sx-list-row-plain {
   box-shadow: none;
   background: none;
-  padding: var(--space-6) 0;
+  padding: var(--list-row-padding,var(--space-6) 0);
+}
+
+:where(.sui-root) .sx-list-row-flat {
+  box-shadow: none;
+  background: transparent;
+}
+:where(.sui-root) .sx-list-row-flat:is([aria-current="true"],[aria-current="page"]) {
+  background: var(--color-tint);
+  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-list-link {
@@ -37,7 +47,8 @@
 }
 
 :where(.sui-root) .sx-list-link:hover {
-  background: var(--color-tint);
+  background: var(--list-row-hover-background, var(--color-tint));
+  background: color-mix(in srgb, var(--list-row-hover-background, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-list-link:focus-visible {
@@ -47,13 +58,13 @@
 
 :where(.sui-root) .sx-list-copy {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--list-row-copy-gap,var(--space-4));
   flex: 1;
   min-width: 0;
 }
 
 :where(.sui-root) .sx-list-title {
-  font-weight: 400;
+  font-weight: var(--list-row-title-weight,400);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -87,3 +98,23 @@
   margin-left: auto;
   flex-shrink: 0;
 }
+
+/* Navigation hosts may opt into a shared interactive foreground color. */
+:where(.sui-root) .sx-list-link:is(:hover, :focus-visible),
+:where(.sui-root) .sx-list-link:is(:hover, :focus-visible) :is(.sx-list-title, .sx-list-leading) {
+  color: var(--list-row-hover-color, var(--text-default));
+}
+
+:where(.sui-root) .sx-list-link:is(:hover, :focus-visible) .sx-help {
+  color: var(--list-row-hover-color, var(--text-subtle));
+}
+:where(.sui-root) .sx-list-link:focus-visible {
+  background: var(--list-row-hover-background, var(--color-tint));
+  background: color-mix(in srgb, var(--list-row-hover-background, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent);
+}
+
+:where(.sui-root) .sx-list-copy > .sx-help { white-space:var(--list-row-description-white-space,nowrap); overflow:hidden; text-overflow:ellipsis; }
+
+:where(.sui-root) .sx-list-heading { display:flex; align-items:center; gap:6px; min-width:0; }
+:where(.sui-root) .sx-list-heading > .sx-list-title { flex:0 1 auto; }
+:where(.sui-root) .sx-list-heading > .badge { flex:0 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }

@@ -4,7 +4,7 @@
   font-size: var(--font-ui-size, 13px);
   line-height: var(--font-ui-line, 20px);
   color: var(--text-subtle);
-  margin: 0 0 12px;
+  margin: var(--agent-run-margin,0 0 12px);
 }
 
 :where(.sui-root) .sx-agent-run > summary {

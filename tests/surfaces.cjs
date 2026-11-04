@@ -1,0 +1,58 @@
+const assert = require('node:assert/strict');
+const { spawn } = require('node:child_process');
+const browserName = process.env.BROWSER || 'chromium';
+const browserType = require(process.env.PLAYWRIGHT_PATH || 'playwright')[browserName];
+const port = Number(process.env.TEST_PORT || 4202), base = `http://127.0.0.1:${port}`;
+const server = spawn(process.execPath,['tools/serve.mjs'],{env:{...process.env,PORT:String(port)},stdio:['ignore','pipe','pipe'],windowsHide:true});
+let browser;
+(async()=>{
+  await new Promise((resolve,reject)=>{server.once('error',reject);server.once('exit',code=>reject(Error('Server exited: '+code)));server.stdout.once('data',resolve);server.stderr.once('data',data=>reject(Error(String(data))))});
+  browser=await browserType.launch({headless:true});
+  const page=await browser.newPage({viewport:{width:1440,height:1100}}), errors=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  await page.goto(base+'/tests/fixtures/surfaces.html');
+  await page.waitForFunction(()=>window.surfaceReady);
+  async function style(selector){return page.locator(selector).evaluate(el=>({opacity:getComputedStyle(el).getPropertyValue('--sui-surface-opacity').trim(),filter:getComputedStyle(el).backdropFilter||getComputedStyle(el).webkitBackdropFilter,background:getComputedStyle(el).backgroundColor}))}
+  for(const theme of ['light','dark']){
+    await page.locator('body').evaluate((body,theme)=>body.dataset.suiTheme=theme,theme);
+    assert.equal((await style('#solid [data-sui-composer]')).opacity,'100%');
+    assert.equal((await style('#solid [data-sui-composer]')).filter,'none');
+    assert.equal((await style('#blur [data-sui-composer]')).opacity,'78%');
+    assert.match((await style('#blur [data-sui-composer]')).filter,/blur\(16px\)/);
+    assert.equal((await style('#blur [data-sui-card] [data-sui-input-field] .field')).opacity,'100%','Default children must remain opaque');
+    assert.equal((await style('#blur [data-sui-card] [data-sui-surface="solid"]')).filter,'none');
+    await page.locator('#blur-input').focus();
+    assert.match(await page.locator('#blur-input').evaluate(el=>getComputedStyle(el.closest('.field')).boxShadow),/inset|rgb|color/);
+    assert.equal(await page.getByRole('button',{name:'blur disabled',exact:true}).isDisabled(),true);
+  }
+  await page.locator('#blur [name="blur-team"]').evaluate(el=>el.closest('[data-sui-select]').querySelector('button').click());
+  assert.match((await style('#blur [role="listbox"][aria-label="blur team"]')).filter,/blur/);
+  await page.getByRole('option',{name:'Engineering',exact:true}).click();
+  assert.equal(await page.locator('#blur [name="blur-team"]').inputValue(),'Engineering');
+  await page.getByRole('button',{name:'blur popover',exact:true}).click();
+  assert.match((await style('#blur [data-sui-popover-content]')).filter,/blur/);
+  await page.keyboard.press('Escape');
+  await page.getByRole('button',{name:'blur modal',exact:true}).click();
+  assert.match((await style('#blur-modal')).filter,/blur/);
+  await page.keyboard.press('Escape');
+  await page.waitForFunction(()=>!document.getElementById('blur-modal').open && document.activeElement?.dataset.openModal==='blur-modal');
+  await page.locator('#blur-composer textarea').fill('A real message');
+  assert.equal(await page.locator('#blur-composer textarea').inputValue(),'A real message');
+  assert.equal(await page.locator('#blur-composer [data-send]').isEnabled(),true);
+  await page.evaluate(()=>UI.showToast({message:'Surface toast',surface:'blur',persistent:true}));
+  assert.match((await style('.ds-toast[data-sui-surface="blur"]')).filter,/blur/);
+  await page.emulateMedia({forcedColors:'active'});
+  assert.equal((await style('#blur-composer')).opacity,'100%');
+  assert.equal((await style('#blur-composer')).filter,'none');
+  await page.emulateMedia({forcedColors:'none'});
+  await page.setViewportSize({width:320,height:900});
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  await page.goto(base+'/site/Design%20system.html#components-card');
+  await page.waitForSelector('[data-surface-comparison="Card"]');
+  assert.match((await style('[data-surface-comparison="Card"] [data-sui-surface="blur"]')).filter,/blur/);
+  await page.goto(base+'/demos/AI%20agents%20demo.html#chat/new');
+  await page.waitForSelector('[data-sui-composer]');
+  assert.equal(await page.locator('[data-sui-composer]').getAttribute('data-sui-surface'),'blur');
+  assert.deepEqual(errors,[]);
+  console.log(browserName+': solid/blur, nesting, themes, controls, overlays, forced colors, 320px, catalog, and New Chat passed.');
+})().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.kill()});

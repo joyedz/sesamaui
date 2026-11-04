@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { uid, escapeHTML } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
@@ -8,7 +9,7 @@ import { controlIcon } from '../icons/controls.mjs';
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function menuItem(options = {}) {
+function buildMenuItem(options = {}) {
   const {
     id = uid(),
     label = '',
@@ -66,4 +67,10 @@ export function menuItem(options = {}) {
 
   const disabledAttr = disabled ? ' disabled aria-disabled="true"' : '';
   return `<button type="button" id="${escapeHTML(id)}" class="${classes}" role="${role}" data-sui-menu-item data-sui-menu-id="${escapeHTML(id)}"${ariaCheckedAttr}${disabledAttr}${attributes ? ` ${attributes}` : ''}>${iconMarkup}${leadingControl}${labelMarkup}${checkIndicator}${shortcutMarkup}</button>`;
+}
+
+
+export function menuItem(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildMenuItem(...args), mode, ["@root"]);
 }

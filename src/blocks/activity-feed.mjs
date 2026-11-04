@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from '../components/shared.mjs';
 import { escapeHTML, uid } from '../components/shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
@@ -7,7 +8,7 @@ import { controlIcon } from '../icons/controls.mjs';
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function activityFeed(options = {}) {
+function buildActivityFeed(options = {}) {
   const {
     id = uid('activity-feed'),
     title = '',
@@ -53,4 +54,10 @@ export function activityFeed(options = {}) {
   }).join('');
 
   return `<div class="${classList}" data-sui-activity-feed id="${escapeHTML(id)}" ${extraAttrs.join(' ')}>${titleHTML}<ol class="sb-activity-items">${itemsHTML}</ol></div>`;
+}
+
+
+export function activityFeed(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildActivityFeed(...args), mode, ["@root"]);
 }

@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 export type FileCardType =
   | 'image'
   | 'document'
@@ -15,6 +16,9 @@ export interface FileCardAction {
 }
 
 export interface FileCardOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
+  variant?: 'default' | 'attachment';
   id?: string;
   name?: string;
   size?: string | number;

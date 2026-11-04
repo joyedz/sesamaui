@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
@@ -18,7 +19,7 @@ function renderSeparator(separator = 'chevron-right') {
  * @param {object} [options]
  * @returns {string} HTML string
  */
-export function breadcrumbs(options = {}) {
+function buildBreadcrumbs(options = {}) {
   const {
     items: rawItems = [],
     separator = 'chevron-right',
@@ -72,4 +73,10 @@ export function breadcrumbs(options = {}) {
   }
 
   return `<nav aria-label="${escapeHTML(ariaLabel)}" class="sx-breadcrumbs-nav" data-sui-breadcrumbs${attributes ? ` ${attributes}` : ''}><ol class="sx-breadcrumbs">${listHtml}</ol></nav>`;
+}
+
+
+export function breadcrumbs(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildBreadcrumbs(...args), mode, ["@root"]);
 }

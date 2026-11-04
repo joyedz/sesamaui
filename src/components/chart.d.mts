@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 export type ChartType = 'line' | 'area' | 'bar' | 'thin-bar' | 'stacked bar' | 'donut';
 
 export interface ChartSeries {
@@ -7,6 +8,8 @@ export interface ChartSeries {
 }
 
 export interface ChartOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   type?: ChartType;
   label?: string;

@@ -1,9 +1,12 @@
+import type { Surface } from '../surface.d.mts';
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'dashed' | 'destructive' | 'secondary-destructive';
 export type ButtonSize = 'xs' | 'sm' | 'base' | 'lg';
 export type ButtonType = 'button' | 'submit' | 'reset';
 export type IconPosition = 'start' | 'end';
 
 export interface ButtonOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   label?: string;
   id?: string;
   type?: ButtonType;
@@ -17,7 +20,11 @@ export interface ButtonOptions {
 
 export type IconButtonVariant = 'raised' | 'ghost' | 'circle' | 'outline' | string;
 
+export type TooltipPlacement = 'top' | 'right' | 'bottom' | 'left';
+
 export interface IconButtonOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   label?: string;
   ariaLabel?: string;
   variant?: IconButtonVariant;
@@ -25,12 +32,17 @@ export interface IconButtonOptions {
   disabled?: boolean;
   pressed?: boolean;
   ariaPressed?: boolean;
+  /** Tooltip text override. By default every Icon Button uses its accessible label. */
+  tooltip?: string;
+  tooltipPlacement?: TooltipPlacement;
   attributes?: string;
 }
 
 export type LinkTone = 'default' | 'brand';
 
 export interface LinkButtonOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   href?: string;
   tone?: LinkTone;
   disabled?: boolean;
@@ -43,6 +55,8 @@ export interface LinkButtonOptions {
 export type SocialProvider = 'google' | 'github';
 
 export interface SocialButtonOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   label?: string;
   size?: ButtonSize;
   disabled?: boolean;

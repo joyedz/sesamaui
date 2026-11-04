@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 export interface TableColumn<T = any> {
   key: string;
   label?: string;
@@ -12,6 +13,8 @@ export type TableSelectionMode = 'none' | 'single' | 'multiple';
 export type TableSortDirection = 'ascending' | 'descending' | 'none' | 'asc' | 'desc';
 
 export interface TableOptions<T = any> {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   columns?: TableColumn<T>[];
   rows?: T[];
@@ -20,7 +23,10 @@ export interface TableOptions<T = any> {
   selectedKeys?: string[] | Set<string>;
   sortColumn?: string;
   sortDirection?: TableSortDirection;
+  /** Transparent header by default; opt in for a sticky, opaque header row. */
   stickyHeader?: boolean;
+  /** Pin the first data column while the table scrolls horizontally. */
+  stickyFirstColumn?: boolean;
   compact?: boolean;
   fixed?: boolean;
   minWidth?: number;

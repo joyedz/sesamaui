@@ -1,5 +1,8 @@
 // Rune outline artwork; see assets/rune-icons/LICENSE and NOTICE.
 const icons = {
+  // Sesama outline addition: symmetric left/right conversation fork.
+  "fork": '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21V14C12 10 6 10 6 6V3M3 6L6 3L9 6M12 14C12 10 18 10 18 6V3M15 6L18 3L21 6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+
   "x": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M18 6L6 18M6 6L18 18\" stroke=\"black\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n</svg>\n",
   "check": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M20 6L9 17L4 12\" stroke=\"black\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n</svg>\n",
   "chevron-down": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M6 9L12 15L18 9\" stroke=\"black\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n</svg>\n",

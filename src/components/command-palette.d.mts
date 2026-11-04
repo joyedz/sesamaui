@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 export interface CommandItem {
   id?: string;
   label?: string;
@@ -17,6 +18,8 @@ export interface CommandGroup {
 }
 
 export interface CommandPaletteOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   title?: string;
   placeholder?: string;

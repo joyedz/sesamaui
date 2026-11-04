@@ -50,7 +50,7 @@ Chronological stream of audit logs or system events:
 
 ## Pre-composed Recipes
 
-Sesama UI also provides high-level recipes for common domain layouts:
-- `dashboardOverviewRecipe(data)`: Pre-assembles 4 metric cards, revenue/category charts, recent activity, and orders table.
-- `revenueChartRecipe(data)`: Pre-composed chart section with filters, revenue area chart, and breakdown donut chart.
-- `dataWorkspaceRecipe(data)`: Full data management layout with search, selection table, and pagination.
+Sesama UI also provides a high-level recipe for a common domain layout:
+- `agentCardRecipe(data)`: Pre-composed agent profile card with avatar, status indicator, role, model badge, capabilities, and actions.
+
+Compose other page layouts (dashboard overview, revenue charts, data workspaces) directly from the structural and content blocks above — see the dashboard demos for reference compositions.

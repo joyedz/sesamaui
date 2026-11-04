@@ -13,6 +13,7 @@
   border: 1px solid var(--color-hairline);
   border-radius: var(--radius-md, 8px);
   background: var(--color-base);
+  background: color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sb-content-heading {

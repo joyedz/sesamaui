@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from '../components/shared.mjs';
 import { contentSection } from './content-section.mjs';
 import { metricCard } from './metric-card.mjs';
 import { escapeHTML } from '../components/shared.mjs';
@@ -8,7 +9,7 @@ import { escapeHTML } from '../components/shared.mjs';
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function chartSection(options = {}) {
+function buildChartSection(options = {}) {
   const {
     id,
     title = '',
@@ -46,4 +47,10 @@ export function chartSection(options = {}) {
     attributes,
     classes: classList
   });
+}
+
+
+export function chartSection(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildChartSection(...args), mode, ["@root"]);
 }

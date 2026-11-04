@@ -100,14 +100,7 @@ import {
   metricCard,
   metricSummary,
   chartSection,
-  requirementGroupRecipe,
-  resourceListRecipe,
   agentCardRecipe,
-  createSkillDialogRecipe,
-  deleteResourceRecipe,
-  dashboardOverviewRecipe,
-  revenueChartRecipe,
-  dataWorkspaceRecipe,
   controllerRegistry,
   registerController,
 } from '../src/index.mjs';
@@ -174,14 +167,7 @@ test('module import and builders work without browser globals', () => {
   assert.match(metricCard({label: 'Rev', value: '$100'}), /data-sui-metric-card/);
   assert.match(metricSummary({metrics: [{label: 'A', value: '1'}]}), /data-sui-metric-summary/);
   assert.match(chartSection({title: 'Analytics'}), /sb-chart-section/);
-  assert.match(requirementGroupRecipe({title: 'Reqs'}), /data-sui-requirement-group/);
-  assert.match(resourceListRecipe({title: 'Resources'}), /data-sui-data-section/);
   assert.match(agentCardRecipe({name: 'Copilot'}), /data-sui-agent-card/);
-  assert.match(createSkillDialogRecipe(), /data-sui-modal/);
-  assert.match(deleteResourceRecipe({resourceName: 'cluster-1'}), /data-sui-modal/);
-  assert.match(dashboardOverviewRecipe(), /sb-dashboard-overview/);
-  assert.match(revenueChartRecipe(), /sb-revenue-chart/);
-  assert.match(dataWorkspaceRecipe(), /data-sui-app-shell/);
 });
 
 test('text options are escaped and button rejects injected enum values', () => {
@@ -193,6 +179,29 @@ test('text options are escaped and button rejects injected enum values', () => {
   assert.match(inputField({label: '<label>', value: '" onfocus="x'}), /&lt;label&gt;/);
   assert.doesNotMatch(inputField({value: '" onfocus="x'}), /value="" onfocus=/);
   assert.match(modal({title: '<title>'}), /&lt;title&gt;/);
+});
+
+test('modal builder renders sizes, locked state and optional scrollable body', () => {
+  const base = modal({id: 'm-base', title: 'Save changes?'});
+  assert.match(base, /data-sui-modal/);
+  assert.match(base, /class="sx-modal-body"/);
+  assert.doesNotMatch(base, /sx-modal-body-scroll/);
+
+  // Long content: the body scrolls inside a fixed header/footer, and the
+  // description scrolls WITH the content — only title and actions stay fixed.
+  const scrollBody = modal({id: 'm-scroll', title: 'Long content', description: 'Review the project information before continuing.', bodyScroll: true, content: '<p>Section 1</p>'});
+  assert.match(scrollBody, /class="sx-modal-body sx-modal-body-scroll"><p id="m-scroll-description">/);
+  assert.doesNotMatch(scrollBody, /<\/p><div class="sx-modal-body/);
+
+  // One consistent anatomy: the description is always the first child of the body.
+  const withDesc = modal({id: 'm-desc', title: 'Details', description: 'Review the project information before continuing.'});
+  assert.match(withDesc, /class="sx-modal-body"><p id="m-desc-description">/);
+  assert.doesNotMatch(withDesc, /<\/p><div class="sx-modal-body/);
+
+  assert.match(modal({id: 'm-lock', title: 'Confirm', locked: true}), /data-locked/);
+  assert.match(modal({id: 'm-xl', title: 'Wide', size: 'xl'}), /data-size="xl"/);
+  // Invalid sizes fall back to base rather than throwing.
+  assert.match(modal({id: 'm-fallback', title: 'Fallback', size: 'huge'}), /data-size="base"/);
 });
 
 test('button supports all variants, sizes, loading state and icon positions', () => {
@@ -247,6 +256,19 @@ test('iconButton supports options, accessibility, and legacy positional calls', 
   assert.match(legacy, /class="ibtn outline"/);
   assert.match(legacy, /aria-label="Row actions"/);
   assert.match(legacy, /data-menu="actions"/);
+
+  // Tooltip override uses the canonical Tooltip pattern
+  const withTip = iconButton('plus', { ariaLabel: 'Add requirement', tooltip: 'Add requirement' });
+  assert.match(withTip, /class="sx-tooltip-wrap" data-sui-tooltip/);
+  assert.match(withTip, /aria-describedby="[^"]+" data-sui-tooltip-trigger/);
+  assert.match(withTip, /<span id="[^"]+" class="sx-tooltip" role="tooltip" popover="manual"[^>]*>Add requirement<\/span>/);
+
+  // All signatures include a tooltip by default, derived from the accessible label.
+  for (const html of [iconButton('plus', { ariaLabel: 'Add requirement' }), iconButton({ icon: 'plus', label: 'Add requirement' }), iconButton('plus', '', '', 'Add requirement')]) {
+    assert.match(html, /data-sui-tooltip-from-label/);
+    assert.match(html, /role="tooltip"[^>]*>Add requirement<\/span>/);
+  }
+  assert.match(iconButton('plus', { label: '<b>Add</b>', tooltip: '<img onerror=alert(1)>' }), /&lt;img onerror=alert\(1\)&gt;/);
 
   // Escaping
   assert.match(iconButton('search', {label: '<script>'}), /aria-label="&lt;script&gt;"/);
@@ -657,24 +679,8 @@ test('individual component modules can be imported directly in isolation', async
   assert.equal(typeof directChartSection, 'function');
   assert.match(directChartSection({title: 'Sales'}), /sb-chart-section/);
 
-  const {
-    requirementGroupRecipe: directReqRecipe,
-    resourceListRecipe: directResRecipe,
-    agentCardRecipe: directAgentRecipe,
-    createSkillDialogRecipe: directSkillRecipe,
-    deleteResourceRecipe: directDeleteRecipe,
-    dashboardOverviewRecipe: directDashRecipe,
-    revenueChartRecipe: directRevRecipe,
-    dataWorkspaceRecipe: directWsRecipe
-  } = await import('../src/blocks/recipes.mjs');
-  assert.equal(typeof directReqRecipe, 'function');
-  assert.equal(typeof directResRecipe, 'function');
+  const {agentCardRecipe: directAgentRecipe} = await import('../src/blocks/recipes.mjs');
   assert.equal(typeof directAgentRecipe, 'function');
-  assert.equal(typeof directSkillRecipe, 'function');
-  assert.equal(typeof directDeleteRecipe, 'function');
-  assert.equal(typeof directDashRecipe, 'function');
-  assert.equal(typeof directRevRecipe, 'function');
-  assert.equal(typeof directWsRecipe, 'function');
 });
 
 test('badge renders display-only status with tones, sizes, icons, and escaping', () => {
@@ -750,7 +756,7 @@ test('avatar renders static span or interactive button with image fallback and s
 
   // Auto tone hash
   const autoTone = avatar({name: 'Jordan Lee', tone: 'auto'});
-  assert.match(autoTone, /background:color-mix\(in srgb,var\(--color-/);
+  assert.match(autoTone, /--avatar-palette-background:var\(--color-avatar-[a-z]+-background\)/);
 
   // Preset sizes
   const sm = avatar({size: 'sm', initials: 'S'});
@@ -1085,11 +1091,27 @@ test('skeleton renders shapes, dimensions, count and accessibility status', () =
   assert.match(custom, /--skeleton-width:80%/);
   assert.match(custom, /--skeleton-height:24px/);
 
+  // Mixed shapes under one status region (legacy text/table compositions)
+  const mixed = skeleton({items: ['line', 'line', 'line-short']});
+  assert.match(mixed, /class="sx-skeleton-layout" role="status" aria-busy="true" aria-label="Loading content"/);
+  assert.equal((mixed.match(/class="sx-skeleton"/g) || []).length, 2);
+  assert.match(mixed, /class="sx-skeleton line-short"/);
+
+  // Rows: nested arrays render side by side in a shared .sx-row
+  const rows = skeleton({items: [['line', 'line-short'], ['line', 'line-short']]});
+  assert.equal((rows.match(/class="sx-row"/g) || []).length, 2);
+
+  // Bare mode emits raw shapes only, without the status layout wrapper
+  const bare = skeleton({shape: 'round', size: 48, bare: true});
+  assert.match(bare, /^<div class="sx-skeleton round" style="--skeleton-size:48px" aria-hidden="true"><\/div>$/);
+  assert.doesNotMatch(bare, /role="status"/);
+
   // Escaping
   assert.match(skeleton({ariaLabel: '<Content>'}), /aria-label="&lt;Content&gt;"/);
 
   // Validation
   assert.throws(() => skeleton({shape: 'triangle'}), TypeError);
+  assert.throws(() => skeleton({items: ['triangle']}), TypeError);
 });
 
 test('scrollArea renders orientation, tabindex, region role and handles boundary indicators', () => {
@@ -1332,9 +1354,15 @@ test('switchControl renders accessible switch button, hidden form input, and con
   assert.match(full, /<input type="checkbox" data-sui-switch-input name="notifications" value="enabled" checked disabled required/);
   assert.match(full, /<span class="sx-help" id="[^\"]+-description">Instant alerts<\/span>/);
 
+  // Bare switch: aria-label names it when no visible label renders
+  const bare = switchControl({ariaLabel: 'Notifications', checked: true});
+  assert.doesNotMatch(bare, /<label/);
+  assert.match(bare, /aria-label="Notifications"/);
+
   // Escaping
   assert.match(switchControl({label: '<Mode>', description: '<Info>'}), /&lt;Mode&gt;/);
   assert.match(switchControl({label: '<Mode>', description: '<Info>'}), /&lt;Info&gt;/);
+  assert.match(switchControl({ariaLabel: '<Mode>'}), /aria-label="&lt;Mode&gt;"/);
 
   // Controller behavior with mock elements
   let emitted = null;
@@ -1776,6 +1804,23 @@ test('popover and initPopover manage trigger, content, open/close, and dismissal
   assert.equal(mockTrigger._focused, true);
 
   popCtrl.destroy();
+});
+
+test('single menu buttons include optional separator and chevron without changing their accessible label', () => {
+  for (const variant of ['primary', 'secondary']) {
+    const html = dropdownMenu({ trigger: { label: 'New project', variant, icon: 'plus', ariaLabel: 'Create resource' }, menuIndicator: true, items: [{ label: 'Project' }] });
+    assert.match(html, /aria-label="Create resource"/);
+    assert.match(html, /<span class="sep" aria-hidden="true"><\/span><svg/);
+    assert.match(html, /data-sui-dropdown-trigger/);
+  }
+  assert.doesNotMatch(dropdownMenu({ trigger: 'Actions' }), /class="sep"/);
+});
+
+test('card edge actions remain outside the footer and preserve trusted tooltip markup', () => {
+  const html = card({ header: 'Project', title: 'Website redesign', expandAction: iconButton('chevron-right', { variant: 'raised', label: 'Expand item', tooltip: 'Expand item' }) });
+  assert.match(html, /class="sx-card-expand"><span class="sx-tooltip-wrap"/);
+  assert.match(html, /aria-label="Expand item"/);
+  assert.doesNotMatch(html, /sx-card-footer/);
 });
 
 test('dropdownMenu and initDropdownMenu compose button and menu with selection lifecycle', () => {
@@ -2350,6 +2395,12 @@ test('tagInput and initTagInput manage tags, duplicate rejection, and form integ
   assert.match(tagHtml, /data-tag-remove/);
   assert.match(tagHtml, /data-tag-status/);
 
+  // Size ladder matches the Input Field control heights
+  const lg = tagInput({ label: 'Tags', size: 'lg' });
+  assert.match(lg, /class="sx-tagbox sx-size-lg"/);
+  assert.match(tagInput({ label: 'Tags', size: 'sm' }), /class="sx-tagbox sx-size-sm"/);
+  assert.throws(() => tagInput({ size: 'xl' }), TypeError);
+
   // Controller interaction
   let tagChange = null;
   const createdTags = ['Design', 'Engineering'];
@@ -2544,6 +2595,8 @@ test('tabs and initTabs handle variants, keyboard roving tabindex, panel switchi
   };
 
   const mockTabsEl = {
+    setAttribute(name, value) { this[name] = value; },
+    removeAttribute(name) { delete this[name]; },
     querySelector(sel) {
       if (sel.includes('tablist')) return mockTablist;
       if (sel.includes('aria-selected="true"')) return mockTab1;
@@ -2655,7 +2708,9 @@ test('tree, treeItem, treeSection and initTree handle structure, expanding/colla
   const sectionHtml = treeSection('Projects', leafHtml, { actionIcon: 'plus', actionLabel: 'Add project' });
   assert.match(sectionHtml, /<section class="sx-tree-section">/);
   assert.match(sectionHtml, /<h2 class="sx-tree-section-title">Projects<\/h2>/);
-  assert.match(sectionHtml, /class="ibtn raised" aria-label="Add project"/);
+  assert.match(sectionHtml, /class="ibtn" aria-label="Add project"/);
+  assert.match(sectionHtml, /data-sui-tooltip-trigger/);
+  assert.match(sectionHtml, /role="tooltip"[^>]*>Add project<\/span>/);
 
   // Tree container
   const treeHtml = tree([
@@ -2669,7 +2724,8 @@ test('tree, treeItem, treeSection and initTree handle structure, expanding/colla
 
   const mockBranch = {
     hidden: false,
-    hasAttribute(attr) { return attr === 'data-branch'; },
+    hasAttribute(attr) { return attr === 'data-branch' ? true : (attr === 'data-open' ? !this.hidden : false); },
+    toggleAttribute(name, force) { if (name === 'data-open') this.hidden = !force; },
     querySelector() { return mockLeafBtn; }
   };
 
@@ -2730,13 +2786,13 @@ test('tree, treeItem, treeSection and initTree handle structure, expanding/colla
 
   const treeCtrl = initTree(mockTreeEl);
 
-  // Toggle folder
+  // Toggle folder — collapsed/expanded is the data-open attribute (animated height)
   treeCtrl.collapse('f1');
-  assert.equal(mockBranch.hidden, true);
+  assert.equal(mockBranch.hasAttribute('data-open'), false);
   assert.deepEqual(toggleEvent, { id: 'f1', expanded: false });
 
   treeCtrl.expand('f1');
-  assert.equal(mockBranch.hidden, false);
+  assert.equal(mockBranch.hasAttribute('data-open'), true);
   assert.deepEqual(toggleEvent, { id: 'f1', expanded: true });
 
   // Select item
@@ -3029,6 +3085,24 @@ test('table and initTable handle columns, sorting, single/multiple selection, ro
   tableCtrl.destroy();
 });
 
+test('table builder renders legacy-aligned variants: transparent header, sticky column, fixed layout', () => {
+  const cols = [{ key: 'name', header: 'Name' }, { key: 'status', header: 'Status' }];
+  const rows = [{ id: 1, name: 'Website 1', status: 'Active' }];
+
+  // The header row is transparent by default; sticky is opt-in.
+  assert.doesNotMatch(table({ columns: cols, rows }), /thead class="sticky"/);
+  assert.match(table({ columns: cols, rows, stickyHeader: true, maxHeight: 240 }), /thead class="sticky"/);
+
+  // Sticky first column: sticky-left on the first data th/td + selection column
+  const sticky = table({ columns: cols, rows, stickyFirstColumn: true, selectionMode: 'multiple' });
+  assert.match(sticky, /<th scope="col" class="sticky-left"/);
+  assert.match(sticky, /<td class="sticky-left" style=/);
+  assert.match(sticky, /data-table-select-all/);
+
+  assert.match(table({ columns: cols, rows, fixed: true }), /sx-table fixed/);
+  assert.match(table({ columns: cols, rows, compact: true }), /sx-table-wrap compact/);
+});
+
 test('pagination and initPagination manage pages, total items, page size, bounds, and events', () => {
   // Functional builder
   const html = pagination({
@@ -3040,8 +3114,15 @@ test('pagination and initPagination manage pages, total items, page size, bounds
   });
 
   assert.match(html, /<nav class="sx-pagination" aria-label="Pagination" data-sui-pagination/);
-  assert.match(html, /<select class="sx-select" data-page-size aria-label="Rows per page">/);
-  assert.match(html, /<option value="10" selected>10<\/option>/);
+  // Rows-per-page uses the canonical Select pattern: trigger + listbox popover.
+  assert.match(html, /class="sx-select sx-select-trigger/);
+  assert.match(html, /aria-haspopup="listbox"/);
+  assert.match(html, /data-sui-select-label>10<\/span>/);
+  assert.match(html, /role="listbox"/);
+  assert.match(html, /aria-selected="true" data-sui-option="10" data-sui-option-label="10"/);
+  // The native select remains only as the hidden form value slot.
+  assert.match(html, /<select data-sui-select-native[^>]*name="pagination-size"/);
+  assert.match(html, /<option value="10"\s+selected>10<\/option>/);
   assert.match(html, /<span class="sx-page-summary" data-page-summary>Page 2 of 5 · 45 items<\/span>/);
   assert.match(html, /data-page-step="-1"/);
   assert.match(html, /data-page-step="1"/);
@@ -3053,7 +3134,6 @@ test('pagination and initPagination manage pages, total items, page size, bounds
   const nextBtn = { disabled: false };
   const numbersEl = { innerHTML: '' };
   const summaryEl = { textContent: '' };
-  const selectEl = { value: '10' };
 
   const mockPagEl = {
     dataset: {
@@ -3069,7 +3149,6 @@ test('pagination and initPagination manage pages, total items, page size, bounds
       if (sel.includes('1') && sel.includes('step')) return nextBtn;
       if (sel.includes('numbers')) return numbersEl;
       if (sel.includes('summary')) return summaryEl;
-      if (sel.includes('size')) return selectEl;
       return null;
     },
     addEventListener(ev, fn) { this['_' + ev] = fn; },
@@ -3442,6 +3521,14 @@ test('message and initMessage support user/agent/comment roles and emit action e
   assert.match(agentMsg, /<span class="badge">AI<\/span>/);
   assert.match(agentMsg, /data-message-action="copy"/);
   assert.match(agentMsg, /data-message-action="retry"/);
+
+  // Sender names are optional for every role: an agent message without a
+  // sender renders no header at all.
+  const anonAgentMsg = message({ role: 'agent', content: 'Inline answer.' });
+  assert.match(anonAgentMsg, /sx-agent-message/);
+  assert.ok(!anonAgentMsg.includes('sx-message-header'), 'agent message without sender must not render a header');
+  const anonUserMsg = message({ content: 'Bare bubble.' });
+  assert.ok(!anonUserMsg.includes('sx-message-header'), 'user message without sender must not render a header');
 
   // Thinking message
   const thinkingMsg = message({ status: 'thinking' });
@@ -3816,6 +3903,9 @@ test('appShell builder and initAppShell controller manage sidebar collapse, peek
   };
 
   const mockShellEl = {
+    querySelectorAll(sel) { return sel === '[data-shell-toggle]' ? [mockToggleBtn] : []; },
+    toggleAttribute(name, force) { if (force) this[name] = ''; else delete this[name]; },
+    removeAttribute(name) { delete this[name]; },
     classList: {
       contains: cls => classes.has(cls),
       add: cls => classes.add(cls),
@@ -3954,6 +4044,7 @@ test('workspaceSidebar and sidebar alias builder and controller handle navigatio
     hasAttribute(attr) { return false; }
   };
   const mockSidebarEl = {
+    querySelectorAll() { return []; },
     addEventListener(ev, fn) { this['_' + ev] = fn; },
     removeEventListener() {},
     dispatchEvent(ev) {
@@ -4197,41 +4288,7 @@ test('metricCard, metricSummary, and chartSection render quantitative blocks and
 });
 
 test('domain recipes assemble cohesive workflows from atomic components and blocks', () => {
-  // 1. Requirement Group Recipe
-  const reqMarkup = requirementGroupRecipe({
-    id: 'req-group-1',
-    title: 'Core Architecture Requirements',
-    description: 'System specifications for the distributed orchestrator.',
-    requirements: [
-      { id: 'req-1', title: 'Sub-millisecond latency', status: 'completed', priority: 'P0' },
-      { id: 'req-2', title: 'Zero downtime rolling restart', status: 'in-progress', priority: 'P1' }
-    ]
-  });
-  assert.match(reqMarkup, /data-sui-requirement-group/);
-  assert.match(reqMarkup, /Core Architecture Requirements/);
-  assert.match(reqMarkup, /Sub-millisecond latency/);
-  assert.match(reqMarkup, /Zero downtime rolling restart/);
-
-  // 2. Resource List Recipe
-  const resMarkup = resourceListRecipe({
-    id: 'res-list-1',
-    title: 'Workspace Documents',
-    layout: 'table',
-    columns: [
-      { key: 'name', label: 'File' },
-      { key: 'size', label: 'Size' }
-    ],
-    resources: [
-      { name: 'architecture-spec.pdf', size: '2.4 MB' },
-      { name: 'api-reference.md', size: '180 KB' }
-    ]
-  });
-  assert.match(resMarkup, /data-sui-data-section/);
-  assert.match(resMarkup, /Workspace Documents/);
-  assert.match(resMarkup, /architecture-spec\.pdf/);
-  assert.match(resMarkup, /api-reference\.md/);
-
-  // 3. Agent Card Recipe
+  // Agent Card Recipe
   const agentMarkup = agentCardRecipe({
     id: 'agent-1',
     name: 'Research Copilot',
@@ -4249,76 +4306,83 @@ test('domain recipes assemble cohesive workflows from atomic components and bloc
   assert.match(agentMarkup, /Web Search/);
   assert.match(agentMarkup, /Launch Session/);
 
-  // 4. Create Skill Dialog Recipe
-  const skillDialogMarkup = createSkillDialogRecipe({
-    id: 'create-tool-modal',
-    title: 'Register Custom MCP Tool',
-    description: 'Declare a callable function tool for autonomous agents.',
-    submitLabel: 'Register Tool',
-    cancelLabel: 'Dismiss'
-  });
-  assert.match(skillDialogMarkup, /data-sui-modal/);
-  assert.match(skillDialogMarkup, /Register Custom MCP Tool/);
-  assert.match(skillDialogMarkup, /Declare a callable function tool/);
-  assert.match(skillDialogMarkup, /Register Tool/);
-  assert.match(skillDialogMarkup, /Dismiss/);
+});
 
-  // 5. Delete Resource Recipe
-  const deleteDialogMarkup = deleteResourceRecipe({
-    id: 'delete-repo-modal',
-    title: 'Delete Repository',
-    resourceName: 'sesama-ui-legacy',
-    requiresKeyword: true,
-    keyword: 'sesama-ui-legacy',
-    confirmLabel: 'Confirm Destruction'
-  });
-  assert.match(deleteDialogMarkup, /data-sui-modal/);
-  assert.match(deleteDialogMarkup, /Delete Repository/);
-  assert.match(deleteDialogMarkup, /sesama-ui-legacy/);
-  assert.match(deleteDialogMarkup, /data-expected-keyword="sesama-ui-legacy"/);
-  assert.match(deleteDialogMarkup, /Confirm Destruction/);
 
-  // 6. Dashboard Overview Recipe
-  const dashMarkup = dashboardOverviewRecipe({
-    title: 'Executive Overview',
-    description: 'Key performance indicators and system telemetry.',
-    metrics: [
-      { label: 'Total Revenue', value: '$240K' },
-      { label: 'Active Users', value: '45,000' }
-    ],
-    chart: '<div class="overview-chart">CHART</div>',
-    activity: '<div class="overview-feed">FEED</div>',
-    table: '<div class="overview-table">RECENT_ORDERS</div>'
-  });
-  assert.match(dashMarkup, /sb-dashboard-overview/);
-  assert.match(dashMarkup, /Executive Overview/);
-  assert.match(dashMarkup, /Total Revenue/);
-  assert.match(dashMarkup, /\$240K/);
-  assert.match(dashMarkup, /CHART/);
-  assert.match(dashMarkup, /FEED/);
-  assert.match(dashMarkup, /RECENT_ORDERS/);
+test('input controls share Input sizes and reject the button-only XS size', () => {
+  for (const build of [input, inputField, select, combobox, datePicker, tagInput, textarea]) {
+    for (const size of ['sm', 'base', 'lg']) assert.match(build({ size }), new RegExp(`sx-size-${size}`));
+    for (const size of ['xs', 'xl']) assert.throws(() => build({ size }), TypeError);
+  }
+});
 
-  // 7. Revenue Chart Recipe
-  const revMarkup = revenueChartRecipe({
-    id: 'q4-revenue',
-    title: 'Q4 Financial Trajectory',
-    description: 'Quarterly run-rate and subscription retention.',
-    chart: '<svg class="rev-svg">REVENUE_CHART</svg>'
-  });
-  assert.match(revMarkup, /sb-revenue-chart/);
-  assert.match(revMarkup, /Q4 Financial Trajectory/);
-  assert.match(revMarkup, /REVENUE_CHART/);
-  assert.match(revMarkup, /Total Revenue/);
+test('button compositions inherit the main Button size contract', () => {
+  for (const size of ['xs', 'sm', 'base', 'lg']) {
+    assert.match(iconButton('plus', { size }), new RegExp(`size-${size}`));
+    assert.match(socialButton('google', { size }), new RegExp(`social ${size}`));
+    assert.match(buttonGroup({ size, buttons: ['Create'] }), new RegExp(`secondary ${size}`));
+    assert.match(dropdownMenu({ trigger: { label: 'Create', size } }), new RegExp(`secondary ${size}`));
+  }
+  assert.match(iconButton('plus', { size: 'xs' }), /width="12" height="12"/);
+});
 
-  // 8. Data Workspace Recipe
-  const wsMarkup = dataWorkspaceRecipe({
-    brand: { name: 'Lakehouse Engine', badge: 'v3' },
-    title: 'Enterprise Datasets',
-    description: 'Distributed query catalogs and partition metrics.',
-    table: '<table class="datasets"><tr><td>warehouse-prod</td></tr></table>'
-  });
-  assert.match(wsMarkup, /data-sui-app-shell/);
-  assert.match(wsMarkup, /Lakehouse Engine/);
-  assert.match(wsMarkup, /Enterprise Datasets/);
-  assert.match(wsMarkup, /warehouse-prod/);
+
+test('explicit Tooltip composition replaces an Icon Button automatic tooltip', () => {
+  const html = tooltip({ trigger: iconButton('plus', { label: 'Add project' }), content: 'Create a new project' });
+  assert.equal((html.match(/data-sui-tooltip /g) || []).length, 1);
+  assert.equal((html.match(/role="tooltip"/g) || []).length, 1);
+  assert.match(html, /aria-label="Add project"/);
+  assert.match(html, /Create a new project/);
+});
+
+
+test('Popover supports alignment while keeping start as its default', () => {
+  assert.match(popover({}), /data-align="start"/);
+  for (const align of ['center', 'end']) assert.match(popover({align}), new RegExp('data-align="' + align + '"'));
+  assert.throws(() => popover({align: 'invalid'}), TypeError);
+});
+
+
+test('overlay placement uses the final layout size during entry transforms', async () => {
+  const {computePlacement} = await import('../src/components/overlay-helpers.mjs');
+  const trigger = { ownerDocument: { defaultView: { innerWidth: 390, innerHeight: 844 } },
+    getBoundingClientRect: () => ({left:310,right:366,top:16,bottom:46,width:56,height:30}) };
+  const popup = { offsetWidth:366, offsetHeight:560, getBoundingClientRect: () => ({width:355,height:543}) };
+  assert.deepEqual(computePlacement(trigger,popup,'bottom',{align:'center'}), {left:16,top:50,placement:'bottom'});
+});
+
+
+test('surface options are shared by component and block builders without changing defaults', async () => {
+  const api = await import('../src/index.mjs');
+  const names = ['button','input','inputField','select','modal','badge','statusDot','avatar','label','card','banner',
+    'emptyState','skeleton','scrollArea','checkbox','radio','switchControl','textarea','chip','menuItem','menu',
+    'popover','dropdownMenu','tooltip','buttonGroup','commandPalette','combobox','datePicker','tagInput','tabs',
+    'breadcrumbs','treeItem','tree','treeSection','listRow','toolbar','collapsible','table','pagination','chart',
+    'canvas','fileCard','fileAttachment','message','toolCall','agentRun','composer','appShell','workspaceSidebar',
+    'sidebar','pageHeader','contentSection','dataSection','peopleList','activityFeed','metricCard','metricSummary','chartSection'];
+  const cases = names.map(name => [name, options => api[name](options)]);
+  cases.push(['iconButton', options => api.iconButton('plus', options)],
+    ['socialButton', options => api.socialButton('google',options)],
+    ['linkButton', options => api.linkButton('More',options)],
+    ['pageLayout', options => api.pageLayout('Content',options)],
+    ['pageGrid', options => api.pageGrid([],options)]);
+  for (const [name, build] of cases) {
+    assert.doesNotMatch(build({}), /data-sui-surface=/, name + ' default markup');
+    for (const surface of ['solid','blur']) assert.match(build({surface}), new RegExp('data-sui-surface="' + surface + '"'), name);
+    for (const surface of ['glass','<script>',null,1]) assert.throws(() => build({surface}), TypeError, name);
+  }
+});
+
+test('surfaces decorate painted fields and panels instead of labels or nested content', () => {
+  const field = inputField({id:'surface-input',label:'Email',surface:'blur'});
+  assert.match(field, /<div data-sui-surface="blur" class="field/);
+  assert.doesNotMatch(field, /<label[^>]*data-sui-surface/);
+  const selectHTML = select({surface:'blur'});
+  assert.equal((selectHTML.match(/data-sui-surface="blur"/g)||[]).length,2);
+  const inner = button({label:'Nested',surface:'solid'});
+  const outer = card({content:inner,surface:'blur'});
+  assert.equal((outer.match(/data-sui-surface="blur"/g)||[]).length,1);
+  assert.equal((outer.match(/data-sui-surface="solid"/g)||[]).length,1);
+  assert.match(popover({surface:'blur',content:'<p>Details</p>'}), /data-sui-surface="blur"[^>]*sx-popover-panel/);
+  assert.match(avatar({surface:'blur',name:'Amelia',color:'auto'}), /data-sui-surface="blur"/);
 });

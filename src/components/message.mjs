@@ -1,13 +1,15 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML, uid } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 import { fileCard } from './file-card.mjs';
+import { avatar } from './avatar.mjs';
 
 /**
  * Render a Message component.
  * @param {Object} options
  * @returns {string} HTML string
  */
-export function message(options = {}) {
+function buildMessage(options = {}) {
   const id = options.id || uid('msg');
   const role = options.role || (options.sender?.isAgent ? 'agent' : options.sender?.isSelf ? 'user' : 'user');
   const isAgent = role === 'agent' || Boolean(options.sender?.isAgent);
@@ -17,21 +19,26 @@ export function message(options = {}) {
   const status = options.status || options.state || '';
   const isDeleted = status === 'deleted';
   const isThinking = status === 'thinking';
+  const isStreaming = status === 'streaming';
 
+  const appearance = options.appearance || 'default';
+  if (!['default', 'bubble'].includes(appearance)) throw new TypeError(`Invalid message appearance: ${appearance}`);
   const classes = [
     'sx-message',
+    appearance === 'bubble' ? 'sx-message-bubbled' : '',
     isAgent ? 'sx-agent-message' : '',
     isSelf ? 'sx-message-outgoing' : '',
     isComment ? 'sx-message-comment' : '',
     options.classes
   ].filter(Boolean).join(' ');
 
-  // Sender header
+  // Sender header — names are optional for every role, including agent:
+  // omit `sender` to render a headerless message (e.g. an inline agent answer).
   let headerHTML = '';
   if (options.sender) {
     const senderName = typeof options.sender === 'string'
       ? options.sender
-      : (isSelf ? 'You' : options.sender.name || (isAgent ? 'Sesama Agent' : 'User'));
+      : (isSelf ? 'You' : options.sender?.name || (isAgent ? 'Sesama Agent' : 'User'));
     const timeHTML = options.time ? `<time datetime="${escapeHTML(options.time)}">${escapeHTML(options.time)}</time>` : '';
 
     if (isAgent) {
@@ -41,8 +48,7 @@ export function message(options = {}) {
       if (typeof options.sender?.avatar === 'string' && options.sender.avatar.trim().startsWith('<')) {
         avatarHTML = options.sender.avatar;
       } else {
-        const initials = senderName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'U';
-        avatarHTML = `<span class="av sx-avatar" role="img" aria-label="${escapeHTML(senderName)}">${escapeHTML(initials)}</span>`;
+        avatarHTML = avatar({ name: senderName, size: 24 });
       }
       headerHTML = `<div class="sx-message-header">${avatarHTML}<strong>${escapeHTML(senderName)}</strong>${timeHTML}</div>`;
     }
@@ -63,6 +69,8 @@ export function message(options = {}) {
     contentHTML = options.content || 'This message was deleted.';
   } else if (options.content) {
     contentHTML = options.content;
+  } else if (isStreaming) {
+    contentHTML = 'Ready to generate a response.';
   }
 
   // Attachments
@@ -73,13 +81,20 @@ export function message(options = {}) {
     attachmentsHTML = `<div class="sx-message-attachment">${options.attachments}</div>`;
   }
 
-  // Body container
-  const bodyClass = isComment ? 'sx-message-comment-body' : 'bubble';
+  // Body container. Thinking bubbles are status regions; streaming bubbles carry
+  // data-agent-response so the app can stream text into them.
+  const bodyClass = isThinking
+    ? 'bubble sx-row sx-agent-thinking'
+    : (isComment ? 'sx-message-comment-body' : 'bubble');
+  const bodyAttrs = isThinking
+    ? ' role="status" aria-live="polite"'
+    : (isStreaming ? ' data-agent-response role="status"' : '');
   const bodyContent = isThinking
     ? contentHTML
     : `${quoteHTML}<div data-message-content ${isDeleted ? 'class="sx-help"' : ''}>${contentHTML}</div>${attachmentsHTML}`;
 
   // Status & actions
+  const actions = options.actions ?? (isSelf ? [{ action: 'copy', icon: 'copy', label: 'Copy message' }] : []);
   let statusHTML = '';
   if (status === 'sent' && isSelf) {
     statusHTML = '<div class="sx-message-status" aria-label="Message sent">Sent</div>';
@@ -90,10 +105,10 @@ export function message(options = {}) {
   }
 
   let actionsHTML = '';
-  if (typeof options.actions === 'string') {
-    actionsHTML = options.actions;
-  } else if (Array.isArray(options.actions) && options.actions.length > 0) {
-    const actionButtons = options.actions.map(action => {
+  if (typeof actions === 'string') {
+    actionsHTML = actions;
+  } else if (Array.isArray(actions) && actions.length > 0) {
+    const actionButtons = actions.map(action => {
       if (typeof action === 'string') {
         if (action === 'retry') {
           return `<button type="button" class="btn outline" data-message-action="retry">Retry</button>`;
@@ -110,6 +125,9 @@ export function message(options = {}) {
         return `<button type="button" class="ibtn" data-message-action="${escapeHTML(action)}" aria-label="${escapeHTML(action)}">${escapeHTML(action)}</button>`;
       }
       const icon = action.icon ? controlIcon(action.icon, 16) : '';
+      if (action.menu) {
+        return `<button type="button" class="ibtn" data-menu="${escapeHTML(action.menu)}" aria-label="${escapeHTML(action.label)}">${icon}</button>`;
+      }
       return `<button type="button" class="ibtn" data-message-action="${escapeHTML(action.action || action.label)}" aria-label="${escapeHTML(action.label)}">${icon}</button>`;
     }).join('');
     actionsHTML = `<div class="sx-row sx-message-actions">${actionButtons}</div>`;
@@ -126,7 +144,7 @@ export function message(options = {}) {
     }
   }
 
-  return `<div class="${classes}" data-sui-message id="${escapeHTML(id)}" data-message-id="${escapeHTML(id)}" ${extraAttrs.join(' ')}>${headerHTML}<div class="${bodyClass}">${bodyContent}</div>${statusHTML}${actionsHTML}</div>`;
+  return `<div class="${classes}" data-sui-message id="${escapeHTML(id)}" data-message-id="${escapeHTML(id)}" ${extraAttrs.join(' ')}>${headerHTML}<div class="${bodyClass}"${bodyAttrs}>${bodyContent}</div>${statusHTML}${actionsHTML}</div>`;
 }
 
 const instances = new WeakMap();
@@ -198,4 +216,10 @@ export function initMessage(element) {
 
   instances.set(element, controller);
   return controller;
+}
+
+
+export function message(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildMessage(...args), mode, ["bubble|sx-message-body|sx-message-content|sx-message-comment-body"]);
 }

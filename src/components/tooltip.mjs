@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { uid, escapeHTML } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 import { computePlacement } from './overlay-helpers.mjs';
@@ -8,18 +9,31 @@ import { computePlacement } from './overlay-helpers.mjs';
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function tooltip(options = {}) {
+function buildTooltip(options = {}) {
   const {
     id = uid(),
     content = 'Helpful information',
     placement = 'top',
-    trigger = null,
+    trigger: initialTrigger = null,
     delay = 150,
     attributes = '',
   } = options;
 
+  let trigger = initialTrigger;
   let triggerMarkup = '';
   if (trigger && typeof trigger === 'string') {
+    // An explicit Tooltip overrides an Icon Button's automatic tooltip rather
+    // than nesting two tooltip triggers around the same action.
+    if (trigger.startsWith('<span class="sx-tooltip-wrap"') && trigger.includes('data-sui-icon-button')) {
+      const button = trigger.match(/<button\b[\s\S]*?<\/button>/)?.[0];
+      const previousId = trigger.match(/<span id="([^"]+)" class="sx-tooltip"/)?.[1];
+      if (button) {
+        trigger = button.replace(/ data-sui-tooltip-trigger/g, '').replace(/ aria-describedby="([^"]*)"/, (_, ids) => {
+          const remaining = ids.split(/\s+/).filter(value => value !== previousId).join(' ');
+          return remaining ? ` aria-describedby="${remaining}"` : '';
+        });
+      }
+    }
     if (trigger.includes('aria-describedby')) {
       triggerMarkup = trigger.replace(/aria-describedby="([^"]*)"/, `aria-describedby="$1 ${escapeHTML(id)}" data-sui-tooltip-trigger`);
     } else {
@@ -44,12 +58,12 @@ const mounted = new WeakMap();
  * @param {HTMLElement} element
  * @returns {object} Tooltip controller
  */
-export function initTooltip(element) {
+export function initTooltip(element, options = {}) {
   if (mounted.has(element)) return mounted.get(element);
 
   const view = element.ownerDocument?.defaultView || globalThis;
-  const trigger = element.querySelector('[data-sui-tooltip-trigger], [data-sx-tooltip], [aria-describedby]');
-  const tip = element.querySelector('[role="tooltip"]');
+  const trigger = options.trigger || element.querySelector('[data-sui-tooltip-trigger], [data-sx-tooltip], [aria-describedby]');
+  const tip = options.tip || element.querySelector('[role="tooltip"]');
 
   if (!trigger || !tip) {
     throw new TypeError('Tooltip markup is incomplete');
@@ -93,6 +107,9 @@ export function initTooltip(element) {
 
   function doShow() {
     if (destroyed || isVisible) return;
+    if (options.fromLabel || element.hasAttribute?.('data-sui-tooltip-from-label')) {
+      tip.textContent = trigger.getAttribute('aria-label') || '';
+    }
     // Dismiss any other open tooltips
     const openTips = element.ownerDocument?.querySelectorAll?.('[role="tooltip"]:popover-open') || [];
     for (const other of openTips) {
@@ -151,8 +168,7 @@ export function initTooltip(element) {
 
   function onKeyDown(event) {
     if (event.key === 'Escape' && isVisible) {
-      event.preventDefault();
-      event.stopPropagation();
+      // A decorative tooltip must not swallow the enclosing dialog/menu's Escape.
       hide(true);
     }
   }
@@ -207,4 +223,42 @@ export function initTooltip(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+// Composite controls often need to keep the icon button as a direct child for
+// layout. Attach the same tooltip controller without introducing a wrapper.
+export function initIconButtonTooltip(button) {
+  const tip = button.ownerDocument.createElement('span');
+  tip.id = uid();
+  tip.className = 'sx-tooltip';
+  tip.setAttribute('role', 'tooltip');
+  tip.setAttribute('popover', 'manual');
+  tip.dataset.side = 'top';
+  tip.textContent = button.getAttribute('aria-label') || '';
+  // Keep the popup outside component header/text selectors while preserving scope.
+  const host = button.closest('.sui-root') || button.parentElement;
+  host.append(tip);
+  const describedBy = (button.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+  button.setAttribute('aria-describedby', [...describedBy, tip.id].join(' '));
+  const controller = initTooltip(button, { trigger: button, tip, fromLabel: true });
+  let destroyed = false;
+  return {
+    ...controller,
+    destroy() {
+      if (destroyed) return;
+      destroyed = true;
+      controller.destroy();
+      const remaining = (button.getAttribute('aria-describedby') || '').split(/\s+/).filter(id => id && id !== tip.id);
+      if (remaining.length) button.setAttribute('aria-describedby', remaining.join(' '));
+      else button.removeAttribute('aria-describedby');
+      tip.remove();
+    },
+  };
+}
+
+
+export function tooltip(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildTooltip(...args), mode, ["sx-tooltip"]);
 }

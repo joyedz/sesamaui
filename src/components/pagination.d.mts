@@ -1,4 +1,7 @@
+import type { Surface } from '../surface.d.mts';
 export interface PaginationOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   page?: number;
   pageSize?: number;
   totalItems?: number;

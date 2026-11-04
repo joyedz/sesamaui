@@ -6,6 +6,7 @@
   padding: var(--space-4);
   border-radius: var(--radius-md);
   background: var(--color-base);
+  background: color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);
   box-shadow: var(--shadow-ring);
   font-family: inherit;
   font-size: 13px;
@@ -47,6 +48,7 @@
 
 :where(.sui-root) .sx-toolbar-separator {
   background: var(--color-hairline);
+  background: color-mix(in srgb, var(--color-hairline) var(--sui-surface-opacity, 100%), transparent);
   flex-shrink: 0;
 }
 

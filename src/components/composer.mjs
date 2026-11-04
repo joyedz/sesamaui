@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML, uid } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 import { fileCard, initFileCard } from './file-card.mjs';
@@ -31,12 +32,12 @@ function formatFileSize(bytes) {
  * @param {Object} options
  * @returns {string} HTML string
  */
-export function composer(options = {}) {
+function buildComposer(options = {}) {
   const id = options.id || uid('composer');
   const placeholder = options.placeholder || 'Write a message or tag @flow';
   const value = options.value || '';
   const attachments = Array.isArray(options.attachments) ? options.attachments : [];
-  const rows = options.rows || 2;
+  const rows = options.rows || (options.compact ? 1 : 2);
   const showMic = options.showMic !== false;
   const showAttach = options.showAttach !== false;
 
@@ -45,15 +46,15 @@ export function composer(options = {}) {
   const isThinking = state === 'thinking';
 
   // Context options
-  const contextOptions = options.contextOptions || ['Base', 'feature/torque-420'];
-  const contextValue = options.contextValue || (typeof contextOptions[0] === 'string' ? contextOptions[0] : contextOptions[0]?.value || 'Base');
+  const contextOptions = options.contextOptions || ['sesama-ui / main', 'sesama-ui / feature/agent-workspace'];
+  const contextValue = options.contextValue || (typeof contextOptions[0] === 'string' ? contextOptions[0] : contextOptions[0]?.value || 'sesama-ui / main');
 
   // Model options
   const modelOptions = options.modelOptions || DEFAULT_MODELS;
   const isGrouped = Array.isArray(modelOptions) && modelOptions.length > 0 && Boolean(modelOptions[0].groups || modelOptions[0].options);
   const modelValue = options.modelValue || (isGrouped ? (modelOptions[0].options?.[0]?.value || modelOptions[0].options?.[0] || 'GPT-6.1 Sol') : (typeof modelOptions[0] === 'string' ? modelOptions[0] : modelOptions[0]?.value || 'GPT-6.1 Sol'));
 
-  const classes = ['composer', 'sx-composer', options.classes].filter(Boolean).join(' ');
+  const classes = ['composer', 'sx-composer', options.compact ? 'sx-composer-compact' : '', options.classes].filter(Boolean).join(' ');
 
   // Attachments markup
   let attachmentsHTML = '';
@@ -91,9 +92,10 @@ export function composer(options = {}) {
   }
 
   // Context select
-  const contextSelectHTML = select({
+  const contextSelectHTML = options.showContext === false ? '' : select({
     name: 'context',
-    ariaLabel: 'Choose context',
+    ariaLabel: 'Choose repository branch',
+    popupWidth: 'content',
     inline: true,
     icon: 'branch',
     value: contextValue,
@@ -104,6 +106,8 @@ export function composer(options = {}) {
   const modelSelectConfig = {
     name: 'model',
     ariaLabel: 'Choose model',
+    popupWidth: 'content',
+    popupAlign: 'end',
     inline: true,
     value: modelValue
   };
@@ -112,7 +116,7 @@ export function composer(options = {}) {
   } else {
     modelSelectConfig.options = modelOptions;
   }
-  const modelSelectHTML = `<div class="composer-model">${select(modelSelectConfig)}</div>`;
+  const modelSelectHTML = options.showModel === false ? '' : `<div class="composer-model">${select(modelSelectConfig)}</div>`;
 
   // Mic button
   const micButtonHTML = showMic
@@ -138,7 +142,7 @@ export function composer(options = {}) {
     }
   }
 
-  return `<div class="${classes}" data-sui-composer id="${escapeHTML(id)}" data-composer-id="${escapeHTML(id)}" data-state="${escapeHTML(state)}" ${extraAttrs.join(' ')}><div class="composer-attachments" data-composer-attachments ${attachments.length > 0 ? '' : 'hidden'}>${attachmentsHTML}</div><input type="file" data-composer-files multiple hidden><textarea rows="${rows}" data-composer-autoresize placeholder="${escapeHTML(placeholder)}" aria-label="Comment">${escapeHTML(value)}</textarea><div class="cbar sx-composer-bar">${attachButtonHTML}${contextSelectHTML}<span class="grow"></span>${modelSelectHTML}${micButtonHTML}${sendButtonHTML}</div></div>`;
+  return `<div class="${classes}" data-sui-composer id="${escapeHTML(id)}" data-composer-id="${escapeHTML(id)}" data-state="${escapeHTML(state)}" ${extraAttrs.join(' ')}><div class="composer-attachments" data-composer-attachments ${attachments.length > 0 ? '' : 'hidden'}>${attachmentsHTML}</div><input type="file" data-composer-files multiple hidden>${options.leading ? `<div class="sx-composer-leading">${options.leading}</div>` : ''}<textarea rows="${rows}" data-composer-autoresize placeholder="${escapeHTML(placeholder)}" aria-label="Comment">${escapeHTML(value)}</textarea><div class="cbar sx-composer-bar">${attachButtonHTML}${contextSelectHTML}<span class="grow"></span>${modelSelectHTML}${micButtonHTML}${sendButtonHTML}</div></div>`;
 }
 
 const instances = new WeakMap();
@@ -457,4 +461,10 @@ export function initComposer(element) {
 
   instances.set(element, controller);
   return controller;
+}
+
+
+export function composer(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildComposer(...args), mode, ["@root"]);
 }

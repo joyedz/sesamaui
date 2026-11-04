@@ -1,10 +1,12 @@
 /* Shared semantic tokens. No reset, fonts, or component imports. */
 :root, .sui-root {
---color-canvas:light-dark(#f6f6f3,#141413);--color-base:light-dark(#fdfdfb,#1d1d1b);--color-recessed:light-dark(#efefeb,#262624);
+--color-canvas:light-dark(#f6f6f3,#141413);--color-base:light-dark(#fdfdfb,#101010);--color-recessed:light-dark(#efefeb,#262624);
 --color-tint:light-dark(rgba(33,33,31,.05),rgba(255,255,255,.06));--color-fill:light-dark(#dfe1ea,#2e2e2c);--color-contrast:light-dark(#21211f,#f4f4f1);
+--color-tint-subtle:light-dark(#eeeeee,#222222);
 --text-default:light-dark(rgba(1,1,1,.81),rgba(255,255,255,.92));--text-subtle:light-dark(rgba(3,3,2,.62),rgba(255,255,255,.74));--text-placeholder:light-dark(rgba(6,6,6,.59),rgba(255,255,255,.58));
 --text-on-brand:#fff;--text-inverse:light-dark(#fff,#141413);
 --color-hairline:light-dark(rgba(0,0,0,.08),rgba(255,255,255,.16));--color-edge:light-dark(rgba(0,0,0,.08),rgba(255,255,255,.18));
+--color-overlay:rgba(33,33,31,.35);
 --color-drop:light-dark(rgba(0,0,0,.06),rgba(0,0,0,.4));--color-drop-lg:light-dark(rgba(0,0,0,.14),rgba(0,0,0,.5));--color-shine:light-dark(#fff,transparent);
 --color-brand:#1f3acb;--color-brand-hover:#395fe5;--color-brand-tint:light-dark(rgba(0,70,255,.04),rgba(80,120,255,.07));--color-brand-line:light-dark(#b5cbfd,#2f4590);
 --color-success:light-dark(#0f9912,#4cc455);--color-danger:light-dark(#d03a2f,#f06a5f);--color-neutral:light-dark(#c8c7c3,#92928a);
@@ -38,3 +40,45 @@
 @keyframes sx-status-pulse{50%{opacity:.45}}
 @keyframes sui-toast-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes toast-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Non-inheriting opacity prevents a blurred container from tinting child surfaces. */
+@property --sui-surface-opacity {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+:root, .sui-root {
+  --surface-opacity: 78%;
+  --surface-blur: 16px;
+  --surface-saturation: 140%;
+}
+
+/* Toast surfaces stay restrained in dark mode; status accents live on icons. */
+:root, .sui-root {
+--color-toast-neutral:light-dark(#21211f,#202020);
+--color-toast-informative:light-dark(#1f3acb,#171d32);
+--color-toast-success:light-dark(#0f9912,#14251b);
+--color-toast-warning:light-dark(#805200,#2b2417);
+--color-toast-error:light-dark(#d03a2f,#2c1a1a);
+--color-toast-text:light-dark(#fff,#f2f2ee);
+--color-toast-edge:light-dark(transparent,rgba(255,255,255,.12));
+--color-toast-icon-neutral:light-dark(#fff,#c6c6be);
+--color-toast-icon-informative:light-dark(#fff,#a3b8ff);
+--color-toast-icon-success:light-dark(#fff,#7edc91);
+--color-toast-icon-warning:light-dark(#fff,#efbc54);
+--color-toast-icon-error:light-dark(#fff,#ff9b91);
+}
+
+/* Initials stay readable on the matching tinted avatar background. */
+:root, .sui-root {
+  --color-avatar-blue: light-dark(#1f3acb, #adc0ff);
+  --color-avatar-blue-background: light-dark(#d3dcff, #253664);
+  --color-avatar-purple: light-dark(#7c1789, #dfa8e9);
+  --color-avatar-purple-background: light-dark(#f0d2f5, #462850);
+  --color-avatar-teal: light-dark(#006773, #8dd9e2);
+  --color-avatar-teal-background: light-dark(#bce4e9, #183f46);
+  --color-avatar-amber: light-dark(#864500, #f2be85);
+  --color-avatar-amber-background: light-dark(#f6d8b7, #4d341f);
+  --color-avatar-green: light-dark(#17652c, #99d6a8);
+  --color-avatar-green-background: light-dark(#c8e8cd, #23432d);
+}

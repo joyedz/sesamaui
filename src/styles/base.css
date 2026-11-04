@@ -1,4 +1,5 @@
 @import url("tokens.css");
+@import url("surface.css");
 
 /* Opt-in host baseline. Nothing resets the application's body, buttons or tables. */
 .sui-root {

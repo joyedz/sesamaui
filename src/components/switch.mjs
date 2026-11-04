@@ -1,12 +1,14 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { uid, escapeHTML } from './shared.mjs';
 
-export function switchControl(options = {}) {
+function buildSwitchControl(options = {}) {
   const opts = typeof options === 'string' ? { label: options } : options;
   const {
     id = uid(),
     name = '',
     value = 'on',
     label = '',
+    ariaLabel = '',
     description = '',
     checked = false,
     disabled = false,
@@ -26,6 +28,7 @@ export function switchControl(options = {}) {
     'role="switch"',
     'class="sw"',
     `aria-checked="${Boolean(checked)}"`,
+    (!label && ariaLabel) ? `aria-label="${escapeHTML(ariaLabel)}"` : '',
     disabled ? 'disabled' : '',
     required ? 'aria-required="true"' : '',
     description ? `aria-describedby="${descId}"` : '',
@@ -156,4 +159,10 @@ export function initSwitch(element) {
 
   mounted.set(btn, controller);
   return controller;
+}
+
+
+export function switchControl(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildSwitchControl(...args), mode, ["sw"]);
 }

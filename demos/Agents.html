@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sesama · Agents</title>
+  <link rel="stylesheet" href="../src/styles/components.css">
+  <link rel="stylesheet" href="../src/styles/blocks.css">
+  <link rel="stylesheet" href="../src/styles/fonts.css">
+  <link rel="stylesheet" href="ai-agent.css">
+  <link rel="stylesheet" href="shared/palette.css">
+</head>
+<body class="sui-root" data-page="agents">
+  <div class="agent-app">
+<main class="agent-main">
+      <header class="agent-header">
+        <div class="sx-row">
+          <span data-icon="chat"></span>
+          <strong id="agent-name" style="font-weight:500">Project brief summary</strong>
+        </div>
+      </header>
+      <div class="agent-chat sx-scroll-area" id="chat">
+        <div class="agent-thread" id="thread"></div>
+      </div>
+      <footer class="agent-compose">
+        <div class="agent-greeting" id="greeting" hidden>
+          <h1>Let’s think it through.</h1>
+        </div>
+        <div class="agent-compose-inner" id="compose"></div>
+      </footer>
+    </main>
+
+    <aside class="agent-detail" id="detail" hidden>
+      <div class="sx-row" style="justify-content:space-between">
+        <h2>Run details</h2>
+        <button class="ibtn" id="close-detail" aria-label="Close details"></button>
+      </div>
+      <dl>
+        <dt>Status</dt><dd>Complete</dd>
+        <dt>Agent</dt><dd>Research agent</dd>
+        <dt>Sources</dt><dd>3 sample documents</dd>
+        <dt>Duration</dt><dd>12 seconds</dd>
+      </dl>
+    </aside>
+  </div>
+
+  <script type="module" src="ai-agent.js"></script>
+</body>
+</html>

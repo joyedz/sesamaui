@@ -1,8 +1,17 @@
+import { applySurface, surfaceMode } from '../components/shared.mjs';
 import { escapeHTML, uid } from '../components/shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 import { tree, treeSection, initTree } from '../components/tree.mjs';
 import { select } from '../components/select.mjs';
 import { avatar } from '../components/avatar.mjs';
+
+const sidebarSymbol = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 363 315" fill="none" aria-hidden="true" focusable="false">
+<path d="M340.11 56.1444C377.218 114.629 336.221 207.139 248.542 262.77C160.863 318.401 59.7028 316.087 22.5951 257.602C-14.5126 199.117 26.4837 106.608 114.163 50.9768C201.842 -4.65419 303.002 -2.34058 340.11 56.1444Z" stroke-width="16" stroke="currentColor" />
+
+<path d="M336.242 86.4448C366.393 133.965 327.821 212.468 250.09 261.787C172.359 311.107 84.9037 312.565 54.753 265.045C24.6024 217.525 63.174 139.021 140.905 89.7023C218.636 40.3832 306.092 38.9248 336.242 86.4448Z" stroke-width="16" stroke="currentColor" />
+
+<path d="M328.923 120.549C351.713 156.469 317.903 218.761 253.406 259.684C188.909 300.606 118.149 304.661 95.3584 268.742C72.5681 232.822 106.378 170.53 170.875 129.608C235.372 88.6854 306.133 84.6298 328.923 120.549Z" stroke-width="16" stroke="currentColor" />
+</svg>`;
 
 const DEFAULT_WORKSPACES = [
   { label: 'Sesama workspace', icon: 'folder' },
@@ -16,9 +25,10 @@ const DEFAULT_WORKSPACES = [
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function workspaceSidebar(options = {}) {
+function buildWorkspaceSidebar(options = {}) {
   const {
     id = uid('sidebar'),
+    variant = 'default',
     brand = null,
     workspace = options.brand?.name || options.workspace || 'Sesama workspace',
     workspaces = DEFAULT_WORKSPACES,
@@ -26,6 +36,7 @@ export function workspaceSidebar(options = {}) {
     navigation = [],
     groups = [],
     projects = [],
+    projectsTitle = 'Projects',
     projectActions = '',
     profile = '',
     user = null,
@@ -36,9 +47,11 @@ export function workspaceSidebar(options = {}) {
     classes = '',
   } = options;
 
+  if (!['default', 'conversation', 'compact'].includes(variant)) throw new TypeError(`Invalid sidebar variant: ${variant}`);
   const classList = [
     'sb-sidebar',
     'sx-workspace-sidebar',
+    variant === 'conversation' ? 'sx-sidebar-conversation' : '',
     classes
   ].filter(Boolean).join(' ');
 
@@ -61,7 +74,7 @@ export function workspaceSidebar(options = {}) {
     selectorHTML = select({
       name: 'workspace',
       ariaLabel: 'Workspace',
-      inline: true,
+      size: 'lg',
       icon: curIcon,
       value: workspace,
       groups: [{ label: 'Your workspaces', options: allWorkspaces }],
@@ -88,7 +101,9 @@ export function workspaceSidebar(options = {}) {
 
   // Projects
   const projectsContent = Array.isArray(projects) ? tree(projects) : (projects || '');
-  const projSectionHTML = treeSection('Projects', projectsContent, typeof projectActions === 'object' ? projectActions : {});
+  const projSectionHTML = projectsTitle === '' && !projectActions
+    ? `<section class="sx-tree-section">${projectsContent}</section>`
+    : treeSection(projectsTitle, projectsContent, typeof projectActions === 'object' ? projectActions : {});
 
   // Profile
   let profileHTML = profile;
@@ -109,13 +124,17 @@ export function workspaceSidebar(options = {}) {
     }
   }
 
-  return `<aside class="${classList}" data-sui-workspace-sidebar id="${escapeHTML(id)}" ${extraAttrs.join(' ')}><div class="sb-sidebar-top">${brandHTML}${selectorHTML}<button type="button" class="ibtn" data-shell-toggle aria-expanded="true" aria-label="Hide sidebar">${controlIcon('panel-left', 16)}</button></div><nav class="sb-navigation sx-sidebar-nav" aria-label="Workspace navigation">${navHTML}${groupsHTML}</nav><div class="sb-projects sx-scroll-area"><button type="button" class="ibtn sb-projects-rail" aria-label="Projects">${controlIcon('kebab', 16)}</button>${projSectionHTML}</div>${profileHTML}</aside>`;
+  if (variant === 'compact') {
+    return `<aside class="${classList} sx-sidebar-compact" data-sui-workspace-sidebar data-sidebar-compact id="${escapeHTML(id)}" ${extraAttrs.join(' ')}><div class="sb-compact-brand" aria-hidden="true">${sidebarSymbol}</div><nav class="sb-navigation sx-sidebar-nav" aria-label="Workspace navigation">${navHTML}${groupsHTML}</nav><div class="sb-compact-footer">${profile || ''}</div></aside>`;
+  }
+
+  return `<aside class="${classList}" data-sui-workspace-sidebar id="${escapeHTML(id)}" ${extraAttrs.join(' ')}><div class="sb-sidebar-top">${brandHTML}${options.headerAction !== undefined ? options.headerAction : `<button type="button" class="ibtn" data-shell-toggle aria-expanded="true" aria-label="Hide sidebar"><span class="sb-sidebar-logo">${sidebarSymbol}</span><span class="sb-sidebar-toggle-icon">${controlIcon('panel-left', 16)}</span></button>`}${selectorHTML}</div><nav class="sb-navigation sx-sidebar-nav" aria-label="Workspace navigation">${navHTML}${groupsHTML}</nav><div class="sb-projects sx-scroll-area"><button type="button" class="ibtn sb-projects-rail" aria-label="${escapeHTML(projectsTitle)}">${controlIcon('kebab', 16)}</button>${projSectionHTML}</div>${profileHTML}</aside>`;
 }
 
 /**
  * Compatibility alias for Workspace Sidebar.
  */
-export function sidebar(options = {}) {
+function buildSidebar(options = {}) {
   return workspaceSidebar(options);
 }
 
@@ -132,7 +151,7 @@ export function initWorkspaceSidebar(element) {
   if (instances.has(element)) return instances.get(element);
 
   // Initialize tree controller if tree is present
-  const treeController = initTree(element);
+  const treeControllers = [...element.querySelectorAll('[data-sui-tree]')].map(root => initTree(root));
 
   function handleClick(e) {
     const item = e.target.closest('[data-tree-key]');
@@ -161,11 +180,22 @@ export function initWorkspaceSidebar(element) {
     element,
     destroy() {
       element.removeEventListener('click', handleClick);
-      treeController?.destroy();
+      treeControllers.forEach(controller => controller.destroy());
       instances.delete(element);
     }
   };
 
   instances.set(element, controller);
   return controller;
+}
+
+
+export function workspaceSidebar(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildWorkspaceSidebar(...args), mode, ["sb-sidebar"]);
+}
+
+export function sidebar(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildSidebar(...args), mode, ["sb-sidebar"]);
 }

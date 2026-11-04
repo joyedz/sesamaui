@@ -92,7 +92,7 @@ test('data builders escape text and headers', () => {
   assertSafe(tree([{label: TAG, icon: 'file', key: BREAKOUT}]));
   assertSafe(treeItem({id: BREAKOUT, label: TAG, icon: 'file-text'}));
   assertSafe(treeSection(TAG, ''));
-  assertSafe(listRow({title: TAG, description: TAG, name: BREAKOUT, value: TAG, href: BREAKOUT}));
+  assertSafe(listRow({title: TAG, titleBadge: TAG, description: TAG, name: BREAKOUT, value: TAG, href: BREAKOUT}));
   assertSafe(toolCall({name: TAG, input: TAG, output: TAG, error: TAG, duration: TAG}));
   assertSafe(agentRun({title: TAG, duration: TAG, steps: [
     {type: 'thinking', title: TAG, detail: TAG},

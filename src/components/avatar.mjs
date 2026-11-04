@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML } from './shared.mjs';
 
 const SIZE_PRESETS = {
@@ -6,13 +7,7 @@ const SIZE_PRESETS = {
   lg: 32,
 };
 
-const AUTO_TONES = [
-  'var(--color-brand)',
-  'var(--color-type-fn)',
-  'var(--color-type-tc)',
-  'var(--color-type-sys)',
-  'var(--color-success)',
-];
+const AUTO_TONES = ['blue', 'purple', 'teal', 'amber', 'green'];
 
 function deriveInitials(name) {
   if (!name) return 'JL';
@@ -36,7 +31,7 @@ function resolveSize(size) {
   throw new TypeError(`Invalid avatar size preset: ${size}`);
 }
 
-export function avatar(options = {}) {
+function buildAvatar(options = {}) {
   const opts = typeof options === 'string' ? { initials: options } : options;
   const {
     name = '',
@@ -69,8 +64,8 @@ export function avatar(options = {}) {
   if (colorMode === 'auto') {
     const hash = [...(name || 'Jordan Lee')].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 0);
     const chosen = AUTO_TONES[hash % AUTO_TONES.length];
-    styleParts.push(`background:color-mix(in srgb,${chosen} 14%,var(--color-base))`);
-    styleParts.push(`color:${chosen}`);
+    styleParts.push(`--avatar-palette-background:var(--color-avatar-${chosen}-background)`);
+    styleParts.push(`--avatar-palette-foreground:var(--color-avatar-${chosen})`);
   } else if (colorMode) {
     styleParts.push(`background:color-mix(in srgb,${escapeHTML(colorMode)} 14%,var(--color-base))`);
     styleParts.push(`color:${escapeHTML(colorMode)}`);
@@ -162,4 +157,10 @@ export function initAvatar(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function avatar(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildAvatar(...args), mode, ["@root"]);
 }

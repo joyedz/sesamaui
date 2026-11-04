@@ -15,5 +15,6 @@ Thumbs.db
 .agents/
 .*-qa.*
 *.log
+output/
 # Original local reference snapshot, not a second public catalog.
 design-system (1).html

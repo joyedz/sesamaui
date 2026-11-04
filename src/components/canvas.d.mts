@@ -1,9 +1,12 @@
+import type { Surface } from '../surface.d.mts';
 export interface CanvasPan {
   x: number;
   y: number;
 }
 
 export interface CanvasOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   toolbar?: boolean | string;
   content?: string;

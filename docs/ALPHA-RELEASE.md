@@ -89,7 +89,7 @@ Importable from `sesama-ui/blocks` or root `sesama-ui`:
   - `activityFeed`: Chronological audit logs and event streams.
   - `chartSection`: Quantitative visualization wrapper with responsive SVG charts and filter slots.
 - **Domain Recipes**:
-  - `dashboardOverviewRecipe`, `revenueChartRecipe`, `dataWorkspaceRecipe`, `requirementGroupRecipe`, `resourceListRecipe`, `agentCardRecipe`, `createSkillDialogRecipe`, `deleteResourceRecipe`.
+  - `agentCardRecipe`.
 
 ---
 

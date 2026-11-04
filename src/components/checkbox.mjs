@@ -1,6 +1,7 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { uid, escapeHTML } from './shared.mjs';
 
-export function checkbox(options = {}) {
+function buildCheckbox(options = {}) {
   const opts = typeof options === 'string' ? { label: options } : options;
   const {
     id = uid(),
@@ -153,4 +154,10 @@ export function initCheckbox(element) {
 
   mounted.set(input, controller);
   return controller;
+}
+
+
+export function checkbox(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildCheckbox(...args), mode, ["@input"]);
 }

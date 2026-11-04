@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { uid, escapeHTML } from './shared.mjs';
 import { button } from './button.mjs';
 import { positionOverlay, createDismissManager } from './overlay-helpers.mjs';
@@ -8,15 +9,18 @@ import { positionOverlay, createDismissManager } from './overlay-helpers.mjs';
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function popover(options = {}) {
+function buildPopover(options = {}) {
   const {
     id = uid(),
     trigger = 'Open',
     content = '',
     placement = 'bottom',
+    align = 'start',
     ariaLabel = 'Dialog',
     attributes = '',
   } = options;
+
+  if (!['start', 'center', 'end'].includes(align)) throw new TypeError('Invalid popover alignment');
 
   let triggerMarkup = '';
   if (typeof trigger === 'string') {
@@ -31,7 +35,7 @@ export function popover(options = {}) {
     triggerMarkup = button({ label, variant, icon, attributes: triggerAttrs, ...rest });
   }
 
-  return `<div data-sui-popover data-placement="${escapeHTML(placement)}" class="sx-popover-wrapper"${attributes ? ` ${attributes}` : ''}>${triggerMarkup}<div id="${escapeHTML(id)}" class="sx-popup sx-popover-panel" popover="manual" data-sx-popup role="dialog" aria-label="${escapeHTML(ariaLabel)}" data-sui-popover-content>${content}</div></div>`;
+  return `<div data-sui-popover data-placement="${escapeHTML(placement)}" data-align="${escapeHTML(align)}" class="sx-popover-wrapper"${attributes ? ` ${attributes}` : ''}>${triggerMarkup}<div id="${escapeHTML(id)}" class="sx-popup sx-popover-panel" popover="manual" data-sx-popup role="dialog" aria-label="${escapeHTML(ariaLabel)}" data-sui-popover-content>${content}</div></div>`;
 }
 
 const mounted = new WeakMap();
@@ -48,13 +52,14 @@ export function initPopover(element) {
 
   const view = element.ownerDocument?.defaultView || globalThis;
   const trigger = element.querySelector('[data-sui-popover-trigger], [popovertarget]');
-  const popup = element.querySelector('[data-sui-popover-content], [popover]');
+  const popup = element.querySelector('[data-sui-popover-content]') || element.querySelector('[popover]');
 
   if (!trigger || !popup) {
     throw new TypeError('Popover markup is incomplete');
   }
 
   const placement = element.dataset.placement || popup.dataset.placement || 'bottom';
+  const align = element.dataset.align || 'start';
   let isOpen = false;
   let destroyed = false;
 
@@ -65,7 +70,7 @@ export function initPopover(element) {
       close(reason === 'escape');
     },
     onReposition: () => {
-      if (isOpen) positionOverlay(trigger, popup, placement);
+      if (isOpen) positionOverlay(trigger, popup, placement, { align });
     },
   });
 
@@ -74,7 +79,7 @@ export function initPopover(element) {
     isOpen = true;
     trigger.setAttribute('aria-expanded', 'true');
     popup.showPopover();
-    positionOverlay(trigger, popup, placement);
+    positionOverlay(trigger, popup, placement, { align });
     dismissManager.bind();
 
     element.dispatchEvent(new view.CustomEvent('sui:popover:open', {
@@ -130,4 +135,10 @@ export function initPopover(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function popover(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildPopover(...args), mode, ["sx-popover-panel"]);
 }

@@ -1,9 +1,16 @@
 import {
   appShell,
+  pageLayout,
+  activityFeed,
+  badge,
+  tabs,
+  collapsible,
+  emptyState,
   workspaceSidebar,
   pageHeader,
   dataSection,
   table,
+  pagination,
   select,
   inputField,
   button,
@@ -14,13 +21,24 @@ import {
   listRow,
   agentRun,
   composer,
+  modal,
+  input,
   initModal,
   showToast,
   controlIcon,
+  runeIcon,
   escapeHTML,
   mount
 } from '../src/index.mjs';
+import { readState, writeState, preserveSidebar } from './shared/state.mjs';
+preserveSidebar('issue-workspace');
+const savedIssueState = readState('issue-workspace');
+import { demoCategories, demoRoutes } from './shared/pages.mjs';
 import { issueSeeds } from './shared/data.mjs';
+import { createReferencePages } from './shared/issue-reference-pages.mjs';
+const referencePages = createReferencePages();
+const currentUser = 'Nils Eller';
+let myIssuesTab = 'assigned';
 
 const esc = escapeHTML;
 
@@ -41,17 +59,50 @@ const issues = issueSeeds.map((row, i) => ({
   agentDone: false
 }));
 
+const extraTopics = ['Improve keyboard shortcuts', 'Fix notification badge', 'Refine empty states', 'Optimize search results', 'Update API validation', 'Improve mobile navigation', 'Audit focus indicators', 'Fix attachment preview', 'Document loading states', 'Reduce layout shifts'];
+for (let index = issues.length; index < 64; index++) {
+  const base = issues[index % issueSeeds.length];
+  issues.push({ ...base, id: 'SES-' + (248 + index), title: extraTopics[index % extraTopics.length] + ' · ' + (Math.floor(index / extraTopics.length) + 1), favorite: false, comments: [] });
+}
+let listPage = 1, listPageSize = 10;
+issues.forEach((issue, index) => { issue.creator = index % 3 ? 'Amelia Park' : currentUser; issue.subscribers = index % 2 ? [currentUser] : []; if (index % 4 === 0) issue.assignee = currentUser; });
+const personalSamples = [
+ ['SUI-1001','Separate initial workspace load from background refresh','In Review','iOS','201','Oct 9'],
+ ['SUI-1002','Show refresh status without blocking navigation','In Review','Reliability','202','Oct 9'],
+ ['SUI-1003','Expose loading state to workspace panels','In Review','Bug · Reliability','203','Oct 8'],
+ ['SUI-1004','Keep activity timestamps stable while streaming','In Progress','Performance','204','Oct 6'],
+ ['SUI-1005','Recover gracefully when an integration disconnects','In Progress','Maps','205','Oct 2'],
+ ['SUI-1006','Load sidebar resources before optional previews','In Progress','Maps','','Oct 7'],
+ ['SUI-1007','Deduplicate comments after a network retry','In Progress','Bug','','Oct 5'],
+ ['SUI-1008','Reduce rerenders in the agent directory','Todo','Maps','','Oct 10'],
+ ['SUI-1009','Remove legacy workspace event handlers','Todo','API','','Oct 9'],
+ ['SUI-1010','Parallelize component accessibility checks','Todo','Performance','','Oct 9'],
+ ['SUI-1011','Stabilize touch interaction smoke tests','Todo','Reliability','','Oct 4']
+];
+issues.forEach(issue => { if (issue.assignee === currentUser) issue.assignee = 'Amelia Park'; });
+for (const [id,title,status,label,pr,updated] of personalSamples) issues.push({ ...issues[0], id,title,status,label,pr,updated,assignee:currentUser,creator:currentUser,subscribers:[currentUser],favorite:false,comments:[],description:'Review '+title.toLowerCase()+' and preserve the existing behavior.',agentDone:false });
+issues[4].status = 'In Review'; issues[8].status = 'In Review';
 let selected = issues[0];
-let view = 'detail';
+let view = 'inbox';
 let search = '';
 let statusFilter = 'All statuses';
-let activeNav = 'favorite-248';
+let activeNav = 'inbox';
+let inboxFilter = 'all';
+const notifications = issues.slice(0, 4).map((issue, index) => ({ id: issue.id, issue, read: index > 1, snoozed: false, text: ['Amelia assigned this issue to you', 'Sesama agent finished a review', 'Noah mentioned you in a comment', 'Priya updated the issue priority'][index], time: ['5m', '8m', '4h', '1d'][index] }));
+let activeNotification = notifications[0].id;
 let agentTimer;
+let pageSession;
 
 const statusIcon = status => statusDot({
   tone: status === 'Done' ? 'success' : status === 'In Progress' ? 'informative' : status === 'Todo' ? 'warning' : 'neutral',
   label: status
 });
+
+function workflowStatusIcon(status) {
+  const color = status === 'In Review' || status === 'Done' ? 'var(--color-success)' : status === 'In Progress' ? 'var(--color-warning)' : 'var(--text-placeholder)';
+  const fill = status === 'In Review' ? '<path d="M7 7V3.5A3.5 3.5 0 1 1 3.5 7Z" fill="currentColor"/>' : status === 'In Progress' ? '<path d="M7 3.5A3.5 3.5 0 0 1 7 10.5Z" fill="currentColor"/>' : status === 'Done' ? '<path d="M4 7l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/>' : '';
+  return '<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" style="color:'+color+';flex:none"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"'+(status==='Backlog'?' stroke-dasharray="2 2"':'')+'/>'+fill+'</svg>';
+}
 
 const initials = name => name.split(' ').map(n => n[0]).join('');
 const avatar = name => avatarBuilder({ name, initials: initials(name), size: 24 });
@@ -60,7 +111,8 @@ function sidebar() {
   return workspaceSidebar({
     workspace: 'Sesama workspace',
     navigation: [
-      { id: 'inbox', key: 'inbox', label: 'Inbox', icon: 'bell', selected: activeNav === 'inbox' },
+      { id: 'inbox', key: 'inbox', label: 'My inbox', icon: runeIcon('inbox'), selected: activeNav === 'inbox' },
+      { id: 'reviews', key: 'reviews', label: 'Reviews', icon: 'code', selected: activeNav === 'reviews' },
       { id: 'my-issues', key: 'my-issues', label: 'My issues', icon: 'circle-user', selected: activeNav === 'my-issues' },
       { id: 'all-issues', key: 'all-issues', label: 'All issues', icon: 'file-text', selected: activeNav === 'all-issues' }
     ],
@@ -68,6 +120,7 @@ function sidebar() {
       {
         title: 'Workspace',
         items: [
+          { id: 'initiatives', key: 'initiatives', label: 'Initiatives', icon: runeIcon('flag'), selected: activeNav === 'initiatives' },
           { id: 'projects', key: 'projects', label: 'Projects', icon: 'folder', selected: activeNav === 'projects' },
           { id: 'cycles', key: 'cycles', label: 'Cycles', icon: 'activity', selected: activeNav === 'cycles' },
           { id: 'views', key: 'views', label: 'Views', icon: 'grid-3x3', selected: activeNav === 'views' }
@@ -103,9 +156,8 @@ function sidebar() {
 function toolbar() {
   return `
     <div class="iw-toolbar">
-      ${iconButton({ icon: 'plus', attributes: 'data-iw-new', accessibleLabel: 'New issue' })}
       ${view === 'detail' ? `
-        ${iconButton({ icon: 'star', classes: selected.favorite ? 'on' : '', attributes: `data-iw-favorite aria-pressed="${selected.favorite}"`, accessibleLabel: 'Toggle favorite' })}
+        ${iconButton({ icon: 'star', variant: 'favorite', pressed: selected.favorite, attributes: 'data-iw-favorite', accessibleLabel: 'Toggle favorite' })}
         ${iconButton({ icon: 'copy', attributes: 'data-iw-copy', accessibleLabel: 'Copy issue ID' })}
         <span class="iw-count">${issues.indexOf(selected) + 1} / ${issues.length}</span>
         ${iconButton({ icon: 'chevron-left', attributes: 'data-iw-prev', accessibleLabel: 'Previous issue' })}
@@ -122,7 +174,7 @@ function propertyFields() {
         name: 'iw-status',
         label: 'Status',
         value: selected.status,
-        options: ['Backlog', 'Todo', 'In Progress', 'Done']
+        options: ['Backlog', 'Todo', 'In Progress', 'In Review', 'Done']
       })}
       ${select({
         name: 'iw-priority',
@@ -135,7 +187,7 @@ function propertyFields() {
         label: 'Assignee',
         icon: 'circle-user',
         value: selected.assignee,
-        options: ['Amelia Park', 'Noah Ibarra', 'Priya Desai', 'Marcus Chen']
+        options: ['Amelia Park', 'Noah Ibarra', 'Priya Desai', 'Marcus Chen', 'Nils Eller']
       })}
     </div>
   `;
@@ -166,7 +218,7 @@ function properties() {
       <section>
         <h2>Project</h2>
         ${listRow({ title: selected.project, leading: controlIcon('folder', 14) })}
-        <p class="iw-detail-note">${selected.cycle} · Oct 19 – Nov 1</p>
+        <p class="iw-detail-note" style="margin-top:var(--space-12)">${selected.cycle} · Oct 19 – Nov 1</p>
       </section>
       <section>
         <h2>Agent</h2>
@@ -202,7 +254,7 @@ function detail() {
         ${propertyFields()}
       </details>
       <div class="iw-issue-actions">
-        <button class="btn secondary" data-iw-delegate>${controlIcon('sparkles', 14)} Delegate to agent</button>
+        ${button({ label: 'Delegate to agent', variant: 'secondary', icon: 'sparkles', attributes: 'data-iw-delegate' })}
         ${linkButton({ label: 'Copy issue ID', icon: 'copy', attributes: 'data-iw-copy' })}
       </div>
       <section aria-labelledby="activity-title">
@@ -213,7 +265,7 @@ function detail() {
         <div class="iw-activity">
           <div class="iw-event">
             ${controlIcon('plus', 14)}
-            <div><strong>Amelia</strong> created this issue <time>2 hours ago</time></div>
+            <div><strong>${esc(selected.creator || currentUser)}</strong> created this issue <time>2 hours ago</time></div>
           </div>
           <div class="iw-event">
             ${controlIcon('grid-3x3', 14)}
@@ -233,7 +285,7 @@ function detail() {
               <p class="iw-comment-body">I’ll check the interaction states. We should cover keyboard navigation and loading as part of this.</p>
             </div>
           </div>
-          <div class="iw-agent-update">
+          ${selected.id === 'SES-248' || selected.agentDone ? `<div class="iw-agent-update">
             <div class="iw-agent-update-head">
               ${controlIcon('sparkles', 16)}
               <span>Sesama agent</span>
@@ -241,7 +293,7 @@ function detail() {
             </div>
             ${agentRun({ title: 'Reviewed the implementation', state: 'completed', duration: '12s', steps: agentSteps() })}
             <p>Found a clear path forward. Keep the initial render independent from the background refresh.</p>
-          </div>
+          </div>` : ''}
           ${selected.comments.map(c => `
             <div class="iw-comment">
               ${avatar('Nils Eller')}
@@ -264,25 +316,28 @@ function list() {
   const rows = issues.filter(issue =>
     (issue.title + ' ' + issue.id).toLowerCase().includes(search.toLowerCase()) &&
     (statusFilter === 'All statuses' || issue.status === statusFilter) &&
-    (activeNav !== 'my-issues' || issue.assignee === 'Amelia Park')
+    (activeNav !== 'my-issues' || (myIssuesTab === 'assigned' ? issue.assignee === currentUser : myIssuesTab === 'created' ? issue.creator === currentUser : myIssuesTab === 'subscribed' ? issue.subscribers.includes(currentUser) : issue.comments.length > 0 || issue.creator === currentUser))
   );
 
+  listPage = Math.min(listPage, Math.max(1, Math.ceil(rows.length / listPageSize)));
+  const pageRows = rows.slice((listPage - 1) * listPageSize, listPage * listPageSize);
+  if (activeNav === 'my-issues') return pageLayout('<div class="iw-reference-stack"><div class="iw-personal-toolbar">' + tabs({ id: 'iw-my-issues-tabs', variant: 'pill', activeTabId: myIssuesTab, tabs: [{id:'assigned',label:'Assigned'},{id:'created',label:'Created'},{id:'subscribed',label:'Subscribed'},{id:'activity',label:'Activity'}] }) + '<div class="sx-row">' + iconButton({icon:'filter',accessibleLabel:'Filter issues',attributes:'data-iw-my-filter'}) + iconButton({icon:'fields',accessibleLabel:'Display options',attributes:'data-iw-my-display'}) + iconButton({icon:'activity',accessibleLabel:'Insights',attributes:'data-iw-my-insights'}) + '</div></div>' + ['In Review','In Progress','Todo','Backlog','Done'].map(status => {
+    const group = rows.filter(issue => issue.status === status);
+    return group.length ? collapsible({id:'iw-group-'+status.replaceAll(' ','-'),open:true,trigger:'<span class="sx-row">'+workflowStatusIcon(status)+'<span>'+esc(status)+'</span>'+'<span class="sx-help">'+group.length+'</span></span>',content:group.map(issue=>listRow({variant:'navigation',appearance:'plain',title:issue.id+'  '+issue.title,leading:workflowStatusIcon(status),trailing:'<span class="iw-personal-meta">'+(issue.pr?'<span class="sx-help">#'+esc(issue.pr)+'</span>':'')+badge({label:issue.label})+avatar(issue.assignee)+'<span class="sx-help">'+esc(issue.updated||'Today')+'</span></span>',href:'#issue-'+issue.id,attributes:'data-iw-open="'+issue.id+'"'})).join('')}) : '';
+  }).join('') + (rows.length ? '' : emptyState({title:'No issues',description:'No issues in this view.',icon:'file-text'})) + '</div>', {variant:'data'});
   return `
     <div class="iw-list-layout">
       <div class="iw-list-toolbar">
-        <label class="field">
-          ${controlIcon('search', 16)}
-          <input aria-label="Search issues" placeholder="Search issues…" data-iw-search value="${esc(search)}">
-        </label>
+        ${input({ id: 'iw-search', type: 'search', ariaLabel: 'Search issues', placeholder: 'Search issues…', value: search, clearable: true })}
         <div class="sx-row">
           ${select({
             name: 'iw-filter',
             label: 'Status filter',
             hideLabel: true,
             value: statusFilter,
-            options: ['All statuses', 'Backlog', 'Todo', 'In Progress', 'Done']
+            options: ['All statuses', 'Backlog', 'Todo', 'In Progress', 'In Review', 'Done']
           })}
-          <button class="btn primary" data-iw-new>${controlIcon('plus', 14)} New issue</button>
+          ${button({ label: 'New issue', variant: 'primary', icon: 'plus', attributes: 'data-iw-new' })}
         </div>
       </div>
       ${dataSection({
@@ -290,7 +345,7 @@ function list() {
         data: table({
           label: 'Issues',
           rowAction: 'open-issue',
-          rows,
+          rows: pageRows,
           columns: [
             { key: 'id', header: 'ID' },
             { key: 'title', header: 'Title' },
@@ -300,26 +355,47 @@ function list() {
           ],
           minWidth: 680
         }),
-        footer: ''
+        pagination: pagination({ page: listPage, pageSize: listPageSize, totalItems: rows.length, pageSizeOptions: [10, 20, 50], ariaLabel: 'Issue pages' })
       })}
-      <p class="sx-help">${rows.length} issues</p>
     </div>
   `;
 }
 
+function inbox() {
+  const visible = notifications.filter(item => inboxFilter === 'snoozed' ? item.snoozed : !item.snoozed && (inboxFilter !== 'unread' || !item.read));
+  const current = visible.find(item => item.id === activeNotification);
+  if (current) selected = current.issue;
+  const rows = visible.map(item => '<div class="iw-inbox-item" data-selected="' + (item.id === activeNotification) + '">' + listRow({
+    variant: 'navigation', appearance: 'plain', title: item.issue.id + ' · ' + item.issue.title, description: item.text,
+    leading: avatarBuilder({ name: item.issue.assignee, size: 32, color: 'auto' }),
+    trailing: '<span class="iw-inbox-meta">' + (!item.read ? statusDot({ tone: 'informative', size: 6 }) : '') + '<span class="sx-help">' + item.time + '</span></span>',
+    href: '#inbox-' + item.id, attributes: 'data-iw-notification="' + item.id + '"' + (item.id === activeNotification ? ' aria-current="true"' : '')
+  }) + '</div>').join('');
+  const preview = current ? pageHeader({ title: selected.id + ' · ' + selected.title, icon: 'file-text', actions:
+    iconButton({icon:'star',variant:'favorite',pressed:selected.favorite,accessibleLabel:'Toggle favorite',attributes:'data-iw-favorite'}) +
+    iconButton({icon:current.read?runeIcon('mail'):'check',accessibleLabel:current.read?'Mark unread':'Mark read',attributes:'data-iw-inbox-read'}) +
+    iconButton({icon:'clock',accessibleLabel:current.snoozed?'Move to inbox':'Snooze',attributes:'data-iw-inbox-snooze'})
+  }) + detail() : '<div class="iw-inbox-empty">' + emptyState({title:visible.length?'Select a notification':'You’re all caught up',description:visible.length?'Choose an update to review its issue.':'No notifications in this view.',icon:runeIcon('inbox')}) + '</div>';
+  return '<div class="iw-inbox-grid"><section class="iw-inbox-list" aria-label="Inbox notifications">' + tabs({id:'iw-inbox-tabs',variant:'pill',activeTabId:inboxFilter,tabs:[{id:'all',label:'All'},{id:'unread',label:'Unread'},{id:'snoozed',label:'Snoozed'}]}) + '<div class="iw-inbox-items">' + (rows || emptyState({title:'No notifications',icon:runeIcon('inbox'),compact:true})) + '</div></section><section class="iw-inbox-preview" aria-label="Issue preview">' + preview + '</section></div>';
+}
+
 function render() {
+  saveIssueState();
+  const collapsed = document.querySelector('[data-sui-app-shell]')?.classList.contains('is-collapsed') || false;
+  pageSession?.destroy();
   document.getElementById('issue-app').innerHTML = appShell({
+    collapsed,
     sidebar: sidebar(),
     header: pageHeader({
-      title: view === 'detail' ? selected.id : activeNav === 'my-issues' ? 'My issues' : 'Issues',
-      icon: 'file-text',
+      title: ['reviews','initiatives','projects'].includes(view) ? ({reviews:'Reviews',initiatives:'Initiatives',projects:'Projects'})[view] : view === 'inbox' ? 'My inbox' : view === 'detail' ? selected.id : activeNav === 'my-issues' ? 'My issues' : 'Issues',
+      icon: view === 'inbox' ? runeIcon('inbox') : 'file-text',
       actions: toolbar()
     }),
-    content: view === 'detail' ? detail() : list(),
+    content: ['reviews','initiatives','projects'].includes(view) ? referencePages.render(view) : view === 'inbox' ? inbox() : view === 'detail' ? detail() : list(),
     ...(view === 'detail' ? { detail: properties() } : {})
   });
 
-  mount(document.getElementById('issue-app'));
+  pageSession = mount(document.getElementById('issue-app'));
 
   const input = document.querySelector('.iw-comment-form textarea');
   if (input) {
@@ -331,33 +407,25 @@ function render() {
 function openIssue(issue) {
   if (!issue) return;
   selected = issue;
+  history.pushState(null, '', '?issue=' + encodeURIComponent(issue.id));
   view = 'detail';
   activeNav = 'favorite-' + issue.id.slice(4);
   render();
 }
 
 function newIssue() {
-  const dialog = document.createElement('dialog');
-  dialog.className = 'ds-modal';
-  dialog.dataset.size = 'lg';
-  dialog.innerHTML = `
-    <div class="sx-modal-header">
-      <h2>New issue</h2>
-      ${iconButton({ icon: 'x', classes: 'sx-modal-close', attributes: 'data-modal-close', accessibleLabel: 'Close dialog' })}
-    </div>
-    <form class="iw-new-form">
-      ${inputField({ id: 'iw-new-title', label: 'Title', type: 'text', name: 'title', placeholder: 'What needs to be done?', required: true, errorSlot: true })}
-      ${inputField({ id: 'iw-new-description', label: 'Description', type: 'text', name: 'description', placeholder: 'Add a little context…' })}
-      <div class="actions">
-        <button type="button" class="btn secondary" data-modal-close>Cancel</button>
-        <button class="btn primary" type="submit">Create issue</button>
-      </div>
-    </form>
-  `;
-  dialog.setAttribute('aria-label', 'Create an issue');
+  const template = document.createElement('template');
+  template.innerHTML = modal({ title: 'New issue', size: 'lg', content: '<form id="iw-create-form" class="iw-new-form">' +
+    inputField({ id: 'iw-new-title', label: 'Title', name: 'title', placeholder: 'What needs to be done?', required: true, errorSlot: true }) +
+    inputField({ id: 'iw-new-description', label: 'Description', name: 'description', placeholder: 'Add a little context…' }) + '</form>',
+    actions: button({ label: 'Cancel', variant: 'secondary', attributes: 'data-sui-modal-close' }) + button({ label: 'Create issue', variant: 'primary', type: 'submit', attributes: 'form="iw-create-form"' })
+  });
+  const dialog = template.content.firstElementChild;
+  dialog.querySelector('[name=title]').setAttribute('autofocus', '');
   document.body.append(dialog);
 
   const modalInstance = initModal(dialog);
+  const dialogSession = mount(dialog);
 
   dialog.querySelector('form').addEventListener('submit', event => {
     event.preventDefault();
@@ -383,7 +451,7 @@ function newIssue() {
       cycle: 'Cycle 24',
       label: 'Feature',
       comments: [],
-      favorite: false
+      favorite: false, creator: currentUser, subscribers: [currentUser]
     };
     issues.push(issue);
     modalInstance.close();
@@ -392,12 +460,38 @@ function newIssue() {
   });
 
   dialog.addEventListener('close', () => {
+    dialogSession.destroy();
     modalInstance.destroy();
     dialog.remove();
   }, { once: true });
 
   modalInstance.open(document.activeElement);
 }
+
+const issueRoutes = new Set(demoCategories.find(category => category.id === 'issue-workspace').pages.map(page => page.id));
+const initialIssuePage = document.body.dataset.page || 'inbox';
+activeNav = initialIssuePage;
+view = ['inbox', 'reviews'].includes(activeNav) ? activeNav : 'list';
+if (['assigned','created','subscribed','activity'].includes(savedIssueState.myIssuesTab)) myIssuesTab = savedIssueState.myIssuesTab;
+if (['all','unread','snoozed'].includes(savedIssueState.inboxFilter)) inboxFilter = savedIssueState.inboxFilter;
+if (typeof savedIssueState.search === 'string') search = savedIssueState.search;
+if (['All statuses','Backlog','Todo','In Progress','In Review','Done'].includes(savedIssueState.statusFilter)) statusFilter = savedIssueState.statusFilter;
+if ([10,25,50].includes(savedIssueState.listPageSize)) listPageSize = savedIssueState.listPageSize;
+if (Number.isInteger(savedIssueState.listPage) && savedIssueState.listPage > 0) listPage = savedIssueState.listPage;
+const selectedId = new URLSearchParams(location.search).get('issue');
+if (selectedId && issues.some(issue => issue.id === selectedId)) { selected = issues.find(issue => issue.id === selectedId); view = 'detail'; }
+document.addEventListener('click', event => {
+  const key = event.target.closest('[data-tree-key]')?.dataset.treeKey;
+  if (issueRoutes.has(key) && key === initialIssuePage && location.search) history.pushState(null, '', location.pathname);
+  if (issueRoutes.has(key) && key !== initialIssuePage) {
+    event.preventDefault(); event.stopImmediatePropagation();
+    saveIssueState(); location.href = demoRoutes[key];
+  }
+}, true);
+function saveIssueState() {
+  writeState('issue-workspace', { myIssuesTab, inboxFilter, search, statusFilter, listPage, listPageSize });
+}
+window.addEventListener('pagehide', saveIssueState);
 
 render();
 
@@ -408,11 +502,12 @@ document.addEventListener('sesama:row-action', event => {
 });
 
 document.addEventListener('input', event => {
-  if (event.target.matches('[data-iw-search]')) {
+  if (event.target.matches('#iw-search')) {
     const position = event.target.selectionStart;
     search = event.target.value;
+    listPage = 1;
     render();
-    const next = document.querySelector('[data-iw-search]');
+    const next = document.querySelector('#iw-search');
     if (next) {
       next.focus({ preventScroll: true });
       next.setSelectionRange(position, position);
@@ -421,9 +516,10 @@ document.addEventListener('input', event => {
 });
 
 document.addEventListener('sui:change', event => {
-  if (event.detail?.name?.startsWith('iw-')) {
+  if (event.detail?.name?.startsWith('iw-') && event.detail.name !== 'iw-project-initiative') {
     if (event.detail.name === 'iw-filter') {
       statusFilter = event.detail.value;
+      listPage = 1;
       render();
       return;
     }
@@ -435,23 +531,6 @@ document.addEventListener('sui:change', event => {
 
 document.addEventListener('click', event => {
   const t = event.target;
-
-  const option = t.closest('[data-select-value]');
-  if (option) {
-    const input = option.closest('[data-select-demo], [data-sui-select]')?.querySelector('input[type=hidden], select');
-    if (input?.name?.startsWith('iw-')) {
-      setTimeout(() => {
-        if (input.name === 'iw-filter') {
-          statusFilter = input.value;
-          render();
-          return;
-        }
-        const key = input.name.slice(3);
-        selected[key] = input.value;
-        showToast('Issue updated.', 'success');
-      }, 0);
-    }
-  }
 
   if (t.closest('[data-iw-new]')) newIssue();
   if (t.closest('[data-iw-favorite]')) {
@@ -491,26 +570,70 @@ document.addEventListener('click', event => {
       return;
     }
     if (key === 'inbox') {
-      showToast('You’re all caught up.');
+      activeNav = 'inbox'; view = 'inbox'; render();
       return;
     }
+    if (['reviews','initiatives','projects'].includes(key)) { activeNav = key; view = key; render(); return; }
     activeNav = key;
+    listPage = 1;
     view = 'list';
     statusFilter = key === 'team-backlog' ? 'Backlog' : (key === 'team-cycle' || key === 'cycles') ? 'In Progress' : 'All statuses';
     render();
   }
 });
 
-document.addEventListener('click', event => {
-  const send = event.target.closest('.iw-comment-form [data-send]');
-  if (!send || send.disabled) return;
-  const textarea = send.closest('.composer, [data-sui-composer]')?.querySelector('textarea');
-  const text = textarea?.value?.trim();
+document.addEventListener('sui:composer:send', event => {
+  if (!event.target.closest('.iw-comment-form')) return;
+  const text = event.detail.text;
   if (!text) return;
+  selected.comments.push(text);
+  queueMicrotask(() => {
+    render();
+    const scroll = document.querySelector('.sb-page-scroll');
+    if (scroll) scroll.scrollTop = scroll.scrollHeight;
+  });
+});
+
+document.addEventListener('sui:tab:change', event => { if (event.target.id !== 'iw-inbox-tabs') return; inboxFilter = event.detail.id; render(); document.querySelector('#iw-inbox-tabs [aria-selected="true"]')?.focus(); });
+document.addEventListener('click', event => {
+  const row = event.target.closest('[data-iw-notification]');
+  if (row) { event.preventDefault(); activeNotification = row.dataset.iwNotification; notifications.find(item => item.id === activeNotification).read = true; render(); return; }
+  const item = notifications.find(item => item.id === activeNotification);
+  if (!item || view !== 'inbox') return;
+  if (event.target.closest('[data-iw-inbox-read]')) { item.read = !item.read; render(); }
+  if (event.target.closest('[data-iw-inbox-snooze]')) { item.snoozed = !item.snoozed; render(); }
+});
+
+document.addEventListener('sui:pagination:change', event => {
+  if (!event.target.closest('.iw-list-layout')) return;
+  listPage = event.detail.page;
+  listPageSize = event.detail.pageSize;
+  queueMicrotask(() => { render(); document.querySelector('.sb-page-scroll')?.scrollTo({ top: 0 }); });
+});
+
+document.addEventListener('sui:tab:change', event => { if (event.target.id === 'iw-my-issues-tabs') { myIssuesTab = event.detail.id; render(); } else if (referencePages.change(event.target.id, event.detail.id)) render(); });
+document.addEventListener('sui:change', event => { if (event.detail?.name === 'iw-project-initiative') { referencePages.state.initiative = event.detail.value; render(); } });
+document.addEventListener('click', event => { const row = event.target.closest('[data-iw-review]'); if (!row) return; event.preventDefault(); referencePages.state.selectedReview = Number(row.dataset.iwReview); render(); });
+
+document.addEventListener('click', event => {
+  const row=event.target.closest('[data-iw-open]');
+  if(row){event.preventDefault();openIssue(issues.find(issue=>issue.id===row.dataset.iwOpen));return;}
+  const filter=event.target.closest('[data-iw-my-filter]');
+  const display=event.target.closest('[data-iw-my-display]');
+  const insights=event.target.closest('[data-iw-my-insights]');
+  if(!filter&&!display&&!insights)return;
+  const template=document.createElement('template');
+  template.innerHTML=modal({title:filter?'Filter issues':display?'Display options':'Insights',content:filter?select({name:'iw-filter',label:'Status',value:statusFilter,options:['All statuses','Backlog','Todo','In Progress','In Review','Done']}):display?'<p>Issues are grouped by status, with labels, linked pull requests, assignees, and dates.</p>':'<p>'+issues.filter(issue=>issue.assignee===currentUser).length+' issues assigned to you.</p>'});
+  const dialog=template.content.firstElementChild;document.body.append(dialog);const controller=initModal(dialog),session=mount(dialog);
+  dialog.querySelector('h2').setAttribute('tabindex','-1');dialog.querySelector('h2').setAttribute('autofocus','');
+  dialog.addEventListener('sui:change',()=>controller.close());dialog.addEventListener('close',()=>{session.destroy();controller.destroy();dialog.remove();},{once:true});controller.open(filter||display||insights);
+});
+
+document.addEventListener('click', event => { for (const action of ['favorite','subscribe','reviewed']) { if (event.target.closest('[data-iw-review-'+action+']')) { referencePages.action(action); render(); break; } } });
+document.addEventListener('click', event => {
+  const item = event.target.closest('[data-tree-key]');
+  if (!item || !['initiatives', 'projects', 'cycles', 'views'].includes(item.dataset.treeKey)) return;
   event.preventDefault();
   event.stopImmediatePropagation();
-  selected.comments.push(text);
-  render();
-  const scroll = document.querySelector('.sb-page-scroll');
-  if (scroll) scroll.scrollTop = scroll.scrollHeight;
 }, true);
+window.addEventListener('popstate', () => { const id = new URLSearchParams(location.search).get('issue'); const issue = issues.find(item => item.id === id); selected = issue || selected; activeNav = initialIssuePage; view = issue ? 'detail' : ['inbox','reviews'].includes(initialIssuePage) ? initialIssuePage : 'list'; render(); });

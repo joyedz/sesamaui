@@ -1,4 +1,6 @@
-export type SelectSize = 'sm' | 'base' | 'lg';
+import type { Surface } from '../surface.d.mts';
+import type { InputSize } from './input.mjs';
+export type SelectSize = InputSize;
 
 export interface SelectOption {
   label: string;
@@ -19,6 +21,8 @@ export interface SelectAction {
 }
 
 export interface SelectOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   name?: string;
   label?: string;
   ariaLabel?: string;
@@ -29,7 +33,11 @@ export interface SelectOptions {
   actions?: SelectAction[];
   size?: SelectSize;
   inline?: boolean;
+  popupWidth?: 'trigger' | 'content';
+  popupAlign?: 'start' | 'end';
   disabled?: boolean;
+  /** Disabled trigger with aria-busy and a 'Loading projects…' value. */
+  loading?: boolean;
   required?: boolean;
   helper?: string;
   error?: string;

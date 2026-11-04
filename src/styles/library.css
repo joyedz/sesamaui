@@ -13,12 +13,15 @@
 .sx-tagbox{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-4);min-height:28px;padding:3px var(--space-6);border:1px solid var(--color-hairline);border-radius:var(--radius-md);background:var(--color-base)}.sx-tagbox input{font:inherit;background:none;color:var(--text-default);border:0;outline:none;min-width:60px;flex:1;width:60px;height:20px;padding:0;line-height:20px}.sx-tagbox:focus-within{border-color:var(--color-brand-hover)}.sx-tagbox[aria-invalid=true]{border-color:var(--color-danger)}.sx-tagbox[data-disabled]{opacity:.5}.sx-tag{display:flex;align-items:center;height:20px;min-width:0;gap:var(--space-4);max-width:100%;padding:var(--space-2) var(--space-6);background:var(--color-recessed);border-radius:var(--radius-xs)}.sx-tag span{overflow-wrap:anywhere}.sx-tag button{width:16px;min-width:16px;height:16px;min-height:16px;padding:0;flex:none;display:grid;place-items:center}
 .sx-calendar{width:280px;max-width:calc(100vw - 32px);padding:var(--space-12)}.sx-calendar-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-8)}.sx-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}.sx-calendar-grid button{height:28px;text-align:center;border-radius:var(--radius-sm)}.sx-calendar-grid button:hover:not(:disabled){background:var(--color-tint)}.sx-calendar-grid button[aria-selected=true]{background:var(--color-brand);color:var(--text-on-brand)}.sx-calendar-grid button[aria-current=date]{box-shadow:inset 0 0 0 1px var(--color-brand-hover)}.sx-calendar-grid button:disabled{opacity:.3;cursor:not-allowed}.sx-weekday{text-align:center;font-size:11px;color:var(--text-placeholder);padding:var(--space-4) 0}
 .sx-command{padding:var(--space-16);max-width:480px}.sx-command .field{width:100%}.sx-command-results{display:grid;gap:var(--space-2);max-height:260px;overflow:auto;margin-top:var(--space-12)}.sx-command-results .active{background:var(--color-tint)}
-.sx-avatar{position:relative;display:grid;place-items:center;flex:none;border-radius:50%;overflow:hidden;background:var(--color-recessed);font-size:10px;font-weight:500;color:var(--text-subtle)}.sx-avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.sx-avatar.selected{outline:2px solid var(--color-brand-hover);outline-offset:2px}.sx-avatar:disabled{opacity:.5}.sx-avatar-group{display:flex;gap:var(--space-4);align-items:center}.sx-button-group{display:inline-flex;max-width:100%}.sx-button-group>.btn{border-radius:0}.sx-button-group>.btn:first-child{border-radius:var(--radius-sm) 0 0 var(--radius-sm)}.sx-button-group>.btn:last-child{border-radius:0 var(--radius-sm) var(--radius-sm) 0}.sx-button-group>.btn+.btn{margin-left:1px}.sx-button-group>.btn:focus-visible{z-index:1}.ds-toast[data-tone=warning]{background:var(--color-warning-solid);color:var(--text-on-brand)}
+.sx-avatar{position:relative;display:grid;place-items:center;flex:none;border-radius:50%;overflow:hidden;background:var(--avatar-palette-background,var(--color-recessed));font-size:10px;font-weight:600;color:var(--avatar-palette-foreground,var(--text-default));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--avatar-palette-foreground,transparent) 32%,transparent)}.sx-avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.sx-avatar.selected{outline:2px solid var(--color-brand-hover);outline-offset:2px}.sx-avatar:disabled{opacity:.5}.sx-avatar-group{display:flex;gap:var(--space-4);align-items:center}.sx-button-group{display:inline-flex;max-width:100%}.sx-button-group>.btn{border-radius:0}.sx-button-group>.btn:first-child{border-radius:var(--radius-sm) 0 0 var(--radius-sm)}.sx-button-group>.btn:last-child{border-radius:0 var(--radius-sm) var(--radius-sm) 0}.sx-button-group>.btn+.btn{margin-left:1px}.sx-button-group>.btn:focus-visible{z-index:1}.ds-toast[data-tone=warning]{background:var(--color-warning-solid);color:var(--text-on-brand)}
 .reading .sx-tooltip-wrap p,.reading .sx p{margin:0}.sx-note{padding:var(--space-12);background:var(--color-recessed);border-radius:var(--radius-md)}
 @media(max-width:600px){.sx{max-width:100%}.sx-pagination [data-page-number-control]{display:none}.sx-pagination [data-page-number-control][aria-current=page]{display:inline-flex}.sx-choice{min-height:32px}.sx-table-wrap{max-width:calc(100vw - 64px)}}
 @media(pointer:coarse){.sx-choice,.sx-pagination .btn,.sx-calendar-grid button{min-height:44px}}
 .ds-toast[data-tone=success]{background:var(--color-success-solid)}.ds-toast[data-tone=error]{background:var(--color-danger-solid)}
-html:has(dialog[open]),body:has(dialog[open]){overflow:hidden}.sx-calendar-grid>[role=row]{display:contents}.sx-table:has(.sticky-left){min-width:560px}.reading>.variant-example .stage{min-width:0}.reading .imp{max-height:280px;overflow:auto}
+/* Scroll lock while a modal is open: lock the viewport (html) only — locking the
+   body would reset sticky sidebars — and keep the scrollbar gutter so the page
+   cannot reflow when the scrollbar disappears. */
+html:has(dialog[open]){overflow:hidden;scrollbar-gutter:stable}
 
 .home-tile .ds-canvas{height:160px}.home-tile .sx{max-width:100%}
 
@@ -106,34 +109,34 @@ html:has(dialog[open]),body:has(dialog[open]){overflow:hidden}.sx-calendar-grid>
 
 .sx-message-outgoing>.bubble{background:color-mix(in srgb,var(--color-brand) 10%,var(--color-base));color:var(--color-brand)}
 
-.composer .cbar>[data-select-demo]{width:110px;min-width:0}.composer .cbar .form-field{gap:0}
+.composer:where(:not(.sui-root, .sui-root *)) .cbar>[data-select-demo]{width:110px;min-width:0}.composer:where(:not(.sui-root, .sui-root *)) .cbar .form-field{gap:0}
 /* Shared hover surface across editable controls. */
 .sx-textarea:not(:disabled):hover,.sx-tagbox:not([data-disabled]):hover{background:color-mix(in srgb,var(--color-base),var(--color-contrast) 3%)}
 
-.composer .cbar{flex-wrap:wrap;margin-top:var(--space-12)}.composer-model{width:120px;min-width:0}.composer-model .form-field{gap:0}.composer .ibtn[aria-pressed=true]{background:var(--color-brand-tint);color:var(--color-brand)}.composer-feedback{display:block;margin-top:var(--space-8)}.composer-feedback[hidden]{display:none}
+.composer:where(:not(.sui-root, .sui-root *)) .cbar{flex-wrap:wrap;margin-top:var(--space-12)}.composer-model:where(:not(.sui-root, .sui-root *)){width:120px;min-width:0}.composer-model:where(:not(.sui-root, .sui-root *)) .form-field{gap:0}.composer:where(:not(.sui-root, .sui-root *)) .ibtn[aria-pressed=true]{background:var(--color-brand-tint);color:var(--color-brand)}.composer-feedback{display:block;margin-top:var(--space-8)}.composer-feedback[hidden]{display:none}
 
-.composer .cbar>.ibtn,.composer .send{width:32px;height:32px;min-height:32px;flex:none}.composer .cbar>.ibtn svg,.composer .send svg{width:16px;height:16px}.composer .sx-select-trigger{height:32px;min-height:32px!important}.composer textarea{max-height:none}
+.composer:where(:not(.sui-root, .sui-root *)) .cbar>.ibtn,.composer:where(:not(.sui-root, .sui-root *)) .send{width:32px;height:32px;min-height:32px;flex:none}.composer:where(:not(.sui-root, .sui-root *)) .cbar>.ibtn svg,.composer:where(:not(.sui-root, .sui-root *)) .send svg{width:16px;height:16px}.composer:where(:not(.sui-root, .sui-root *)) .sx-select-trigger{height:32px;min-height:32px!important}.composer:where(:not(.sui-root, .sui-root *)) textarea{max-height:none}
 
-.composer .composer-stop-square{display:block;width:10px;height:10px;border-radius:2px;background:currentColor}
+.composer:where(:not(.sui-root, .sui-root *)) .composer-stop-square{display:block;width:10px;height:10px;border-radius:2px;background:currentColor}
 
-.composer-attachments{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--space-8);margin-bottom:var(--space-8)}.composer-attachments[hidden]{display:none}.composer-attachments .fcard{min-width:0;max-width:100%;width:100%}.composer-attachments .fhead{gap:var(--space-4);padding:var(--space-4) var(--space-6)}.composer-attachments .fhead>svg,.composer-attachments .ibtn{flex:none}.composer-attachments .fhead>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.composer .cbar>div:first-child>.ibtn{width:32px;height:32px}.composer .cbar>div:first-child>.ibtn svg{width:16px;height:16px}
+.composer-attachments{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--space-8);margin-bottom:var(--space-8)}.composer-attachments[hidden]{display:none}.composer-attachments .fcard{min-width:0;max-width:100%;width:100%}.composer-attachments .fhead{gap:var(--space-4);padding:var(--space-4) var(--space-6)}.composer-attachments .fhead>svg,.composer-attachments .ibtn{flex:none}.composer-attachments .fhead>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.composer:where(:not(.sui-root, .sui-root *)) .cbar>div:first-child>.ibtn{width:32px;height:32px}.composer:where(:not(.sui-root, .sui-root *)) .cbar>div:first-child>.ibtn svg{width:16px;height:16px}
 
 @media(max-width:600px){.composer-attachments{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
-.home-tile .composer{min-width:0;padding:var(--space-12) var(--space-16)}.home-tile .composer .cbar{gap:var(--space-4);flex-wrap:nowrap}.home-tile .composer .cbar>[data-select-demo]{width:72px;flex:1;min-width:0}.home-tile .composer-model{width:76px;flex:1;min-width:0}.home-tile .composer .sx-select-trigger{gap:var(--space-4);padding-inline:var(--space-4)}.home-tile .composer .cbar>.grow{flex:0}.home-tile .composer .cbar>[data-select-demo] .sx-select-trigger>svg:first-child{display:none}
+.home-tile .composer:where(:not(.sui-root, .sui-root *)){min-width:0;padding:var(--space-12) var(--space-16)}.home-tile .composer:where(:not(.sui-root, .sui-root *)) .cbar{gap:var(--space-4);flex-wrap:nowrap}.home-tile .composer:where(:not(.sui-root, .sui-root *)) .cbar>[data-select-demo]{width:72px;flex:1;min-width:0}.home-tile .composer-model:where(:not(.sui-root, .sui-root *)){width:76px;flex:1;min-width:0}.home-tile .composer:where(:not(.sui-root, .sui-root *)) .sx-select-trigger{gap:var(--space-4);padding-inline:var(--space-4)}.home-tile .composer:where(:not(.sui-root, .sui-root *)) .cbar>.grow{flex:0}.home-tile .composer:where(:not(.sui-root, .sui-root *)) .cbar>[data-select-demo] .sx-select-trigger>svg:first-child{display:none}
 
 .sx-tree-action-row{position:relative;display:flex;align-items:center}.sx-tree-action-row>.ti{padding-right:64px}.sx-tree-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sx-tree-actions,.sx-tree-loader{position:absolute;right:var(--space-8);display:flex;align-items:center;gap:var(--space-4)}.sx-tree-actions{opacity:0;pointer-events:none}.sx-tree-action-row:hover .sx-tree-actions,.sx-tree-action-row:focus-within .sx-tree-actions{opacity:1;pointer-events:auto}.sx-tree-action-row:hover{background:var(--color-tint);border-radius:var(--radius-md)}@media(hover:none){.sx-tree-actions{opacity:1;pointer-events:auto}}
 
-.sx-tree-actions{gap:0}.sx-tree-actions>.ibtn{width:20px;height:20px}.sx-tree-action-row>.ti{padding-right:48px}.composer-model{flex:0 1 160px;max-width:160px}.composer-model>[data-select-demo],.composer-model .form-field,.composer-model .sx-select-trigger{width:100%;min-width:0;max-width:100%}.home-tile .composer-model{max-width:100px}
+.sx-tree-actions{gap:0}.sx-tree-actions>.ibtn{width:20px;height:20px}.sx-tree-action-row>.ti{padding-right:48px}.composer-model:where(:not(.sui-root, .sui-root *)){flex:0 1 160px;max-width:160px}.composer-model:where(:not(.sui-root, .sui-root *))>[data-select-demo],.composer-model:where(:not(.sui-root, .sui-root *)) .form-field,.composer-model:where(:not(.sui-root, .sui-root *)) .sx-select-trigger{width:100%;min-width:0;max-width:100%}.home-tile .composer-model:where(:not(.sui-root, .sui-root *)){max-width:100px}
 
 /* Shared spacing for Select content and its trailing chevron. */
-.home-tile .composer .sx-select-trigger{gap:var(--space-8);justify-content:flex-start}.composer .cbar>[data-select-demo],.composer-model{width:auto;flex:0 1 auto;min-width:0;max-width:160px}.composer .sx-select-trigger{width:100%}.home-tile .composer .cbar>[data-select-demo],.home-tile .composer-model{flex:1 1 0;min-width:0;max-width:120px;width:auto}
+.home-tile .composer:where(:not(.sui-root, .sui-root *)) .sx-select-trigger{gap:var(--space-8);justify-content:flex-start}.composer:where(:not(.sui-root, .sui-root *)) .cbar>[data-select-demo],.composer-model:where(:not(.sui-root, .sui-root *)){width:auto;flex:0 1 auto;min-width:0;max-width:160px}.composer:where(:not(.sui-root, .sui-root *)) .sx-select-trigger{width:100%}.home-tile .composer:where(:not(.sui-root, .sui-root *)) .cbar>[data-select-demo],.home-tile .composer-model:where(:not(.sui-root, .sui-root *)){flex:1 1 0;min-width:0;max-width:120px;width:auto}
 
 /* Select owns truncation and spacing; layouts only constrain its width. */
 [data-select-demo]{min-width:0;max-width:100%}
-.home-tile .composer .sx-select-trigger{min-width:0;max-width:100%;gap:var(--space-8);justify-content:flex-start;overflow:hidden}
-.composer .cbar>[data-select-demo],.composer-model{flex:0 1 auto;width:140px;min-width:0;max-width:160px}
-.home-tile .composer .cbar>[data-select-demo],.home-tile .composer-model{flex:1 1 0;width:0;min-width:0;max-width:120px}
+.home-tile .composer:where(:not(.sui-root, .sui-root *)) .sx-select-trigger{min-width:0;max-width:100%;gap:var(--space-8);justify-content:flex-start;overflow:hidden}
+.composer:where(:not(.sui-root, .sui-root *)) .cbar>[data-select-demo],.composer-model:where(:not(.sui-root, .sui-root *)){flex:0 1 auto;width:140px;min-width:0;max-width:160px}
+.home-tile .composer:where(:not(.sui-root, .sui-root *)) .cbar>[data-select-demo],.home-tile .composer-model:where(:not(.sui-root, .sui-root *)){flex:1 1 0;width:0;min-width:0;max-width:120px}
 .select{min-width:0;max-width:100%;gap:var(--space-8)}.select>.lbl{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.select>svg{flex:none}
 
 .home-tile .sx-pagination-info{display:none}.home-tile .sx-pagination-controls{margin-inline:auto}
@@ -142,19 +145,19 @@ html:has(dialog[open]),body:has(dialog[open]){overflow:hidden}.sx-calendar-grid>
 
 .sx-command[open]{display:flex;flex-direction:column;overflow:hidden;max-height:calc(100dvh - 48px)}.sx-command>.field,.sx-command>h2,.sx-command>.sx-help,.sx-command>.actions{flex-shrink:0}.sx-command .sx-command-results{display:block;flex:0 1 auto;min-height:0;max-height:260px;overflow-y:auto;padding:2px;scrollbar-width:thin}.sx-command-results>[role=group]+[role=group]{margin-top:var(--space-8)}.sx-command-results .sx-menu-item{white-space:normal;overflow-wrap:anywhere;min-height:28px}.sx-command>.sx-help{margin-bottom:0}
 
-.composer .cbar>.grow{flex:1 1 0;min-width:0}.composer textarea{max-height:min(240px,35dvh);overflow-y:auto}.home-tile .composer .cbar>.grow{flex:0}
+.composer:where(:not(.sui-root, .sui-root *)) .cbar>.grow{flex:1 1 0;min-width:0}.composer:where(:not(.sui-root, .sui-root *)) textarea{max-height:min(240px,35dvh);overflow-y:auto}.home-tile .composer:where(:not(.sui-root, .sui-root *)) .cbar>.grow{flex:0}
 
-.sx-agent-message>.sx-row{padding-left:var(--space-6)}
-
-.sx-agent-message>.bubble{background:transparent}
+/* Action rows share the message's left edge (avatar column) like the canonical
+   agent response; thinking bubbles keep their bubble padding. */
+.sx-agent-message>.bubble{background:transparent;padding-top:0}
 
 /* Composer Selects grow with their labels, then shrink within the toolbar. */
-.composer .cbar{flex-wrap:nowrap}
-.composer .cbar>[data-select-demo],.composer .composer-model,.home-tile .composer .cbar>[data-select-demo],.home-tile .composer .composer-model{width:max-content;max-width:none;min-width:0;flex:0 1 auto}
-.composer .composer-model>[data-select-demo],.composer .cbar .form-field{width:100%;min-width:0;max-width:none}
-.composer .sx-select-trigger{width:100%;min-width:0;max-width:100%;justify-content:flex-start;gap:8px}
-.composer .sx-select-trigger>[data-select-label]{flex:0 1 auto;min-width:0}
-.composer .cbar>div:first-child{flex-shrink:0}
+.composer:where(:not(.sui-root, .sui-root *)) .cbar{flex-wrap:nowrap}
+.composer:where(:not(.sui-root, .sui-root *)) .cbar>[data-select-demo],.composer:where(:not(.sui-root, .sui-root *)) .composer-model:where(:not(.sui-root, .sui-root *)),.home-tile .composer:where(:not(.sui-root, .sui-root *)) .cbar>[data-select-demo],.home-tile .composer:where(:not(.sui-root, .sui-root *)) .composer-model:where(:not(.sui-root, .sui-root *)){width:max-content;max-width:none;min-width:0;flex:0 1 auto}
+.composer:where(:not(.sui-root, .sui-root *)) .composer-model:where(:not(.sui-root, .sui-root *))>[data-select-demo],.composer:where(:not(.sui-root, .sui-root *)) .cbar .form-field{width:100%;min-width:0;max-width:none}
+.composer:where(:not(.sui-root, .sui-root *)) .sx-select-trigger{width:100%;min-width:0;max-width:100%;justify-content:flex-start;gap:8px}
+.composer:where(:not(.sui-root, .sui-root *)) .sx-select-trigger>[data-select-label]{flex:0 1 auto;min-width:0}
+.composer:where(:not(.sui-root, .sui-root *)) .cbar>div:first-child{flex-shrink:0}
 
 /* Conversation typography belongs to the shared components. */
 .sx-message>.bubble,.sx-agent-message>[data-agent-response]{font-size:14px;line-height:22px}
@@ -222,9 +225,9 @@ html:has(dialog[open]),body:has(dialog[open]){overflow:hidden}.sx-calendar-grid>
 .sx-table th>.sx-sort{display:inline-flex;vertical-align:middle}
 
 /* Control sizing uses the same scale as Button and Input Field. */.sx-date-trigger{min-height:var(--control-size-base)}.sx-tagbox{min-height:var(--control-size-base)}.sx-pagination-size .sx-select{min-height:var(--control-size-sm);height:var(--control-size-sm);line-height:var(--control-size-sm)}.sx-pagination-controls>.btn{height:var(--control-size-sm)}.sx-pagination-numbers>.btn{width:var(--control-size-sm);min-width:var(--control-size-sm);height:var(--control-size-sm)}
-.composer .cbar>.ibtn,.composer .send,.composer .cbar>div:first-child>.ibtn{width:var(--control-size-lg);height:var(--control-size-lg);min-height:var(--control-size-lg)}.composer .sx-select-trigger{height:var(--control-size-lg);min-height:var(--control-size-lg)!important}
+.composer:where(:not(.sui-root, .sui-root *)) .cbar>.ibtn,.composer:where(:not(.sui-root, .sui-root *)) .send,.composer:where(:not(.sui-root, .sui-root *)) .cbar>div:first-child>.ibtn{width:var(--control-size-lg);height:var(--control-size-lg);min-height:var(--control-size-lg)}.composer:where(:not(.sui-root, .sui-root *)) .sx-select-trigger{height:var(--control-size-lg);min-height:var(--control-size-lg)!important}
 @media(pointer:fine){.sx-pagination-controls>.btn,.sx-pagination-numbers>.btn{min-height:var(--control-size-sm)}}
 
-/* Keep compact metadata legible on dark surfaces. */.sx-date-field.invalid{box-shadow:inset 0 0 0 1px var(--color-danger)}.sx-textarea,.sx-tagbox{border-color:var(--color-control-edge)}.sx-textarea:focus,.sx-tagbox:focus-within{border-color:var(--color-focus)}.sx-message-outgoing>.bubble{color:var(--color-brand-text)}.composer .ibtn[aria-pressed=true],.sx-agent-actions .ibtn[aria-pressed=true]{color:var(--color-brand-text)}.sx-status-dot[data-tone=warning]{background:var(--color-warning)}.sx-date-field>svg{color:var(--text-subtle)}
+/* Keep compact metadata legible on dark surfaces. */.sx-date-field.invalid{box-shadow:inset 0 0 0 1px var(--color-danger)}.sx-textarea,.sx-tagbox{border-color:var(--color-control-edge)}.sx-textarea:focus,.sx-tagbox:focus-within{border-color:var(--color-focus)}.sx-message-outgoing>.bubble{color:var(--color-brand-text)}.composer:where(:not(.sui-root, .sui-root *)) .ibtn[aria-pressed=true],.sx-agent-actions .ibtn[aria-pressed=true]{color:var(--color-brand-text)}.sx-status-dot[data-tone=warning]{background:var(--color-warning)}.sx-date-field>svg{color:var(--text-subtle)}
 
 .sx-banner[data-tone=informative]>svg{color:var(--color-brand-text)}.sx-calendar-grid button[aria-current=date]{box-shadow:inset 0 0 0 1px var(--color-focus)}

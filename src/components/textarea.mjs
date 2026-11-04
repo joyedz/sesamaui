@@ -1,8 +1,10 @@
+import { applySurface, surfaceMode } from './shared.mjs';
+import { INPUT_SIZES } from './shared.mjs';
 import { uid, escapeHTML } from './shared.mjs';
 
-const VALID_SIZES = ['sm', 'base', 'lg'];
+const VALID_SIZES = INPUT_SIZES;
 
-export function textarea(options = {}) {
+function buildTextarea(options = {}) {
   const opts = typeof options === 'string' ? { label: options } : options;
   const {
     id = uid(),
@@ -183,4 +185,10 @@ export function initTextarea(element) {
 
   mounted.set(ta, controller);
   return controller;
+}
+
+
+export function textarea(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildTextarea(...args), mode, ["sx-textarea|@textarea"]);
 }

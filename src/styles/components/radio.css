@@ -14,6 +14,7 @@
   border: 1px solid var(--text-placeholder);
   border-radius: 50%;
   background: var(--color-base);
+  background: color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);
   cursor: pointer;
   vertical-align: middle;
   transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard);
@@ -22,6 +23,7 @@
 :where(.sui-root) .sx-checkbox-layout input[type="radio"]:checked {
   border-color: var(--color-contrast);
   background: var(--color-contrast);
+  background: color-mix(in srgb, var(--color-contrast) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-checkbox-layout input[type="radio"]::after {
@@ -31,6 +33,7 @@
   height: 6px;
   border-radius: 50%;
   background: var(--text-inverse);
+  background: color-mix(in srgb, var(--text-inverse) var(--sui-surface-opacity, 100%), transparent);
   transform: scale(.5);
   opacity: 0;
   transition: transform var(--motion-fast) var(--ease-out), opacity var(--motion-fast) var(--ease-out);

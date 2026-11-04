@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML, uid } from './shared.mjs';
 
 const PALETTE = [
@@ -221,7 +222,7 @@ function buildChartExtras(config, hidden) {
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function chart(options = {}) {
+function buildChart(options = {}) {
   const {
     id = uid('sui-chart'),
     height = 240,
@@ -485,4 +486,10 @@ export function initChart(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function chart(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildChart(...args), mode, ["@root"]);
 }

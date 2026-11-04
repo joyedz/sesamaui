@@ -1,22 +1,28 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { uid, escapeHTML, tabStops } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
 // content/actions are trusted application HTML slots. Text options are escaped.
-export function modal({
+function buildModal({
   id = uid(),
   title = 'Dialog',
   description = '',
   content = '',
   actions = '',
   size = 'base',
-  locked = false
+  locked = false,
+  bodyScroll = false
 } = {}) {
   const modalSize = ['sm', 'base', 'lg', 'xl'].includes(size) ? size : 'base';
   const escId = escapeHTML(id);
   const escTitle = escapeHTML(title);
   const escDesc = description ? escapeHTML(description) : '';
 
-  return `<dialog id="${escId}" data-sui-modal class="ds-modal" data-size="${modalSize}" ${locked ? 'data-locked' : ''} aria-labelledby="${escId}-title" ${description ? `aria-describedby="${escId}-description"` : ''}><div class="sx-modal-header"><h2 id="${escId}-title">${escTitle}</h2><button type="button" class="ibtn sx-modal-close" data-sui-modal-close aria-label="Close dialog">${controlIcon('x')}</button></div>${description ? `<p id="${escId}-description">${escDesc}</p>` : ''}<div class="sx-modal-body">${content}</div>${actions ? `<div class="actions">${actions}</div>` : ''}</dialog>`;
+  // One consistent anatomy: the description is always the first child of the
+  // body — so with bodyScroll only the title and the action footer stay fixed.
+  const bodyClass = `sx-modal-body${bodyScroll ? ' sx-modal-body-scroll' : ''}`;
+  const descriptionHTML = description ? `<p id="${escId}-description">${escDesc}</p>` : '';
+  return `<dialog id="${escId}" data-sui-modal class="ds-modal" data-size="${modalSize}" ${locked ? 'data-locked' : ''} aria-labelledby="${escId}-title" ${description ? `aria-describedby="${escId}-description"` : ''}><div class="sx-modal-header"><h2 id="${escId}-title">${escTitle}</h2><button type="button" class="ibtn sx-modal-close" data-sui-modal-close aria-label="Close dialog">${controlIcon('x')}</button></div><div class="${bodyClass}">${descriptionHTML}${content}</div>${actions ? `<div class="actions">${actions}</div>` : ''}</dialog>`;
 }
 
 const mounted = new WeakMap();
@@ -112,4 +118,10 @@ export function initModal(dialog) {
   };
   mounted.set(dialog, handle);
   return handle;
+}
+
+
+export function modal(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildModal(...args), mode, ["@dialog"]);
 }

@@ -7,6 +7,9 @@
   justify-items: start;
 }
 
+:where(.sui-root) .sx-message-bubbled.sx-message > .bubble { width:var(--message-bubble-width,auto); max-width:var(--message-bubble-max-width,85%); padding:10px 14px; border-radius:18px; background:var(--color-recessed); background:color-mix(in srgb,var(--color-recessed) var(--sui-surface-opacity,100%),transparent); color:var(--text-default); justify-self:start; }
+:where(.sui-root) .sx-message-bubbled.sx-message-outgoing > .bubble { justify-self:end; }
+
 :where(.sui-root) .sx-message > .bubble {
   font-size: var(--font-body-size, 14px);
   line-height: var(--font-body-line, 22px);
@@ -41,18 +44,22 @@
   padding: var(--space-8) var(--space-12);
   border-radius: var(--radius-lg);
   background: var(--color-recessed);
+  background: color-mix(in srgb, var(--color-recessed) var(--sui-surface-opacity, 100%), transparent);
   color: var(--text-default);
 }
 
 :where(.sui-root) .sx-message-outgoing > .bubble {
   background: color-mix(in srgb, var(--color-brand) 10%, var(--color-base));
+  background: color-mix(in srgb, color-mix(in srgb, var(--color-brand) 10%, var(--color-base)) var(--sui-surface-opacity, 100%), transparent);
   color: var(--color-brand-text, var(--color-brand));
 }
 
 :where(.sui-root) .sx-agent-message > .bubble {
+  justify-self: stretch;
+  min-width: 0;
   background: transparent;
-  padding-inline: 0;
-  padding-bottom: 0;
+  /* Flush with the header: the root's 8px gap is the only name-to-content space. */
+  padding: 0;
 }
 
 :where(.sui-root) .sx-message-quote {
@@ -92,7 +99,7 @@
 }
 
 :where(.sui-root) .sx-message details {
-  margin-bottom: var(--space-8, 8px);
+  margin-bottom: var(--space-12, 12px);
   color: var(--text-subtle);
 }
 
@@ -104,6 +111,7 @@
   height: 24px;
   border-radius: var(--radius-sm);
   background: var(--color-recessed);
+  background: color-mix(in srgb, var(--color-recessed) var(--sui-surface-opacity, 100%), transparent);
   color: var(--text-subtle);
 }
 
@@ -138,13 +146,43 @@
 :where(.sui-root) .sx-message-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: 0;
 }
 
-/* Compact inline action icons that hug the message text. */
+/* Reserve the action row so revealing controls never shifts the conversation. */
+:where(.sui-root) .sx-message > .sx-message-actions {
+  margin-inline-start: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :where(.sui-root) .sx-message > .sx-message-actions {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  :where(.sui-root) .sx-message:hover > .sx-message-actions,
+  :where(.sui-root) .sx-message:focus-within > .sx-message-actions,
+  :where(.sui-root) .sx-agent-message:not([data-message-latest]):not(:has(~ .sx-agent-message)) > .sx-message-actions,
+  :where(.sui-root) .sx-agent-message[data-message-latest="true"] > .sx-message-actions {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+:where(.sui-root) .sx-message-outgoing > .sx-message-actions {
+  margin-inline-end: 0;
+}
+
+/* Small secondary icons retain the standard small control target. */
 :where(.sui-root) .sx-message-actions .ibtn {
-  width: 20px;
-  height: 20px;
+  width: var(--control-size-sm);
+  height: var(--control-size-sm);
+  color: color-mix(in srgb, var(--text-subtle) 65%, transparent);
+}
+
+:where(.sui-root) .sx-message-actions .ibtn:hover:not(:disabled),
+:where(.sui-root) .sx-message-actions .ibtn:focus-visible {
+  color: var(--text-default);
 }
 
 :where(.sui-root) .sx-message-actions .ibtn > svg {

@@ -1,6 +1,9 @@
+import type { Surface } from '../surface.d.mts';
 export type BannerTone = 'neutral' | 'informative' | 'success' | 'warning' | 'error';
 
 export interface BannerOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   title?: string;
   description?: string;
   tone?: BannerTone;

@@ -1,7 +1,10 @@
+import type { Surface } from '../surface.d.mts';
 import { ButtonOptions, ButtonVariant, ButtonSize } from './button.d.mts';
 import { MenuOptions } from './menu.d.mts';
 
 export interface ButtonGroupOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   buttons?: Array<ButtonOptions | string>;
   split?: boolean;

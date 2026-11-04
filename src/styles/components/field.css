@@ -1,6 +1,21 @@
 @import url("../base.css");
+
 @import url("control.css");
 @import url("icon-button.css");
+
+:where(.sui-root) .sx-input-shell:has([data-sui-input-clear]) {
+  position: relative;
+  padding-inline-end: 36px;
+}
+:where(.sui-root) .sx-input-shell [data-sui-input-clear] {
+  position: absolute;
+  inset-inline-end: var(--space-8);
+  top: calc(50% - 10px);
+  width: 20px;
+  height: 20px;
+}
+:where(.sui-root) [data-sui-input-clear][hidden] { display: none; }
+:where(.sui-root) .sx-input-shell:has([data-sui-input-clear]) input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; }
 /* Canonical Sesama field styles. Legacy compatibility is generated. */
 :where(.sui-root) .field{display:flex;align-items:center;gap:var(--space-8);width:220px;min-height:30px;padding:var(--space-4) var(--space-8);border-radius:var(--radius-md);box-shadow:inset 0 0 0 1px var(--color-hairline);color:var(--text-placeholder)}
 :where(.sui-root) .field:focus-within{box-shadow:inset 0 0 0 1px var(--color-brand-hover)}
@@ -18,15 +33,14 @@
 :where(.sui-root) .form-help,:where(.sui-root) .form-error{font-size:var(--font-meta-size);line-height:var(--font-meta-line)}
 :where(.sui-root) .form-help{color:var(--text-subtle)}
 :where(.sui-root) .form-error{color:var(--color-danger-text)}
-:where(.sui-root) .form-field .field{width:100%;background:var(--color-base)}
+:where(.sui-root) .form-field .field{width:100%;background:var(--color-base);background:color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent)}
 :where(.sui-root) .field:has(input:disabled){opacity:.5}
 :where(.sui-root) .field:has([aria-invalid="true"]){box-shadow:inset 0 0 0 1px var(--color-danger)}
 :where(.sui-root) .phone-prefix{color:var(--text-subtle);padding-right:var(--space-8);border-right:1px solid var(--color-hairline)}
 :where(.sui-root) .field input[type="tel"]{min-width:0}
 :where(.sui-root) .form-field .ibtn{flex:none}
 :where(.sui-root) .form-field [hidden]{display:none!important}
-:where(.sui-root) .sx-input-shell{width:100%;background:var(--color-base)}
+:where(.sui-root) .sx-input-shell{width:100%;background:var(--color-base);background:color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent)}
 :where(.sui-root) .sx-input-shell input{width:100%}
 :where(.sui-root) .sx-input-shell .sx-affix{flex:none;color:var(--text-subtle)}
-:where(.sui-root) .field.sx-size-xs{padding-block:var(--space-2)}
-:where(.sui-root) .field:not(:has(:disabled)):hover{background:color-mix(in srgb,var(--color-base),var(--color-contrast) 3%)}
+:where(.sui-root) .field:not(:has(:disabled)):hover{background:color-mix(in srgb,var(--color-base),var(--color-contrast) 3%);background:color-mix(in srgb, color-mix(in srgb,var(--color-base),var(--color-contrast) 3%) var(--sui-surface-opacity, 100%), transparent)}

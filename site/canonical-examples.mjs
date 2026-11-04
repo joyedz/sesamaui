@@ -1,9 +1,10 @@
-/* Canonical ESM previews for the Design system catalog.
- * For every legacy variant example, the equivalent ESM builder render is
- * inserted directly below it (labelled "... (ESM)") so variants can be
- * compared one by one. Builders come from src/index.mjs with the canonical
- * stylesheets; legacy examples themselves stay untouched. */
-
+import { conversationExamples } from './conversation-examples.mjs';
+import { surfaceExamples } from './surface-examples.mjs';
+import { renderComponentApiReference } from './component-api-reference.mjs';
+window.renderComponentApiReference = renderComponentApiReference;
+/* Components and Blocks render canonical ESM previews exclusively (source of truth).
+ * Legacy examples remain only as a fallback for entries without a canonical map. */
+import { renderComponentDocumentation } from './component-docs.mjs';
 import {
   button, iconButton, linkButton, socialButton, input, inputField, select, modal, initModal,
   badge, statusDot, avatar, label, divider, card, banner, emptyState,
@@ -16,9 +17,7 @@ import {
   appShell, workspaceSidebar, pageHeader, pageLayout, pageGrid,
   contentSection, dataSection, peopleList, activityFeed,
   metricCard, metricSummary, chartSection,
-  requirementGroupRecipe, resourceListRecipe, agentCardRecipe,
-  createSkillDialogRecipe, deleteResourceRecipe, dashboardOverviewRecipe,
-  revenueChartRecipe, dataWorkspaceRecipe,
+  agentCardRecipe,
   mount, controlIcon, runeIcon, CONTROL_ICON_NAMES
 } from '../src/index.mjs';
 
@@ -59,6 +58,19 @@ const tableColumns = [
   { key: 'status', header: 'Status' },
   { key: 'owner', header: 'Owner' }
 ];
+/* Legacy-style table sample data and columns: 25 projects, Name + Status badge. */
+const tableSampleRows = (count = 8) => Array.from({ length: count }, (_, i) => ({
+  id: i + 1,
+  name: ['Website', 'Mobile app', 'Platform', 'Research', 'Design system'][i % 5] + ' ' + (i + 1),
+  status: i % 3 ? 'Active' : 'Draft',
+  owner: ['Amelia Park', 'Noah Ibarra', 'Priya Desai', 'Marcus Chen'][i % 4],
+  updated: `Oct ${(i % 28) + 1}, 2026`
+}));
+const tableNameColumn = { key: 'name', header: 'Name' };
+const tableStatusColumn = { key: 'status', header: 'Status', render: value => badge({ label: String(value) }) };
+const tableOwnerColumn = { key: 'owner', header: 'Owner' };
+const tableUpdatedColumn = { key: 'updated', header: 'Last updated' };
+const tableActionsColumn = { key: 'actions', header: 'Actions', align: 'right', render: (_, row) => `<div class="sx-table-actions">${button({ label: 'Edit', variant: 'ghost', attributes: `aria-label="Edit ${row.name}"` })}${dropdownMenu({ trigger: { label: '', variant: 'ghost', icon: 'kebab', ariaLabel: `More actions for ${row.name}` }, ariaLabel: 'Row actions', items: [{ label: 'Copy link', icon: 'copy' }, { label: 'Archive', icon: 'archive' }] })}</div>` };
 const longList = Array.from({ length: 30 }, (_, i) => `Project ${i + 1}`);
 /* Legacy Agent Run examples share one three-step script per run state. */
 function agentRunSteps(state) {
@@ -71,6 +83,8 @@ function agentRunSteps(state) {
 }
 
 const bannerActions = () => button({ label: 'Review details', variant: 'outline', attributes: 'data-canonical-toast="Details reviewed.|success"' });
+/* Shared modal footer: every catalog modal mirrors the legacy Cancel/Confirm anatomy. */
+const modalActions = () => button({ label: 'Cancel', variant: 'secondary', attributes: 'data-modal-close' }) + button({ label: 'Confirm', variant: 'primary' });
 const collapsibleSteps = items => '<ul style="margin:0;padding:0 0 0 8px;list-style:none;display:grid;gap:var(--space-4)">' + items.map(s => `<li style="display:flex;align-items:center;gap:6px">${controlIcon('check', 12)}${s}</li>`).join('') + '</ul>';
 
 const demoBlock = text => `<div style="display:grid;place-items:center;min-height:80px;background:var(--color-recessed);border-radius:var(--radius-md);color:var(--text-subtle);font-size:12px">${text}</div>`;
@@ -78,6 +92,8 @@ const row = (...nodes) => `<div class="sx-row" style="justify-content:center">${
 const sw = (on, label = 'Toggle setting', disabled = false) =>
   `<button type="button" class="sw" role="switch" aria-checked="${!!on}" data-switch aria-label="${label}"${disabled ? ' disabled' : ''}><i></i></button>`;
 const ibtn = (name, attrs, ariaLabel) => iconButton(name, { ariaLabel, attributes: attrs });
+/* Menu lists are fixed-position popovers; catalog previews render them static. */
+const staticMenu = opts => menu({ ...opts, attributes: 'style="position:static;width:240px"' });
 
 /* ---------- per-variant canonical builders ----------
  * Keys must match the legacy example names exactly.
@@ -106,35 +122,32 @@ const canonical = {
       button({ label: 'BASE', size: 'base', icon: 'plus' }), button({ label: 'LG', size: 'lg', icon: 'plus' })
     ),
     'With icon': () => button({ label: 'Create project', icon: 'plus' }),
-    'Square icon button': () => iconButton('plus', { ariaLabel: 'Add requirement', attributes: 'aria-pressed="false"' }),
-    'Raised icon button': () => iconButton('plus', { variant: 'raised', ariaLabel: 'Add requirement', attributes: 'aria-pressed="false"' }),
+    'Square icon button': () => iconButton('plus', { ariaLabel: 'Add requirement', tooltip: 'Add requirement', attributes: 'aria-pressed="false"' }),
+    'Raised icon button': () => iconButton('plus', { variant: 'raised', ariaLabel: 'Add requirement', tooltip: 'Add requirement', attributes: 'aria-pressed="false"' }),
     'Outline icon button': () => row(
-      iconButton('kebab', { variant: 'outline size-base', ariaLabel: 'More actions' }),
-      iconButton('plus', { variant: 'outline size-base', ariaLabel: 'Add item' }),
+      iconButton('kebab', { variant: 'outline size-base', ariaLabel: 'More actions', tooltip: 'More actions' }),
+      iconButton('plus', { variant: 'outline size-base', ariaLabel: 'Add item', tooltip: 'Add item' }),
       iconButton('kebab', { variant: 'outline size-base', ariaLabel: 'More actions unavailable', disabled: true })
     ),
+    'Toggle / Favorite': () => row(iconButton('star', { variant: 'favorite', pressed: false, ariaLabel: 'Add to favorites', attributes: 'data-catalog-favorite' }), iconButton('star', { variant: 'favorite', pressed: true, ariaLabel: 'Remove from favorites', attributes: 'data-catalog-favorite' }), iconButton('star', { variant: 'favorite', pressed: true, disabled: true, ariaLabel: 'Favorite unavailable' })),
     'Icon button sizes': () => row(
-      iconButton('kebab', { size: 'sm', ariaLabel: 'Small action' }),
-      iconButton('kebab', { size: 'base', ariaLabel: 'Base action' }),
-      iconButton('kebab', { size: 'lg', ariaLabel: 'Large action' })
+      iconButton('kebab', { size: 'sm', ariaLabel: 'Small action', tooltip: 'Small action' }),
+      iconButton('kebab', { size: 'base', ariaLabel: 'Base action', tooltip: 'Base action' }),
+      iconButton('kebab', { size: 'lg', ariaLabel: 'Large action', tooltip: 'Large action' })
     ),
-    'Circle icon button': () => iconButton('search', { variant: 'raised circle', ariaLabel: 'Search requirements' }),
+    'Circle icon button': () => iconButton('search', { variant: 'raised circle', ariaLabel: 'Search requirements', tooltip: 'Search requirements' }),
     'Loading': () => button({ label: 'Saving…', loading: true }),
     'Disabled': () => button({ label: 'Save changes', disabled: true }),
     'With title': () => button({ label: 'Create project', icon: 'plus', attributes: 'title="Create a new requirement"' })
   },
 
   'Button group': {
-    'Menu button / primary': () => dropdownMenu({
-      trigger: { label: 'New project', variant: 'primary', icon: 'plus' },
+    ...Object.fromEntries(['primary', 'secondary'].map(variant => [`Menu button / ${variant}`, () => dropdownMenu({
+      trigger: { label: 'New project', variant, icon: 'plus', ariaLabel: 'Create resource' },
+      menuIndicator: true,
       ariaLabel: 'Create resource',
-      items: [{ label: 'From template', icon: 'copy' }, { label: 'Blank project', icon: 'plus' }]
-    }),
-    'Menu button / secondary': () => dropdownMenu({
-      trigger: { label: 'New requirement', icon: 'plus' },
-      ariaLabel: 'Create resource',
-      items: [{ label: 'Requirement', icon: 'file-text' }, { label: 'Folder', icon: 'folder' }, { type: 'separator' }, { label: 'Import', icon: 'import' }]
-    }),
+      items: [{ label: 'Project', icon: 'folder' }, { label: 'Folder', icon: 'folder' }, { type: 'separator' }, { label: 'Import', icon: runeIcon('arrow-down-to-line', 16) }]
+    })])),
     'Connected group': () => buttonGroup({ buttons: ['Day', 'Week', 'Month'] }),
     'Split button': () => buttonGroup({ split: true, buttons: [{ label: 'Create project' }] })
   },
@@ -178,10 +191,11 @@ const canonical = {
     'Group with overflow': () => `<div class="sx-avatar-group">${avatar({ name: 'Amelia Park', size: 24 })}${avatar({ name: 'Noah Ibarra', size: 24 })}${avatar({ name: 'Priya Desai', size: 24 })}${popover({ trigger: { label: '+3', size: 'sm' }, ariaLabel: 'Show 3 more members', content: '<div class="sx-pop-content"><div>Alex Morgan</div><div>Sam Rivera</div><div>Taylor Kim</div></div>' })}</div>`
   },
 
+  /* Bare switches like the legacy demo: no visible label, aria-label names it. */
   'Switch': {
-    'On': () => switchControl({ label: 'Notifications', checked: true }),
-    'Off': () => switchControl({ label: 'Notifications' }),
-    'Disabled': () => switchControl({ label: 'Notifications', checked: true, disabled: true })
+    'On': () => switchControl({ ariaLabel: 'Notifications', checked: true }),
+    'Off': () => switchControl({ ariaLabel: 'Notifications' }),
+    'Disabled': () => switchControl({ ariaLabel: 'Notifications', checked: true, disabled: true })
   },
 
   'Input': {
@@ -198,6 +212,7 @@ const canonical = {
   },
 
   'Input Field': {
+    'Clearable search': () => inputField({ label: 'Search agents', type: 'search', clearable: true, value: 'Research', placeholder: 'Search agents...' }),
     'default': () => inputField({ label: 'Email', name: 'email', type: 'email', placeholder: 'name@example.com' }),
     'helper': () => inputField({ label: 'Email', name: 'email', type: 'email', placeholder: 'name@example.com', helper: 'We will use this address to contact you.' }),
     'required': () => inputField({ label: 'Email', name: 'email', type: 'email', placeholder: 'name@example.com', required: true }),
@@ -237,37 +252,32 @@ const canonical = {
     'Vertical': () => divider({ orientation: 'vertical', attributes: 'style="height:48px"' })
   },
 
+  /* Select mirrors the legacy examples: label 'Project', placeholder value, and
+     the default option set with a disabled entry. */
   'Select': {
-    'Input Field': () => select({ name: 'base', ariaLabel: 'Base', value: 'Base', icon: 'branch', options: ['Base', 'Review', 'Approved'] }),
-    'Inline': () => select({ name: 'inline', ariaLabel: 'Base', value: 'Base', options: ['Base', 'Review'], inline: true, hideLabel: true }),
-    'Disabled': () => select({ name: 'disabled', ariaLabel: 'Base', value: 'Base', options: ['Base', 'Review'], disabled: true }),
-    'default': () => select({ name: 'team', label: 'Team', value: 'Design team', options: ['Design team', 'Engineering'] }),
-    'with icon': () => select({ name: 'team', label: 'Team', value: 'Design team', icon: 'users', options: ['Design team', 'Engineering'] }),
-    'without label': () => select({ name: 'team', ariaLabel: 'Team', hideLabel: true, value: 'Design team', icon: 'users', options: ['Design team', 'Engineering'] }),
-    'inline': () => select({ name: 'inline', ariaLabel: 'Base', hideLabel: true, inline: true, value: 'Base', icon: 'branch', options: ['Base', 'feature/torque-420'] }),
-    'description': () => select({ name: 'described', label: 'Team', value: 'Design team', options: ['Design team', 'Engineering'], helper: 'Choose the team that owns this project.' }),
-    'invalid': () => select({ name: 'invalid', label: 'Team', invalid: true, options: ['Design team', 'Engineering'] }),
-    'disabled': () => select({ name: 'disabled', label: 'Team', value: 'Design team', options: ['Design team', 'Engineering'], disabled: true }),
+    'default': () => select({ name: 'project', label: 'Project', placeholder: 'Choose project', options: ['Website', 'Mobile app', { label: 'Archived project', disabled: true }] }),
+    'with icon': () => select({ name: 'project', label: 'Project', placeholder: 'Choose project', icon: 'folder', options: ['Website', 'Mobile app', { label: 'Archived project', disabled: true }] }),
+    'without label': () => select({ name: 'project', ariaLabel: 'Project', hideLabel: true, placeholder: 'Choose project', options: ['Website', 'Mobile app', { label: 'Archived project', disabled: true }] }),
+    'inline': () => select({ name: 'project', label: 'Project', placeholder: 'Choose project', inline: true, options: ['Website', 'Mobile app', { label: 'Archived project', disabled: true }] }),
+    'description': () => select({ name: 'project', label: 'Project', placeholder: 'Choose project', helper: 'Choose where this item belongs.', options: ['Website', 'Mobile app', { label: 'Archived project', disabled: true }] }),
+    'invalid': () => select({ name: 'project', label: 'Project', placeholder: 'Choose project', invalid: true, error: 'Choose a project.', options: ['Website', 'Mobile app', { label: 'Archived project', disabled: true }] }),
+    'disabled': () => select({ name: 'project', label: 'Project', placeholder: 'Choose project', disabled: true, options: ['Website', 'Mobile app', { label: 'Archived project', disabled: true }] }),
+    'loading': () => select({ name: 'project', label: 'Project', loading: true, options: ['Website', 'Mobile app', { label: 'Archived project', disabled: true }] }),
     'grouped': () => select({
-      name: 'grouped', label: 'Environment', value: 'Production',
-      groups: [{ label: 'Environments', options: ['Production', 'Staging'] }, { label: 'Local', options: ['Development'] }]
+      name: 'project', label: 'Project', placeholder: 'Choose project',
+      groups: [{ label: 'Design', options: ['Website', 'Mobile app'] }, { label: 'Engineering', options: [{ label: 'Archived project', disabled: true }, 'Platform'] }]
     }),
     'with footer action': () => select({
-      name: 'footer', label: 'Design', value: 'Design',
+      name: 'project', label: 'Project', value: 'Design',
       groups: [{ label: 'Options', options: [{ label: 'Design', icon: 'image' }, { label: 'Personal', icon: 'circle-user' }] }],
       actions: [{ key: 'add-option', label: 'Create new', icon: 'plus' }]
     }),
-    'long list': () => select({ name: 'long', label: 'Project', value: 'Project 1', options: longList }),
-    'Sizes': () => row(
-      select({ name: 'sm', ariaLabel: 'Small', size: 'sm', value: 'Base', options: ['Base'] }),
-      select({ name: 'base', ariaLabel: 'Base size', value: 'Base', options: ['Base'] }),
-      select({ name: 'lg', ariaLabel: 'Large', size: 'lg', value: 'Base', options: ['Base'] })
-    )
+    'long list': () => select({ name: 'project', label: 'Project', placeholder: 'Choose project', options: Array.from({ length: 40 }, (_, i) => `Project ${i + 1}`) }),
+    'Sizes': () => `<div class="sx-stack">${['sm', 'base', 'lg'].map(size => `<div class="sx-stack"><span class="sx-help">${{ sm: 'Small · 26px', base: 'Base · 30px', lg: 'Large · 34px' }[size]}</span>${select({ name: `project-${size}`, label: 'Project', placeholder: 'Choose project', size, options: ['Website', 'Mobile app', { label: 'Archived project', disabled: true }] })}</div>`).join('')}</div>`
   },
 
   'Tabs': {
-    'Segmented': () => tabs({ ariaLabel: 'Project view', variant: 'segmented', tabs: [{ label: 'Table', content: 'Requirements table.' }, { label: 'Tree', content: 'Requirements tree.' }, { label: 'Reader', content: 'Reading view.' }] }),
-    'Pill': () => tabs({ ariaLabel: 'Workspace view', variant: 'pill', tabs: [{ label: 'Agent', content: 'Agent workspace.' }, { label: 'Automations', content: 'Automation rules.' }] }),
+    'line': () => tabs({ ariaLabel: 'Agent directory', variant: 'line', tabs: [{ label: 'All', content: 'All agents available in this workspace.' }, { label: 'Favorites', content: 'Agents you have saved as favorites.' }, { label: 'Created by me', content: 'Agents you have created.' }] }),
     'segmented': () => tabs({ ariaLabel: 'Project view', variant: 'segmented', tabs: [{ label: 'Overview', content: 'Project overview and summary.' }, { label: 'Activity', content: 'Recent project activity.' }, { label: 'Settings', content: 'Project preferences.' }] }),
     'pill': () => tabs({ ariaLabel: 'Workspace view', variant: 'pill', tabs: [{ label: 'Agent', content: 'Agent workspace.' }, { label: 'Automations', content: 'Automation rules.' }] }),
     'disabled tab': () => tabs({ ariaLabel: 'Project view', tabs: [{ label: 'Overview', content: 'Overview panel.' }, { label: 'Settings', disabled: true }] })
@@ -279,7 +289,7 @@ const canonical = {
   },
 
   'Tree item': {
-    'Section header with action': () => treeSection('Projects', tree([{ label: 'Website launch', icon: 'folder' }]), { actionIcon: 'plus', actionLabel: 'Add project', actionAttributes: 'aria-label="Add project"' }),
+    'Section header with action': () => treeSection('Projects', tree([{ label: 'Website launch', icon: 'folder' }]), { actionIcon: 'plus', actionLabel: 'Add project' }),
     'Navigation': () => tree([
       { label: 'Dashboard', icon: 'home' }, { label: 'Projects', icon: 'folder' }, { label: 'Documents', icon: 'doc' },
       { label: 'Activity', icon: 'bell' }, { label: 'Team', icon: 'users' }, { label: 'Settings', icon: 'settings' }
@@ -289,8 +299,8 @@ const canonical = {
     'Three levels': () => tree([{ label: 'Projects', icon: 'folder', children: [{ label: 'Website', icon: 'folder', children: [{ label: 'Overview', icon: 'doc' }, { label: 'Guidelines', icon: 'doc' }] }, { label: 'Mobile app', icon: 'folder' }] }]),
     'Collapsed': () => tree([{ label: 'Projects', icon: 'folder', expanded: false, children: [{ label: 'Website', icon: 'folder', children: [{ label: 'Overview', icon: 'doc' }] }] }]),
     'With hover actions': () => tree([
-      { label: 'Projects', icon: 'folder', actions: ibtn('plus', '', 'Add to Projects') + ibtn('kebab', '', 'Actions for Projects') },
-      { label: 'Documents', icon: 'doc', actions: ibtn('plus', '', 'Add to Documents') + ibtn('kebab', '', 'Actions for Documents') }
+      { label: 'Projects', icon: 'folder', actions: iconButton('plus', { label: 'Add to Projects', tooltip: 'Add to Projects' }) + iconButton('kebab', { label: 'Actions for Projects', tooltip: 'Actions for Projects' }) },
+      { label: 'Documents', icon: 'doc', actions: iconButton('plus', { label: 'Add to Documents', tooltip: 'Add to Documents' }) + iconButton('kebab', { label: 'Actions for Documents', tooltip: 'Actions for Documents' }) }
     ]),
     'With loading': () => tree([{ label: 'Documents', icon: 'doc', loading: true }]),
     'Selected': () => tree([{ label: 'Projects', icon: 'folder', selected: true }])
@@ -319,7 +329,7 @@ const canonical = {
     'Framed': () => card({ title: 'Website redesign', description: 'Plan and track the next release.', actions: button({ label: 'Open', variant: 'secondary' }), attributes: 'style="max-width:300px"' }),
     'Bare': () => card({ title: 'Website redesign', attributes: 'style="max-width:300px"' }),
     'Selected': () => card({ title: 'Website redesign', description: 'Plan and track the next release.', selected: true, attributes: 'style="max-width:300px"' }),
-    'Expandable': () => card({ title: 'Website redesign', actions: ibtn('chevron-right', '', 'Expand item') }),
+    'Expandable': () => card({ header: label({ text: 'Project' }), title: 'Website redesign', expandAction: iconButton('chevron-right', { variant: 'raised', label: 'Expand item', tooltip: 'Expand item', attributes: 'data-canonical-toast="Expanded item"' }), attributes: 'style="max-width:300px"' }),
     'With status': () => card({ title: 'Website redesign', content: badge({ label: 'Draft' }), attributes: 'style="max-width:300px"' })
   },
 
@@ -347,32 +357,55 @@ const canonical = {
   },
 
   'Message': {
-    'User': () => message({ content: '<p>The peak motor torque requirement changed to 420 Nm. Update the downstream requirements and regenerate the motor housing.</p>' }),
     'Basic': () => message({ content: '<p>The project brief is ready. Please review the latest changes.</p>' }),
     'With sender': () => message({ sender: 'Jordan Lee', time: '10:30', content: '<p>The project brief is ready. Please review the latest changes.</p>' }),
     'Incoming': () => message({ sender: 'Jordan Lee', time: '10:30', content: '<p>The project brief is ready. Please review the latest changes.</p>' }),
-    'Sender / outgoing': () => message({ role: 'user', own: true, status: 'sent', time: '10:31', content: '<p>Reviewed — the scope looks good to send.</p>' }),
-    'Sender with attachment': () => message({ role: 'user', own: true, status: 'sent', content: '<p>Brief attached for review.</p>', attachments: fileCard({ name: 'Project brief.pdf', type: 'document' }) }),
-    'Comment / without bubble': () => message({ role: 'comment', sender: 'Jordan Lee', content: '<p>Concurrency looks fine after the fix.</p>' }),
-    'With attachment': () => message({ content: '<p>Latest draw attached.</p>', attachments: fileCard({ name: 'motor.step', type: 'other' }) }),
-    'With reply': () => message({ quote: { name: 'Alex Morgan', text: 'Is the project brief ready?' }, content: '<p>Yes — sending it now.</p>' }),
-    'With actions': () => message({ content: '<p>Ready for review.</p>', actions: [{ action: 'reply', icon: 'chat', label: 'Reply' }, { action: 'copy', icon: 'copy', label: 'Copy message' }] }),
-    'Sending': () => message({ role: 'user', own: true, status: 'sending', content: '<p>Sending the updated brief…</p>' }),
-    'Failed': () => message({ role: 'user', own: true, status: 'failed', content: '<p>This message could not be sent.</p>' }),
-    'Deleted': () => message({ role: 'user', status: 'deleted', content: '' }),
+    'Sender / outgoing': () => message({ role: 'user', own: true, sender: { isSelf: true }, status: 'sent', time: '10:30', content: '<p>Reviewed — the scope looks good to send.</p>' }),
+    'Sender with attachment': () => message({ role: 'user', own: true, sender: { isSelf: true }, status: 'sent', time: '10:30', content: '<p>Brief attached for review.</p>', attachments: fileCard({ name: 'Project brief.pdf', type: 'document' }) }),
+    'Comment / without bubble': () => message({ role: 'comment', sender: 'Jordan Lee', time: '10:30', content: '<p>Concurrency looks fine after the fix.</p>' }),
+    'With attachment': () => message({ sender: 'Jordan Lee', time: '10:30', content: '<p>Latest draw attached.</p>', attachments: fileCard({ name: 'motor.step', type: 'other' }) }),
+    'With reply': () => message({ sender: 'Jordan Lee', time: '10:30', quote: { name: 'Alex Morgan', text: 'Is the project brief ready?' }, content: '<p>Yes — sending it now.</p>' }),
+    'With actions': () => message({ sender: 'Jordan Lee', time: '10:30', content: '<p>Ready for review.</p>', actions: [{ action: 'reply', icon: 'chat', label: 'Reply' }, { action: 'copy', icon: 'copy', label: 'Copy message' }, { action: 'kebab', icon: 'kebab', label: 'Message actions' }] }),
+    'Sending': () => message({ role: 'user', own: true, sender: { isSelf: true }, status: 'sending', time: '10:30', content: '<p>Sending the updated brief…</p>' }),
+    'Failed': () => message({ role: 'user', own: true, sender: { isSelf: true }, status: 'failed', time: '10:30', content: '<p>This message could not be sent.</p>' }),
+    'Deleted': () => message({ sender: 'Jordan Lee', time: '10:30', status: 'deleted', content: '' }),
     'AI agent response': () => message({
       role: 'agent',
-      content: '<p>I reviewed the project brief. Next steps: confirm scope, assign owners, and validate the timeline.</p>',
-      actions: [{ action: 'copy', icon: 'copy', label: 'Copy response' }, { action: 'helpful', icon: 'thumbs-up', label: 'Helpful response' }]
+      sender: 'Sesama Agent',
+      time: '10:31',
+      content: 'I reviewed the project brief. Here are the next steps:<ol class="sx-agent-steps"><li>Confirm the updated scope.</li><li>Assign an owner to each milestone.</li><li>Review the delivery timeline with your team.</li></ol>',
+      actions: [
+        { action: 'copy', icon: 'copy', label: 'Copy response' },
+        { action: 'regenerate', icon: 'refresh-cw', label: 'Regenerate response' },
+        { action: 'helpful', icon: 'thumbs-up', label: 'Helpful response' },
+        { action: 'not-helpful', icon: 'thumbs-down', label: 'Not helpful response' },
+        { icon: 'kebab', label: 'More response actions', menu: 'Copy response,Report response' }
+      ]
     }),
-    'AI agent thinking': () => message({ role: 'agent', status: 'thinking' }),
-    'AI agent streaming': () => message({ role: 'agent', content: '<p>Reviewing the requirements…</p>' }),
+    'AI agent thinking': () => message({ role: 'agent', sender: 'Sesama Agent', time: '10:31', status: 'thinking' }),
+    'AI agent streaming': () => message({
+      role: 'agent',
+      sender: 'Sesama Agent',
+      time: '10:31',
+      status: 'streaming',
+      attributes: 'data-agent-message',
+      actions: '<div class="sx-row"><button type="button" class="btn outline" data-agent-stream="start">Start response</button><button type="button" class="btn outline" data-agent-stream="stop" disabled>Stop</button></div>'
+    }),
     'AI agent tool result': () => message({
       role: 'agent',
+      sender: 'Sesama Agent',
+      time: '10:31',
       content: agentRun({
         title: 'Document research', state: 'completed',
-        steps: [{ type: 'tool', name: 'Search documents', iconName: 'search', state: 'completed', input: 'Project brief', output: '3 sample documents found.' }]
-      }) + '<div data-message-content><p>Found the brief and two related documents.</p></div>'
+        steps: [{ type: 'tool', name: 'Search documents', iconName: 'search', state: 'completed', input: 'Latest project brief', output: '3 sample documents found.' }, { title: 'Summarize findings', state: 'completed' }]
+      }) + 'I found the latest project brief and two related documents. The brief includes the updated scope and delivery milestones.',
+      actions: [
+        { action: 'copy', icon: 'copy', label: 'Copy response' },
+        { action: 'regenerate', icon: 'refresh-cw', label: 'Regenerate response' },
+        { action: 'helpful', icon: 'thumbs-up', label: 'Helpful response' },
+        { action: 'not-helpful', icon: 'thumbs-down', label: 'Not helpful response' },
+        { icon: 'kebab', label: 'More response actions', menu: 'Copy response,Report response' }
+      ]
     })
   },
 
@@ -382,16 +415,17 @@ const canonical = {
   },
 
   'File card': {
-    'With preview': () => fileCard({ name: 'MTR-HSG-4200-R02.step', type: 'other', expanded: true, preview: `<div class="sx-file-icon-preview">${controlIcon('box', 80)}</div>` }),
+    'With preview': () => fileCard({ name: 'motor.step', type: 'other', expanded: true, preview: `<div class="sx-file-icon-preview">${controlIcon('box', 80)}</div>` }),
     'Without preview': () => fileCard({ name: 'motor.step', type: 'other' }),
     'Image': () => fileCard({ name: 'landscape.png', type: 'image', src: '/assets/file-preview.svg' }),
     'Document': () => fileCard({ name: 'Project brief.pdf', type: 'document' }),
+    'Wide document preview': () => `<div style="width:100%;--file-card-max-width:100%">${fileCard({ name: 'launch-brief.md', type: 'document', expanded: true, preview: '<p>Preview a document using the available layout width.</p>' })}</div>`,
     'Spreadsheet': () => fileCard({ name: 'Budget.xlsx', type: 'spreadsheet' }),
     'Presentation': () => fileCard({ name: 'Project overview.pptx', type: 'presentation' }),
     'Video': () => fileCard({ name: 'Product walkthrough.mp4', type: 'video' }),
     'Audio': () => fileCard({ name: 'Interview recording.mp3', type: 'audio' }),
     'Archive': () => fileCard({ name: 'Project assets.zip', type: 'archive' }),
-    'Other': () => fileCard({ name: 'Model.step', type: 'other' })
+    'Other': () => fileCard({ name: 'motor.step', type: 'other' })
   },
 
   'Input area': {
@@ -407,30 +441,19 @@ const canonical = {
     'character limit': () => textarea({ label: 'Description', maxLength: 120, placeholder: 'Describe your project…' })
   },
 
+  /* Table mirrors the legacy variant set: transparent header (ESM typography and
+     colors), badge statuses, checkbox selection, sticky header/column, fixed
+     layout, table-shaped loading skeleton and the empty/error states. */
   'Table': {
-    'Default': () => table({ label: 'Requirements', columns: tableColumns.slice(0, 2), rows: tableRows }),
-    'Sortable': () => table({ label: 'Requirements', columns: [{ key: 'name', header: 'Name', sortable: true }, { key: 'status', header: 'Status' }], rows: tableRows, sortKey: 'name' }),
-    'Selectable': () => table({
-      label: 'Requirements',
-      columns: [{ key: 'name', header: 'Name' }, { key: 'status', header: 'Status' }],
-      rows: tableRows,
-      rowAction: 'open'
-    }),
-    'default': () => table({ label: 'Requirements', columns: tableColumns.slice(0, 2), rows: tableRows }),
-    'with actions': () => table({
-      label: 'Requirements',
-      columns: [...tableColumns.slice(0, 2), { key: 'actions', header: 'Actions', align: 'right', render: (_, r) => `<div class="sx-table-actions">${button({ label: 'Edit', variant: 'ghost', attributes: `aria-label="Edit ${r.name}"` })}</div>` }],
-      rows: tableRows
-    }),
-    'compact': () => table({ label: 'Requirements', columns: tableColumns.slice(0, 2), rows: tableRows }),
-    'selection': () => table({
-      label: 'Requirements',
-      columns: [{ key: 'name', header: 'Name' }, { key: 'status', header: 'Status' }],
-      rows: tableRows
-    }),
-    'sticky header': () => table({ label: 'Requirements', columns: tableColumns, rows: tableRows, maxHeight: 200 }),
-    'loading': () => skeleton({ shape: 'line', count: 3 }),
-    'empty': () => table({ label: 'Requirements', columns: tableColumns, rows: [] }),
+    'default': () => table({ columns: [tableNameColumn, tableStatusColumn], rows: tableSampleRows() }),
+    'with actions': () => table({ columns: [tableNameColumn, tableStatusColumn, tableActionsColumn], rows: tableSampleRows() }),
+    'compact': () => table({ compact: true, columns: [tableNameColumn, tableStatusColumn], rows: tableSampleRows() }),
+    'selection': () => table({ selectionMode: 'multiple', columns: [tableNameColumn, tableStatusColumn], rows: tableSampleRows() }),
+    'fixed layout': () => table({ fixed: true, columns: [tableNameColumn, tableStatusColumn], rows: tableSampleRows() }),
+    'sticky header': () => table({ stickyHeader: true, maxHeight: 240, columns: [tableNameColumn, tableStatusColumn], rows: tableSampleRows(25) }),
+    'sticky column': () => table({ stickyFirstColumn: true, selectionMode: 'multiple', minWidth: 960, columns: [tableNameColumn, tableStatusColumn, tableOwnerColumn, tableUpdatedColumn], rows: tableSampleRows() }),
+    'loading': () => skeleton({ items: ['line', 'line-short', 'line', 'line-short', 'line', 'line-short'] }),
+    'empty': () => emptyState({ title: 'No projects yet', description: 'Create your first project to get started.', icon: 'folder', actions: button({ label: 'Create project', variant: 'primary' }) }),
     'error': () => emptyState({ title: 'Projects could not load', description: 'Please try loading the list again.', icon: 'circle-x', actions: button({ label: 'Retry', variant: 'primary' }) })
   },
 
@@ -476,22 +499,26 @@ const canonical = {
         content: inputField({ label: 'Name', name: 'modal-name', value: 'Website redesign', required: true }),
         actions: button({ label: 'Cancel', variant: 'secondary', attributes: 'data-modal-close' }) + button({ label: 'Save changes', variant: 'primary' })
       }),
-    'sm': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-modal-sm">Open small modal</button>` + modal({ id: 'canonical-modal-sm', title: 'Small modal', size: 'sm' }),
-    'base': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-modal-base">Open base modal</button>` + modal({ id: 'canonical-modal-base', title: 'Base modal' }),
-    'lg': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-modal-lg">Open large modal</button>` + modal({ id: 'canonical-modal-lg', title: 'Large modal', size: 'lg' }),
-    'xl': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-modal-xl">Open extra large modal</button>` + modal({ id: 'canonical-modal-xl', title: 'Extra large modal', size: 'xl' }),
+    'sm': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-modal-sm">Open small modal</button>` +
+      modal({ id: 'canonical-modal-sm', title: 'Project details', description: 'Review the project information before continuing.', size: 'sm', actions: modalActions() }),
+    'base': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-modal-base">Open base modal</button>` +
+      modal({ id: 'canonical-modal-base', title: 'Project details', description: 'Review the project information before continuing.', actions: modalActions() }),
+    'lg': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-modal-lg">Open large modal</button>` +
+      modal({ id: 'canonical-modal-lg', title: 'Project details', description: 'Review the project information before continuing.', size: 'lg', actions: modalActions() }),
+    'xl': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-modal-xl">Open extra large modal</button>` +
+      modal({ id: 'canonical-modal-xl', title: 'Project details', description: 'Review the project information before continuing.', size: 'xl', actions: modalActions() }),
     'long content': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-modal-long">Open long content modal</button>` +
-      modal({ id: 'canonical-modal-long', title: 'Long content', content: Array.from({ length: 10 }, (_, i) => `<p>Section ${i + 1}: review the project scope and delivery milestones.</p>`).join('') }),
+      modal({ id: 'canonical-modal-long', title: 'Project details', description: 'Review the project information before continuing.', bodyScroll: true, content: Array.from({ length: 10 }, (_, i) => `<p>Section ${i + 1}: review the project scope and delivery milestones.</p>`).join(''), actions: modalActions() }),
     'locked confirmation': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-modal-locked">Open locked confirmation</button>` +
-      modal({ id: 'canonical-modal-locked', title: 'Confirm changes', locked: true, actions: button({ label: 'Confirm', variant: 'primary', attributes: 'data-modal-close' }) }),
+      modal({ id: 'canonical-modal-locked', title: 'Confirm changes', description: 'Review the project information before continuing.', locked: true, actions: modalActions() }),
     'with Select': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-modal-select">Open modal with Select</button>` +
-      modal({ id: 'canonical-modal-select', title: 'Project details', content: select({ name: 'modal-team', label: 'Team', value: 'Design team', options: ['Design team', 'Engineering'] }) }),
+      modal({ id: 'canonical-modal-select', title: 'Project details', description: 'Review the project information before continuing.', content: select({ name: 'modal-team', label: 'Team', value: 'Design team', options: ['Design team', 'Engineering'] }), actions: modalActions() }),
     'with Popover': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-modal-pop">Open modal with Popover</button>` +
-      modal({ id: 'canonical-modal-pop', title: 'Project details', content: popover({ trigger: 'Filter options', content: '<div class="sx-pop-content"><span class="sx-help">Interactive panel.</span></div>' }) }),
+      modal({ id: 'canonical-modal-pop', title: 'Project details', description: 'Review the project information before continuing.', content: popover({ trigger: 'Filter options', content: '<div class="sx-pop-content"><span class="sx-help">Interactive panel.</span></div>' }), actions: modalActions() }),
     'with Combobox': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-modal-combo">Open modal with Combobox</button>` +
-      modal({ id: 'canonical-modal-combo', title: 'Project details', content: combobox({ label: 'Project' }) }),
+      modal({ id: 'canonical-modal-combo', title: 'Project details', description: 'Review the project information before continuing.', content: combobox({ label: 'Project' }), actions: modalActions() }),
     'with Dropdown': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-modal-dropdown">Open modal with Dropdown</button>` +
-      modal({ id: 'canonical-modal-dropdown', title: 'Project details', content: dropdownMenu({ trigger: 'Actions', items: [{ label: 'Edit', icon: 'pencil' }, { label: 'Delete', icon: 'trash', danger: true }] }) })
+      modal({ id: 'canonical-modal-dropdown', title: 'Project details', description: 'Review the project information before continuing.', content: dropdownMenu({ trigger: 'Actions', items: [{ label: 'Edit', icon: 'pencil' }, { label: 'Delete', icon: 'trash', danger: true }] }), actions: modalActions() })
   },
 
   'Agent Run': {
@@ -527,22 +554,22 @@ const canonical = {
   },
 
   'Menu': {
-    'plain': () => menu({ ariaLabel: 'Project actions', items: [{ label: 'Edit' }, { label: 'Duplicate' }, { label: 'Delete' }] }),
-    'default': () => menu({ ariaLabel: 'Project actions', items: [{ label: 'Edit', icon: 'pencil' }, { label: 'Duplicate', icon: 'copy' }, { type: 'separator' }, { label: 'Delete', icon: 'trash', danger: true }] }),
-    'grouped': () => menu({ ariaLabel: 'Project actions', groups: [{ label: 'Project', items: [{ label: 'Edit', icon: 'pencil' }, { label: 'Duplicate', icon: 'copy' }] }, { label: 'Manage', items: [{ label: 'Delete', icon: 'trash', danger: true }] }] }),
-    'without icons': () => menu({ ariaLabel: 'Project actions', items: [{ label: 'Edit' }, { label: 'Duplicate' }, { type: 'separator' }, { label: 'Delete', danger: true }] }),
-    'shortcuts': () => menu({ ariaLabel: 'Project actions', items: [{ label: 'Edit', shortcut: 'Enter' }, { label: 'Duplicate', shortcut: 'D' }, { type: 'separator' }, { label: 'Delete', shortcut: 'Delete', danger: true }] }),
-    'selection': () => menu({ ariaLabel: 'Visibility', groups: [{ label: 'Show', items: [{ label: 'Show sidebar', role: 'menuitemcheckbox', checked: true }] }, { label: 'Visibility', items: [{ label: 'Show archived', role: 'menuitemcheckbox', control: 'checkbox' }, { label: 'Show completed', role: 'menuitemcheckbox', control: 'checkbox', checked: true }] }, { label: 'Density', items: [{ label: 'Compact view', role: 'menuitemradio', control: 'radio', checked: true }, { label: 'Comfortable view', role: 'menuitemradio', control: 'radio' }] }] }),
-    'long list': () => menu({ ariaLabel: 'Projects', items: longList.map(n => ({ label: n, icon: 'folder' })) })
+    'plain': () => staticMenu({ ariaLabel: 'Project actions', items: [{ label: 'Edit' }, { label: 'Duplicate' }, { label: 'Delete' }] }),
+    'default': () => staticMenu({ ariaLabel: 'Project actions', items: [{ label: 'Edit', icon: 'pencil' }, { label: 'Duplicate', icon: 'copy' }, { type: 'separator' }, { label: 'Delete', icon: 'trash', danger: true }] }),
+    'grouped': () => staticMenu({ ariaLabel: 'Project actions', groups: [{ label: 'Project', items: [{ label: 'Edit', icon: 'pencil' }, { label: 'Duplicate', icon: 'copy' }] }, { label: 'Manage', items: [{ label: 'Delete', icon: 'trash', danger: true }] }] }),
+    'without icons': () => staticMenu({ ariaLabel: 'Project actions', items: [{ label: 'Edit' }, { label: 'Duplicate' }, { type: 'separator' }, { label: 'Delete', danger: true }] }),
+    'shortcuts': () => staticMenu({ ariaLabel: 'Project actions', items: [{ label: 'Edit', shortcut: 'Enter' }, { label: 'Duplicate', shortcut: 'D' }, { type: 'separator' }, { label: 'Delete', shortcut: 'Delete', danger: true }] }),
+    'selection': () => staticMenu({ ariaLabel: 'Visibility', groups: [{ label: 'Show', items: [{ label: 'Show sidebar', role: 'menuitemcheckbox', checked: true }] }, { label: 'Visibility', items: [{ label: 'Show archived', role: 'menuitemcheckbox', control: 'checkbox' }, { label: 'Show completed', role: 'menuitemcheckbox', control: 'checkbox', checked: true }] }, { label: 'Density', items: [{ label: 'Compact view', role: 'menuitemradio', control: 'radio', checked: true }, { label: 'Comfortable view', role: 'menuitemradio', control: 'radio' }] }] }),
+    'long list': () => staticMenu({ ariaLabel: 'Projects', items: longList.map(n => ({ label: n, icon: 'folder' })) })
   },
 
   'Menu Item': {
-    'Text only': () => menu({ ariaLabel: 'Text item', items: [{ label: 'Edit' }] }),
-    'With icon': () => menu({ ariaLabel: 'Icon item', items: [{ label: 'Edit', icon: 'pencil' }] }),
-    'Disabled': () => menu({ ariaLabel: 'Disabled item', items: [{ label: 'Move to workspace', disabled: true }] }),
-    'Danger': () => menu({ ariaLabel: 'Danger item', items: [{ label: 'Delete', danger: true }] }),
-    'Shortcut': () => menu({ ariaLabel: 'Shortcut item', items: [{ label: 'Duplicate', shortcut: 'D' }] }),
-    'Checkbox and radio': () => menu({ ariaLabel: 'Selection items', groups: [{ label: 'Checkmark', items: [{ label: 'Show sidebar', role: 'menuitemcheckbox', checked: true }] }, { label: 'Checkbox', items: [{ label: 'Show archived', role: 'menuitemcheckbox', control: 'checkbox' }, { label: 'Show completed', role: 'menuitemcheckbox', control: 'checkbox', checked: true }] }, { label: 'Radio', items: [{ label: 'Compact view', role: 'menuitemradio', control: 'radio', checked: true }, { label: 'Comfortable view', role: 'menuitemradio', control: 'radio' }] }] })
+    'Text only': () => staticMenu({ ariaLabel: 'Text item', items: [{ label: 'Edit' }] }),
+    'With icon': () => staticMenu({ ariaLabel: 'Icon item', items: [{ label: 'Edit', icon: 'pencil' }] }),
+    'Disabled': () => staticMenu({ ariaLabel: 'Disabled item', items: [{ label: 'Move to workspace', disabled: true }] }),
+    'Danger': () => staticMenu({ ariaLabel: 'Danger item', items: [{ label: 'Delete', danger: true }] }),
+    'Shortcut': () => staticMenu({ ariaLabel: 'Shortcut item', items: [{ label: 'Duplicate', shortcut: 'D' }] }),
+    'Checkbox and radio': () => staticMenu({ ariaLabel: 'Selection items', groups: [{ label: 'Checkmark', items: [{ label: 'Show sidebar', role: 'menuitemcheckbox', checked: true }] }, { label: 'Checkbox', items: [{ label: 'Show archived', role: 'menuitemcheckbox', control: 'checkbox' }, { label: 'Show completed', role: 'menuitemcheckbox', control: 'checkbox', checked: true }] }, { label: 'Radio', items: [{ label: 'Compact view', role: 'menuitemradio', control: 'radio', checked: true }, { label: 'Comfortable view', role: 'menuitemradio', control: 'radio' }] }] })
   },
 
   'Checkbox': {
@@ -599,6 +626,7 @@ const canonical = {
   'Popover': {
     'default': () => popover({
     trigger: 'Filter options',
+    align: 'center',
     content: '<div class="sx-popover-header">Filter projects</div>' +
       '<div class="sx-popover-body">' + inputField({ label: 'Project name', name: 'popover-project', placeholder: 'Search projects' }) + '</div>' +
       '<div class="sx-popover-footer">' + button({ label: 'Apply filters', variant: 'outline', attributes: 'data-canonical-toast="Filters applied.|success"' }) + '</div>'
@@ -614,6 +642,7 @@ const canonical = {
   },
 
   'Combobox': {
+    'Sizes': () => `<div class="sx-stack">${['sm', 'base', 'lg'].map(size => `<div class="sx-stack"><span class="sx-help">${{ sm: 'Small � 26px', base: 'Base � 30px', lg: 'Large � 34px' }[size]}</span>${combobox({ label: 'Project', size, options: ['Website', 'Mobile app'] })}</div>`).join('')}</div>`,
     'default': () => combobox({ label: 'Project' }),
     'disabled': () => combobox({ label: 'Project', disabled: true }),
     'invalid': () => combobox({ label: 'Project', invalid: true }),
@@ -630,12 +659,12 @@ const canonical = {
   },
 
   'Skeleton': {
-    'text': () => `<div class="sx-stack" aria-busy="true"><span class="sx-help" role="status">Loading content</span>${skeleton({ shape: 'line', count: 3 })}</div>`,
-    'avatar': () => `<div class="sx-stack" aria-busy="true"><span class="sx-help" role="status">Loading content</span><div class="sx-row">${skeleton({ shape: 'round', size: 32 })}${skeleton({ shape: 'line', width: '40%' })}</div></div>`,
-    'card': () => `<div class="sx-stack" aria-busy="true"><span class="sx-help" role="status">Loading content</span>${skeleton({ shape: 'card' })}</div>`,
-    'table': () => `<div class="sx-stack" aria-busy="true"><span class="sx-help" role="status">Loading content</span>${skeleton({ shape: 'line', count: 3 })}</div>`,
-    'Fill component container': () => `<div style="width:100%;height:160px;border-radius:var(--radius-md)">${skeleton({ shape: 'fill' })}</div>`,
-    'Custom dimensions': () => `<div class="sx-row"><div style="width:45%">${skeleton({ shape: 'line', height: 16 })}</div></div>`
+    'text': () => `<div class="sx sx-stack"><span class="sx-help" aria-hidden="true">Loading content</span>${skeleton({ items: ['line', 'line', 'line-short'] })}</div>`,
+    'avatar': () => `<div class="sx sx-stack"><span class="sx-help" aria-hidden="true">Loading content</span>${skeleton({ shape: 'round' })}</div>`,
+    'card': () => `<div class="sx sx-stack"><span class="sx-help" aria-hidden="true">Loading content</span>${skeleton({ shape: 'card' })}</div>`,
+    'table': () => `<div class="sx sx-stack"><span class="sx-help" aria-hidden="true">Loading content</span>${skeleton({ items: ['line', 'line-short', 'line', 'line-short', 'line', 'line-short'] })}</div>`,
+    'Fill component container': () => `<div style="width:100%;height:160px;border-radius:var(--radius-md)">${skeleton({ shape: 'fill', ariaLabel: 'Loading card' })}</div>`,
+    'Custom dimensions': () => `<div class="sx-row" role="status" aria-busy="true" aria-label="Loading profile" style="width:100%">${skeleton({ shape: 'round', size: 48, bare: true })}<div class="sx-stack" style="flex:1;min-width:0" aria-hidden="true">${skeleton({ shape: 'line', width: '45%', height: 16, bare: true })}${skeleton({ shape: 'line', width: '80%', height: 12, bare: true })}</div></div>`
   },
 
   'Pagination': {
@@ -660,7 +689,8 @@ const canonical = {
     'max tags': () => tagInput({ label: 'Tags', tags: ['Design', 'Review'], maxTags: 2 }),
     'read only': () => tagInput({ label: 'Tags', tags: ['Design', 'Review'], readonly: true }),
     'disabled': () => tagInput({ label: 'Tags', tags: ['Design', 'Review'], disabled: true }),
-    'invalid': () => tagInput({ label: 'Tags', invalid: true, error: 'A valid tag is required.' })
+    'invalid': () => tagInput({ label: 'Tags', invalid: true, error: 'A valid tag is required.' }),
+    'Sizes': () => `<div class="sx-stack">${['sm', 'base', 'lg'].map(size => `<div class="sx-stack"><span class="sx-help">${{ sm: 'Small · 26px', base: 'Base · 30px', lg: 'Large · 34px' }[size]}</span>${tagInput({ label: 'Tags', size, placeholder: 'Add a tag…' })}</div>`).join('')}</div>`
   },
 
   'Command Palette': {
@@ -729,23 +759,6 @@ const blockSamples = {
     'bordered': () => contentSection({ title: 'Section title', description: 'Optional description', content: demoBlock('Content slot'), variant: 'bordered' }),
     'divided': () => contentSection({ title: 'Section title', description: 'Optional description', content: demoBlock('Content slot'), variant: 'divided' })
   },
-  'Create skill dialog': {
-    'Default': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-skill-dialog">Open create skill dialog</button>` +
-      createSkillDialogRecipe({ id: 'canonical-skill-dialog' })
-  },
-  'Dashboard Overview': {
-    'Dashboard template': () => dashboardOverviewRecipe({
-      metrics: [
-        { label: 'Open queue', value: '38', change: '−12.4%', tone: 'success' },
-        { label: 'Active conversations', value: '126', change: '+5.2%', tone: 'neutral' },
-        { label: 'Median first reply', value: '4.1m', change: '−8.0%', tone: 'success' },
-        { label: 'Customer satisfaction', value: '94%', change: '+1.1%', tone: 'success' }
-      ],
-      chart: chartSection({ title: 'Conversation volume', chart: chart({ type: 'area', label: 'Conversation volume', data: chartData, series: chartSeries, height: 220 }), variant: 'bordered' }),
-      activity: contentSection({ title: 'Recent activity', content: activityFeed({ items: activities }), variant: 'bordered' }),
-      table: dataSection({ title: 'Recent projects', data: table({ label: 'Projects', columns: tableColumns, rows: tableRows }) })
-    })
-  },
   'Data Section': {
     'Full-width table': () => dataSection({
       title: 'Best-selling products',
@@ -753,17 +766,6 @@ const blockSamples = {
       actions: button({ label: 'Export', variant: 'outline' }),
       table: table({ label: 'Products', columns: tableColumns, rows: tableRows })
     })
-  },
-  'Data workspace': {
-    'Projects': () => `<div style="height:420px">${dataWorkspaceRecipe({
-      navigation: [{ label: 'Overview', icon: 'home', key: 'overview', selected: true }],
-      projects: [{ label: 'Website launch', icon: 'folder', children: [{ label: 'Review checklist', icon: false }] }],
-      table: table({ label: 'Datasets', columns: tableColumns, rows: tableRows })
-    })}</div>`
-  },
-  'Delete resource': {
-    'Default': () => `<button type="button" class="btn secondary" data-canonical-open="canonical-delete-dialog">Open delete dialog</button>` +
-      deleteResourceRecipe({ id: 'canonical-delete-dialog', resourceName: 'ARP-475A Compliance' })
   },
   'Metric Card': {
     'Summary without card': () => metricSummary({ value: '$28,450', change: '+12.4%', description: 'vs last month', tone: 'success' }),
@@ -798,42 +800,42 @@ const blockSamples = {
     'Team members': () => peopleList({ people: team }),
     'Empty': () => peopleList({})
   },
-  'Requirement group': {
-    'Default': () => requirementGroupRecipe({
-      requirements: [
-        { title: 'Peak Wheel Power', description: 'ARP-475A', status: 'In review' },
-        { title: 'Mass of Powertrain', description: 'Design constraint', status: 'Draft', priority: 'High' }
-      ]
-    })
-  },
-  'Resource list': {
-    'Default': () => resourceListRecipe({
-      title: 'Resources',
-      layout: 'list',
-      resources: [
-        { name: 'Website launch', type: 'Project', updated: 'Oct 24, 2026' },
-        { name: 'Mobile app', type: 'Project', updated: 'Oct 25, 2026' }
-      ]
-    })
-  },
-  'Revenue Chart': {
-    'Daily revenue': () => revenueChartRecipe({
-      chart: chart({ type: 'line', label: 'Revenue overview', data: chartData, series: revSeries, height: 220 })
-    })
-  },
   'Workspace Sidebar': {
     'Workspace navigation': () => workspaceSidebar({
+      projectsTitle: 'Launch projects',
       navigation: [{ label: 'Overview', icon: 'home', key: 'overview', selected: true }, { label: 'Reports', icon: 'grid-3x3', key: 'reports' }],
       projects: [{ label: 'Website launch', icon: 'folder', children: [{ label: 'Review launch checklist', icon: false }] }]
-    })
+    }),
+    'Compact rail': () => `<div style="height:420px">${workspaceSidebar({
+      id: 'catalog-compact-sidebar',
+      variant: 'compact',
+      navigation: iconButton('home', { label: 'Overview', variant: 'ghost', size: 'lg', tooltipPlacement: 'right', attributes: 'aria-current="page"' }) +
+        iconButton('grid-3x3', { label: 'Reports', variant: 'ghost', size: 'lg', tooltipPlacement: 'right' }) +
+        iconButton('settings', { label: 'Agent settings', variant: 'ghost', size: 'lg', tooltipPlacement: 'right' }),
+      profile: iconButton('sun', { label: 'Toggle theme', size: 'lg', tooltipPlacement: 'right', attributes: 'data-shell-theme' })
+    })}</div>`
   }
 };
 
 Object.assign(canonical, blockSamples);
 
 /* Component previews center inside the stage; full-width blocks opt out. */
-const FULL_WIDTH = new Set(['App Shell', 'Data workspace', 'Dashboard Overview', 'Page Grid', 'Data Section', 'Chart Section', 'Revenue Chart', 'Content Section', 'Resource list', 'Metric Card']);
+const FULL_WIDTH = new Set(['App Shell', 'Page Grid', 'Data Section', 'Chart Section', 'Content Section', 'Metric Card']);
 const wrap = html => `<div class="sui-root" style="width:100%">${html}</div>`;
+
+/* Message ESM demos surface the builder's action events as toasts (legacy demos use tooltips). */
+let messageDemosWired = false;
+function wireMessageDemos() {
+  if (messageDemosWired) return;
+  messageDemosWired = true;
+  document.addEventListener('sui:message:copy', () => showToast('Message copied.', 'success'));
+  document.addEventListener('sui:message:retry', () => showToast('Retrying message…', 'informative'));
+  document.addEventListener('sui:message:action', event => {
+    const action = event.detail?.action;
+    const label = { reply: 'Reply requested · demo', helpful: 'Feedback saved', 'not-helpful': 'Feedback saved', regenerate: 'Regenerating response…' }[action];
+    if (label) showToast(label, action === 'helpful' || action === 'not-helpful' ? 'success' : 'informative');
+  });
+}
 
 /* Interactive canonical previews need the runtime; rehydrate after each paint. */
 function hydrate() {
@@ -853,6 +855,7 @@ function hydrate() {
   }
 
   try { mount(document.body).refresh(); } catch {}
+  wireMessageDemos();
 
   document.querySelectorAll('[data-canonical-open]').forEach(btn => {
     if (btn.dataset.canonicalWired) return;
@@ -882,47 +885,114 @@ function hydrate() {
 }
 
 const stageStyle = document.createElement('style');
-stageStyle.textContent = '.stage .sui-root{display:grid;justify-items:center}.stage .sui-root.is-full{display:block}';
+stageStyle.textContent = '.stage .sui-root{display:grid;justify-items:center}.stage .sui-root.is-full{display:block}.stage .surface-comparison{display:grid;width:100%;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px;align-items:stretch}.surface-comparison-stage{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:16px;min-width:0;padding:24px;border-radius:12px;background:linear-gradient(145deg,var(--color-brand-tint),color-mix(in srgb,var(--color-brand) 48%,var(--color-base)));overflow:hidden}.surface-comparison-label{font-size:12px;color:var(--text-subtle)}';
 document.head.append(stageStyle);
+
+window.canonicalComponentExamples = name => {
+  const map = canonical[name];
+  if (!map) throw new Error(`Missing component examples: ${name}`);
+  return Object.entries(map).map(([variant, factory]) => {
+    const html = factory();
+    return { name: variant === '*' ? 'Default' : variant, html: `<div class="sui-root${FULL_WIDTH.has(name) ? ' is-full' : ''}" data-preview-component="${name}" style="width:100%">${html}</div>`, code: html };
+  }).concat(surfaceExamples(name), conversationExamples(name));
+};
+window.renderCanonicalComponent = x => renderComponentDocumentation(x[1], window.canonicalComponentExamples(x[1]));
+
+/* Blocks render canonical ESM examples as the source of truth; legacy examples are a fallback. */
+window.canonicalBlockExamples = (name, fallback) => {
+  const map = canonical[name];
+  if (!map) return typeof fallback === 'function' ? fallback() : [];
+  const out = [];
+  for (const [variant, factory] of Object.entries(map)) {
+    try {
+      const html = factory();
+      if (!html) continue;
+      out.push({
+        name: variant === '*' ? 'Default' : variant,
+        html: `<div class="sui-root${FULL_WIDTH.has(name) ? ' is-full' : ''}" data-preview-component="${name}" style="width:100%">${html}</div>`,
+        code: html
+      });
+    } catch (error) {
+      console.warn('[canonical-examples] Block preview unavailable for ' + name + ' / ' + variant + '; falling back to legacy examples.', error);
+      return typeof fallback === 'function' ? fallback() : out;
+    }
+  }
+  return out;
+};
 
 const originalExamples = window.componentExamples;
 if (typeof originalExamples === 'function') {
   window.componentExamples = function componentExamplesWithCanonical(x) {
-    const base = originalExamples(x);
-    const map = canonical[x[1]];
-    if (!map) return base;
-    const out = [];
-    for (const entry of base) {
-      out.push(entry);
-      const factory = map[entry.name] || map['*'];
-      if (!factory) continue;
-      try {
-        const html = factory();
-        if (!html) continue;
-        out.push({
-          name: entry.name + ' (ESM)',
-          html: `<div class="sui-root${FULL_WIDTH.has(x[1]) ? ' is-full' : ''}" style="width:100%">${html}</div>`,
-          description: 'Equivalent variant rendered by the canonical ESM builder (src/index.mjs).',
-          code: html
-        });
-      } catch (error) {
-        console.warn('[canonical-examples] ESM preview unavailable for ' + x[1] + ' / ' + entry.name, error);
-      }
-    }
-    return out;
+    if (x[0] === 'Components') return window.canonicalComponentExamples(x[1]);
+    if (x[0] === 'Blocks') return window.canonicalBlockExamples(x[1], () => originalExamples(x));
+    return originalExamples(x);
   };
 }
 
+// Keep navigation group state across catalog repaints.
+const sidebarStorageKey = 'sesama:design-system:sidebar';
+let savedSidebar = {};
+try { savedSidebar = JSON.parse(sessionStorage.getItem(sidebarStorageKey) || '{}') || {}; } catch {}
+const sidebarGroupState = new Map(Object.entries(savedSidebar.groups || {}).filter(([, value]) => typeof value === 'boolean'));
+const sidebarNav = document.getElementById('nav');
+let sidebarReady = false;
+let sidebarPosition = { top: Number(savedSidebar.top) || 0, left: Number(savedSidebar.left) || 0 };
+function saveSidebar() {
+  if (!sidebarReady) return;
+  sidebarPosition = { top: sidebarNav.scrollTop, left: sidebarNav.scrollLeft };
+  try { sessionStorage.setItem(sidebarStorageKey, JSON.stringify({ ...sidebarPosition, groups: Object.fromEntries(sidebarGroupState) })); } catch {}
+}
+sidebarNav.addEventListener('scroll', saveSidebar, { passive: true });
+window.addEventListener('pagehide', saveSidebar);
+window.canonicalSidebarGroup = (name, content) => `<div class="sui-root ds-nav-section">${collapsible({
+  id: `ds-nav-${name.toLowerCase()}`,
+  trigger: name,
+  content: `<div class="ds-nav-items">${content}</div>`,
+  open: sidebarGroupState.get(name) ?? true,
+  attributes: `data-nav-group="${name}"`,
+})}</div>`;
+document.addEventListener('sui:collapsible:toggle', event => {
+  const name = event.target.dataset.navGroup;
+  if (name) {
+    sidebarGroupState.set(name, event.detail.open);
+    saveSidebar();
+  }
+});
+
+// Home compositions use canonical builders, sized for the showcase tiles.
+const homePreviews = {
+  Combobox: () => combobox({ label: 'Project' }),
+  Avatar: () => avatar({ name: 'Jordan Lee', initials: 'JL', size: 48, color: 'auto' }),
+  Label: () => row(...['default', 'neutral', 'brand', 'success', 'warning', 'error', 'subtle'].map(tone => label({ text: tone[0].toUpperCase() + tone.slice(1), tone }))),
+};
+// Home uses the same canonical factories as the ESM component documentation.
+window.canonicalHomePreview = name => {
+  const examples = canonical[name];
+  const factory = homePreviews[name] || (examples && Object.values(examples)[0]);
+  if (!factory) throw new Error(`Missing ESM Home preview: ${name}`);
+  return `<div class="sui-root${FULL_WIDTH.has(name) ? ' is-full' : ''}" data-home-esm="${name}" style="width:100%">${factory()}</div>`;
+};
+
 window.CANONICAL_CONTROL_ICONS = CONTROL_ICON_NAMES;
-if (document.querySelector('#icon-basic-loading')) window.paint();
+// Initial catalog paint runs before this module: repaint so direct hash visits get the
+// ESM comparison examples (and the Icons page gets the control icon gallery).
+// The final paint below refreshes both direct links and Home.
 
 const originalPaint = window.paint;
 if (typeof originalPaint === 'function') {
   window.paint = function paintWithCanonical() {
+    saveSidebar();
+    const position = { ...sidebarPosition };
     const result = originalPaint();
     hydrate();
+    sidebarNav.scrollTop = position.top;
+    sidebarNav.scrollLeft = position.left;
+    sidebarReady = true;
     return result;
   };
 }
 
-hydrate();
+// Repaint the initial page now that ESM Home factories and hydration are ready.
+window.paint();
+
+document.addEventListener('click', event => { const target = event.target.closest('[data-catalog-favorite]'); if (!target || target.disabled) return; const pressed = target.getAttribute('aria-pressed') !== 'true'; target.setAttribute('aria-pressed', String(pressed)); target.setAttribute('aria-label', pressed ? 'Remove from favorites' : 'Add to favorites'); });

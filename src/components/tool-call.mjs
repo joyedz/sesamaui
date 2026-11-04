@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML, uid } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
@@ -14,7 +15,7 @@ const RUN_STATES = {
  * @param {Object} options
  * @returns {string} HTML string
  */
-export function toolCall(options = {}) {
+function buildToolCall(options = {}) {
   const id = options.id || uid('tool');
   const name = options.name || 'Tool call';
   const state = options.state || 'completed';
@@ -113,4 +114,10 @@ export function initToolCall(element) {
 
   instances.set(element, controller);
   return controller;
+}
+
+
+export function toolCall(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildToolCall(...args), mode, ["@root"]);
 }

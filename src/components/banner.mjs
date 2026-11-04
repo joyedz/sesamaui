@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
@@ -18,7 +19,7 @@ function toneDefaultIcon(tone) {
   }
 }
 
-export function banner(options = {}) {
+function buildBanner(options = {}) {
   const opts = typeof options === 'string' ? { description: options } : options;
   const {
     title = '',
@@ -124,4 +125,10 @@ export function initBanner(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function banner(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildBanner(...args), mode, ["@root"]);
 }

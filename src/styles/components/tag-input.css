@@ -1,13 +1,16 @@
 @import url("../base.css");
 
 /* Canonical Sesama tag input styles. */
-:where(.sui-root) .sx-tagbox{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-4);min-height:var(--control-size-base,30px);padding:3px var(--space-6);border:1px solid var(--color-hairline);border-radius:var(--radius-md);background:var(--color-base);transition:background-color var(--motion-fast) var(--ease-standard),color var(--motion-fast) var(--ease-standard),border-color var(--motion-fast) var(--ease-standard)}
+:where(.sui-root) .sx-tagbox{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-4);min-height:var(--control-size-base,30px);padding:3px var(--space-6);border:1px solid var(--color-hairline);border-radius:var(--radius-md);background:var(--color-base);background:color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);transition:background-color var(--motion-fast) var(--ease-standard),color var(--motion-fast) var(--ease-standard),border-color var(--motion-fast) var(--ease-standard)}
+/* Size ladder matches the Input Field control heights (sm 26 · base 30 · lg 34). */
+:where(.sui-root) .sx-tagbox.sx-size-sm{padding-block:2px;min-height:var(--control-size-sm,26px)}
+:where(.sui-root) .sx-tagbox.sx-size-lg{min-height:var(--control-size-lg,34px)}
 :where(.sui-root) .sx-tagbox input{font:inherit;background:none;color:var(--text-default);border:0;outline:none;min-width:60px;flex:1;width:60px;height:20px;padding:0;line-height:var(--font-control-line,20px);font-size:var(--font-ui-size)}
 :where(.sui-root) .sx-tagbox:focus-within{border-color:var(--color-brand-hover)}
 :where(.sui-root) .sx-tagbox[aria-invalid=true]{border-color:var(--color-danger)}
 :where(.sui-root) .sx-tagbox[data-disabled]{opacity:.5}
-:where(.sui-root) .sx-tagbox:not([data-disabled]):hover{background:color-mix(in srgb,var(--color-base),var(--color-contrast) 3%)}
-:where(.sui-root) .sx-tag{display:flex;align-items:center;height:20px;min-width:0;gap:var(--space-4);max-width:100%;padding:var(--space-2) var(--space-6);background:var(--color-recessed);border-radius:var(--radius-xs);font-size:12px;line-height:16px;transition:opacity var(--motion-fast) var(--ease-standard),transform var(--motion-fast) var(--ease-standard)}
+:where(.sui-root) .sx-tagbox:not([data-disabled]):hover{background:color-mix(in srgb,var(--color-base),var(--color-contrast) 3%);background:color-mix(in srgb, color-mix(in srgb,var(--color-base),var(--color-contrast) 3%) var(--sui-surface-opacity, 100%), transparent)}
+:where(.sui-root) .sx-tag{display:flex;align-items:center;height:20px;min-width:0;gap:var(--space-4);max-width:100%;padding:var(--space-2) var(--space-6);background:var(--color-recessed);background:color-mix(in srgb, var(--color-recessed) var(--sui-surface-opacity, 100%), transparent);border-radius:var(--radius-xs);font-size:12px;line-height:16px;transition:opacity var(--motion-fast) var(--ease-standard),transform var(--motion-fast) var(--ease-standard)}
 @starting-style{:where(.sui-root) .sx-tag{opacity:0;transform:scale(.95)}}
 @media(prefers-reduced-motion:reduce){:where(.sui-root) .sx-tag{transition:opacity var(--motion-fast) var(--ease-standard);transform:none}
 @starting-style{:where(.sui-root) .sx-tag{transform:none}}}

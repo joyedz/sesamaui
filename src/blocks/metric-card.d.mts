@@ -1,8 +1,11 @@
+import type { Surface } from '../surface.d.mts';
 export type MetricTone = 'success' | 'error' | 'neutral';
 export type MetricSize = 'default' | 'compact';
 export type MetricState = 'ready' | 'loading';
 
 export interface MetricSummaryOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   value?: string;
   change?: string;
   description?: string;
@@ -11,6 +14,8 @@ export interface MetricSummaryOptions {
 }
 
 export interface MetricCardOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   label?: string;
   value?: string;

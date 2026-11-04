@@ -1,8 +1,9 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML } from './shared.mjs';
 
 const VALID_VARIANTS = ['default', 'flat', 'bordered', 'recessed'];
 
-export function card(options = {}) {
+function buildCard(options = {}) {
   const {
     header = '',
     title = '',
@@ -10,6 +11,7 @@ export function card(options = {}) {
     content = '',
     footer = '',
     actions = '',
+    expandAction = '',
     variant = 'default',
     selected = false,
     attributes = '',
@@ -48,5 +50,11 @@ export function card(options = {}) {
     footerInner = `<div class="cf sx-card-footer">${footer || ''}${actionsMarkup}</div>`;
   }
 
-  return `<div ${attrs}>${headerMarkup}${bodyMarkup}${footerInner}</div>`;
+  return `<div ${attrs}>${headerMarkup}${bodyMarkup}${footerInner}${expandAction ? `<div class="sx-card-expand">${expandAction}</div>` : ''}</div>`;
+}
+
+
+export function card(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildCard(...args), mode, ["@root"]);
 }

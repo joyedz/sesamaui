@@ -1,5 +1,7 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { uid, escapeHTML } from './shared.mjs';
 import { button } from './button.mjs';
+import { controlIcon } from '../icons/controls.mjs';
 import { menu, initMenu } from './menu.mjs';
 import { positionOverlay, createDismissManager } from './overlay-helpers.mjs';
 
@@ -10,7 +12,7 @@ import { positionOverlay, createDismissManager } from './overlay-helpers.mjs';
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function dropdownMenu(options = {}) {
+function buildDropdownMenu(options = {}) {
   const {
     id = uid(),
     trigger = 'Actions',
@@ -19,6 +21,7 @@ export function dropdownMenu(options = {}) {
     placement = 'bottom',
     ariaLabel = 'Menu',
     attributes = '',
+    menuIndicator = false,
   } = options;
 
   const menuId = `${id}-menu`;
@@ -34,6 +37,10 @@ export function dropdownMenu(options = {}) {
     const { label = 'Actions', variant = 'secondary', icon = null, ...rest } = trigger;
     const triggerAttrs = `popovertarget="${escapeHTML(menuId)}" aria-haspopup="menu" aria-expanded="false" data-sui-dropdown-trigger${rest.attributes ? ` ${rest.attributes}` : ''}`;
     triggerMarkup = button({ label, variant, icon, attributes: triggerAttrs, ...rest });
+  }
+
+  if (menuIndicator) {
+    triggerMarkup = triggerMarkup.replace('</button>', `<span class="sep" aria-hidden="true"></span>${controlIcon('chevron-down', 16)}</button>`);
   }
 
   const menuMarkup = menu({
@@ -190,4 +197,10 @@ export function initDropdownMenu(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function dropdownMenu(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildDropdownMenu(...args), mode, ["sx-menu-list"]);
 }

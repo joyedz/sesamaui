@@ -1,10 +1,11 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
 const VALID_TONES = ['default', 'neutral', 'brand', 'success', 'warning', 'error', 'subtle'];
 const VALID_SIZES = ['sm', 'base'];
 
-export function label(options = {}) {
+function buildLabel(options = {}) {
   const opts = typeof options === 'string' ? { text: options } : options;
   const {
     text = '',
@@ -31,4 +32,10 @@ export function label(options = {}) {
   ].filter(Boolean).join(' ');
 
   return `<span ${attrs}>${iconMarkup}${textMarkup}</span>`;
+}
+
+
+export function label(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildLabel(...args), mode, ["@root"]);
 }

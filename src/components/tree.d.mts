@@ -1,4 +1,6 @@
+import type { Surface } from '../surface.d.mts';
 export interface TreeItemConfig {
+  surface?: Surface;
   id?: string;
   label?: string;
   icon?: string | boolean | null;
@@ -7,6 +9,10 @@ export interface TreeItemConfig {
   loading?: boolean;
   actions?: string;
   children?: TreeItemConfig[];
+  /** Trusted application HTML for rich branch rows. */
+  content?: string;
+  /** Section folders place the icon at the end and omit branch indentation. */
+  layout?: 'default' | 'section';
   attributes?: string;
   // Legacy aliases
   key?: string;
@@ -18,12 +24,16 @@ export interface TreeItemConfig {
 }
 
 export interface TreeOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   items?: TreeItemConfig[];
   ariaLabel?: string;
   attributes?: string;
 }
 
 export interface TreeSectionOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   title?: string;
   action?: string;
   content?: string;

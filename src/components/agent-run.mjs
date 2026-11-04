@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML, uid } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 import { toolCall, initToolCall } from './tool-call.mjs';
@@ -45,7 +46,7 @@ function renderStep(step, fallbackState = 'completed') {
  * @param {Object} options
  * @returns {string} HTML string
  */
-export function agentRun(options = {}) {
+function buildAgentRun(options = {}) {
   const id = options.id || uid('run');
   const title = options.title || 'Agent run';
   const state = options.state || 'completed';
@@ -149,4 +150,10 @@ export function initAgentRun(element) {
 
   instances.set(element, controller);
   return controller;
+}
+
+
+export function agentRun(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildAgentRun(...args), mode, ["@root"]);
 }

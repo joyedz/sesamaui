@@ -1,7 +1,9 @@
+import { applySurface, surfaceMode } from './shared.mjs';
+import { INPUT_SIZES } from './shared.mjs';
 import { uid, escapeHTML, tabStops } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
-export function select({
+function buildSelect({
   name = '',
   label = '',
   ariaLabel = '',
@@ -13,14 +15,19 @@ export function select({
   actions = [],
   size = 'base',
   inline = false,
+  popupWidth = 'trigger',
+  popupAlign = 'start',
   disabled = false,
+  loading = false,
   required = false,
   helper = '',
   error = '',
   invalid = false,
   icon = undefined,
 } = {}) {
-  if (!['sm', 'base', 'lg'].includes(size)) throw new TypeError('Invalid select size');
+  if (!INPUT_SIZES.includes(size)) throw new TypeError('Invalid select size');
+  if (!['trigger', 'content'].includes(popupWidth)) throw new TypeError('Invalid select popup width');
+  if (!['start', 'end'].includes(popupAlign)) throw new TypeError('Invalid select popup alignment');
 
   const normalize = entry => typeof entry === 'string'
     ? { label: entry, value: entry }
@@ -81,7 +88,7 @@ export function select({
   }
 
   const emptyOption = entries.some(entry => entry.value === '') ? '' : `<option value="" hidden ${!chosen ? 'selected' : ''}>${escapeHTML(placeholder)}</option>`;
-  const nativeSelect = `<select data-sui-select-native class="sui-sr-only" tabindex="-1" aria-hidden="true" name="${escapeHTML(name)}" ${required ? 'required' : ''} ${disabled ? 'disabled' : ''}>${emptyOption}${nativeOptions}</select>`;
+  const nativeSelect = `<select data-sui-select-native class="sui-sr-only" tabindex="-1" aria-hidden="true" name="${escapeHTML(name)}" ${required ? 'required' : ''} ${disabled || loading ? 'disabled' : ''}>${emptyOption}${nativeOptions}</select>`;
 
   const description = [helper ? helperId : '', isInvalid ? errorId : ''].filter(Boolean).join(' ');
 
@@ -93,7 +100,10 @@ export function select({
 
   const triggerIcon = icon ? controlIcon(icon) : '';
 
-  return `<div data-sui-select data-sui-placeholder="${escapeHTML(placeholder)}" data-sui-error-message="${escapeHTML(error || 'Choose an option.')}" ${required ? 'data-sui-required' : ''}><div class="form-field">${labelElement}<button type="button" id="${triggerId}" data-field-control class="sx-select sx-select-trigger sx-size-${size} ${inline ? 'inline' : ''}" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="${labelId} ${valueId}" aria-controls="${optionsId}" ${description ? `aria-describedby="${description}"` : ''} ${isInvalid ? `aria-invalid="true" aria-errormessage="${errorId}"` : ''} ${disabled ? 'disabled' : ''}>${triggerIcon}<span id="${valueId}" data-sui-select-label>${escapeHTML(chosen?.label || placeholder)}</span>${controlIcon('chevron-down', 16)}</button>${messagesElement}</div>${nativeSelect}<div id="${optionsId}" class="sx-popup sx-select-options" popover="manual" role="listbox" aria-label="${escapeHTML(label || ariaLabel || name || 'Select')}">${customOptions}${actionsMarkup}</div></div>`;
+  // Loading mirrors the legacy demo: disabled trigger, aria-busy, and a
+  // 'Loading projects…' value until real options arrive.
+  const displayLabel = chosen?.label || (loading ? 'Loading projects…' : placeholder);
+  return `<div data-sui-select data-sui-popup-width="${popupWidth}" data-sui-popup-align="${popupAlign}" data-sui-placeholder="${escapeHTML(loading && !value ? 'Loading projects…' : placeholder)}" data-sui-error-message="${escapeHTML(error || 'Choose an option.')}" ${required ? 'data-sui-required' : ''}><div class="form-field">${labelElement}<button type="button" id="${triggerId}" data-field-control class="sx-select sx-select-trigger sx-size-${size} ${inline ? 'inline' : ''}" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="${labelId} ${valueId}" aria-controls="${optionsId}" ${description ? `aria-describedby="${description}"` : ''} ${isInvalid ? `aria-invalid="true" aria-errormessage="${errorId}"` : ''} ${disabled || loading ? 'disabled' : ''} ${loading ? 'aria-busy="true"' : ''}>${triggerIcon}<span id="${valueId}" data-sui-select-label>${escapeHTML(displayLabel)}</span>${controlIcon('chevron-down', 16)}</button>${messagesElement}</div>${nativeSelect}<div id="${optionsId}" class="sx-popup sx-select-options" popover="manual" role="listbox" aria-label="${escapeHTML(label || ariaLabel || name || 'Select')}">${customOptions}${actionsMarkup}</div></div>`;
 }
 
 const mounted = new WeakMap();
@@ -111,6 +121,7 @@ export function initSelect(element) {
   const helperNode = element.querySelector('.form-help');
   const placeholder = element.dataset.suiPlaceholder || 'Choose an option';
   let form, open = false, search = '', searchTimer, destroyed = false, previousValue = control.value;
+  let anchorRect = null;
   const enabledOptions = () => [...popup.querySelectorAll('[data-sui-option]:not(:disabled)')];
   const findOption = value => [...popup.querySelectorAll('[data-sui-option]')].find(node => node.dataset.suiOption === String(value));
   const ensureActive = () => { if (destroyed) throw new Error('Select controller has been destroyed'); };
@@ -156,13 +167,20 @@ export function initSelect(element) {
   }
   function position() {
     const r = trigger.getBoundingClientRect();
+    const contentWidth = element.dataset.suiPopupWidth === 'content';
+    popup.style.maxWidth = `${Math.max(0, view.innerWidth - 16)}px`;
+    popup.style.width = contentWidth ? 'max-content' : `${r.width}px`;
+    popup.style.minWidth = contentWidth ? `${Math.min(r.width, view.innerWidth - 16)}px` : '';
+    const width = contentWidth ? popup.getBoundingClientRect().width : r.width;
     const spaceBelow = view.innerHeight - r.bottom;
     const spaceAbove = r.top;
     const needed = Math.min(240, popup.scrollHeight || 180);
     const placeAbove = spaceBelow < needed && spaceAbove > spaceBelow;
+    popup.style.maxHeight = `${Math.max(0, Math.min(240, (placeAbove ? spaceAbove : spaceBelow) - 12))}px`;
+    popup.style.overflowY = 'auto';
     popup.style.position = 'fixed';
-    popup.style.left = `${Math.max(8, Math.min(r.left, view.innerWidth - r.width - 8))}px`;
-    popup.style.width = `${r.width}px`;
+    const left = element.dataset.suiPopupAlign === 'end' ? r.right - width : r.left;
+    popup.style.left = `${Math.max(8, Math.min(left, view.innerWidth - width - 8))}px`;
     popup.style.top = placeAbove ? 'auto' : `${r.bottom + 4}px`;
     popup.style.bottom = placeAbove ? `${view.innerHeight - r.top + 4}px` : 'auto';
     popup.dataset.placement = placeAbove ? 'top' : 'bottom';
@@ -170,6 +188,7 @@ export function initSelect(element) {
   function openPopup(focusLast = false) {
     if (open || control.matches(':disabled')) return;
     open = true;
+    anchorRect = trigger.getBoundingClientRect();
     trigger.setAttribute('aria-expanded', 'true');
     popup.showPopover();
     position();
@@ -204,8 +223,16 @@ export function initSelect(element) {
     }
   }
   function onScroll(event) {
-    if (!event.target || !(event.target instanceof view.Node) || !popup.contains(event.target)) close();
-    else position();
+    if (!event.target || !(event.target instanceof view.Node) || !popup.contains(event.target)) {
+      // A scroll event that arrives right after open (scroll-into-view settle
+      // from the opening click) must not kill the popover: close only when the
+      // anchor trigger actually moved away from its open-time position.
+      if (anchorRect) {
+        const r = trigger.getBoundingClientRect();
+        if (Math.abs(r.left - anchorRect.left) < 1 && Math.abs(r.top - anchorRect.top) < 1) return;
+      }
+      close();
+    } else position();
   }
   function onPointer(event) {
     if (!event.target || !(event.target instanceof view.Node) || (!element.contains(event.target) && !popup.contains(event.target))) close();
@@ -378,4 +405,10 @@ export function initSelect(element) {
   };
   mounted.set(element, handle);
   return handle;
+}
+
+
+export function select(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildSelect(...args), mode, ["sx-select-trigger", "sx-select-options"]);
 }

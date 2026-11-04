@@ -1,8 +1,9 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML } from './shared.mjs';
 
 const VALID_TONES = ['neutral', 'informative', 'success', 'warning', 'error', 'disabled'];
 
-export function statusDot(options = {}) {
+function buildStatusDot(options = {}) {
   const opts = typeof options === 'string' ? { tone: options } : options;
   const {
     tone = 'neutral',
@@ -47,4 +48,10 @@ export function statusDot(options = {}) {
   ].filter(Boolean).join(' ');
 
   return `<span ${dotAttrs}></span>`;
+}
+
+
+export function statusDot(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildStatusDot(...args), mode, ["sx-status-dot"]);
 }

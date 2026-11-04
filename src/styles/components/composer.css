@@ -3,10 +3,11 @@
 :where(.sui-root) .sx-composer {
   width: 100%;
   min-width: min(320px, 100%);
-  max-width: 720px;
+  max-width: var(--composer-max-width, 720px);
   padding: var(--space-8) var(--space-12);
-  border-radius: var(--radius-xl);
+  border-radius: var(--composer-radius, 24px);
   background: var(--color-base);
+  background: color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);
   box-shadow: var(--shadow-ring);
   transition: box-shadow var(--motion-fast) var(--ease-standard);
   display: flex;
@@ -83,7 +84,8 @@
 
 :where(.sui-root) .composer textarea::placeholder,
 :where(.sui-root) .sx-composer textarea::placeholder {
-  color: var(--text-placeholder);
+  color: color-mix(in srgb, var(--text-placeholder) 75%, transparent);
+  opacity: 1;
 }
 
 /* Focus state belongs to the composer card; the textarea itself stays clean. */
@@ -117,15 +119,46 @@
 }
 
 :where(.sui-root) .composer-model {
+  flex: 0 0 auto;
+  width: max-content;
+  max-width: none;
+  min-width: 0;
+}
+
+:where(.sui-root) .composer-model .sx-select-trigger {
+  width: max-content;
+  max-width: none;
+  min-width: 0;
+}
+
+:where(.sui-root) .composer-model .sx-select-trigger > [data-sui-select-label] {
+  flex: none;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+/* Repository labels shrink before the content-sized model action. */
+:where(.sui-root) .sx-composer-bar > [data-sui-select] {
   flex: 0 1 auto;
   width: 140px;
   max-width: 160px;
   min-width: 0;
 }
 
-:where(.sui-root) .composer-model .sx-select-trigger {
+:where(.sui-root) .sx-composer-bar > [data-sui-select] .sx-select-trigger {
   width: 100%;
   min-width: 0;
+}
+
+/* Preserve complete model labels on narrow screens without toolbar overflow. */
+@media (max-width: 600px) {
+  :where(.sui-root) .sx-composer .sx-composer-bar {
+    flex-wrap: wrap;
+  }
+
+  :where(.sui-root) .composer-model {
+    margin-inline-start: auto;
+  }
 }
 
 :where(.sui-root) .composer .cbar > .ibtn,
@@ -150,6 +183,7 @@
 
 :where(.sui-root) .composer .ibtn[aria-pressed="true"] {
   background: var(--color-brand-tint);
+  background: color-mix(in srgb, var(--color-brand-tint) var(--sui-surface-opacity, 100%), transparent);
   color: var(--color-brand-text, var(--color-brand));
 }
 
@@ -158,6 +192,7 @@
   place-items: center;
   border-radius: 50%;
   background: var(--color-recessed);
+  background: color-mix(in srgb, var(--color-recessed) var(--sui-surface-opacity, 100%), transparent);
   color: var(--text-placeholder);
   cursor: pointer;
   border: 0;
@@ -166,6 +201,7 @@
 
 :where(.sui-root) .composer .send:not(:disabled) {
   background: var(--color-brand);
+  background: color-mix(in srgb, var(--color-brand) var(--sui-surface-opacity, 100%), transparent);
   color: var(--text-on-brand);
 }
 
@@ -180,3 +216,12 @@
   border-radius: 2px;
   background: currentColor;
 }
+
+/* Compact message bar; default stacked Composer keeps its existing layout. */
+:where(.sui-root) .sx-composer-compact { display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; column-gap:8px; row-gap:0; padding:6px 8px; border-radius:var(--composer-radius,16px); background:var(--color-recessed); background:color-mix(in srgb,var(--color-recessed) var(--sui-surface-opacity,100%),transparent); }
+:where(.sui-root) .sx-composer-compact .composer-attachments { grid-column:1/-1; }
+:where(.sui-root) .sx-composer-compact textarea { grid-column:2; grid-row:2; min-height:30px; padding:4px 0; }
+:where(.sui-root) .sx-composer-compact .sx-composer-leading { grid-column:1; grid-row:2; }
+:where(.sui-root) .sx-composer-compact .sx-composer-leading .ibtn { width:var(--control-size-lg,34px); height:var(--control-size-lg,34px); }
+:where(.sui-root) .sx-composer-compact .sx-composer-bar { grid-column:3; grid-row:2; margin:0; flex-wrap:nowrap; }
+

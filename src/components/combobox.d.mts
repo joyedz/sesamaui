@@ -1,3 +1,5 @@
+import type { Surface } from '../surface.d.mts';
+import type { InputSize } from './input.mjs';
 export interface ComboboxOption {
   id?: string;
   value: string;
@@ -12,6 +14,8 @@ export interface ComboboxGroup {
 }
 
 export interface ComboboxOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   name?: string;
   label?: string;
@@ -26,6 +30,7 @@ export interface ComboboxOptions {
   error?: string;
   loading?: boolean;
   clearable?: boolean;
+  size?: InputSize;
   attributes?: string;
 }
 

@@ -25,7 +25,9 @@ let browser;
   assert.deepEqual(await page.evaluate(()=>window.events),[{name:'team',value:'engineering',previousValue:'design'}]);
   await trigger.focus();await page.keyboard.press('ArrowDown');await page.keyboard.press('Home');await page.keyboard.press('Enter');assert.equal(await page.locator('select[name=team]').inputValue(),'design');
   await trigger.click();await page.keyboard.press('Escape');assert.equal(await trigger.getAttribute('aria-expanded'),'false');
-  await trigger.click();await page.evaluate(()=>window.dispatchEvent(new Event('scroll')));assert.equal(await trigger.getAttribute('aria-expanded'),'false');
+  // Scroll dismissal needs a REAL scroll that moves the anchor (the popup stays
+  // open while settle-scroll events without movement arrive after opening).
+  await trigger.click();await page.evaluate(()=>{document.body.style.minHeight='2500px';window.scrollTo(0,600);});await page.waitForTimeout(60);assert.equal(await trigger.getAttribute('aria-expanded'),'false');
   await page.evaluate(async()=>{const {initSelect}=await import('/src/index.mjs');const node=document.querySelector('[data-sui-select]');const a=initSelect(node);if(a!==initSelect(node))throw Error('Init is not idempotent');window.events=[];a.setValue('engineering');});
   assert.deepEqual(await page.evaluate(()=>window.events),[]);
   await page.getByRole('button',{name:'Reset',exact:true}).click();assert.equal(await page.locator('select[name=team]').inputValue(),'design');

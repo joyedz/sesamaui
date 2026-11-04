@@ -34,6 +34,8 @@
 }
 
 :where(.sui-root) .sx-table td {
+  font-size: var(--font-ui-size);
+  line-height: var(--font-ui-line);
   padding: var(--space-6) var(--space-8);
   height: 40px;
   vertical-align: middle;
@@ -62,6 +64,7 @@
 
 :where(.sui-root) .sx-table tr[aria-selected="true"] td {
   background: var(--color-tint);
+  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-table tbody > tr:last-child > td {
@@ -76,15 +79,34 @@
   position: sticky;
   top: 0;
   background: var(--color-base);
+  background: color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);
   z-index: 1;
+}
+
+/* Sticky first column (legacy parity): opaque cells so scrolled content passes
+   underneath; separate borders avoid collapsed-border artifacts on scroll. */
+:where(.sui-root) .sx-table .sticky-left {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--color-base);
+  background: color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);
+}
+
+:where(.sui-root) .sx-table:has(.sticky-left) {
+  border-collapse: separate;
 }
 
 :where(.sui-root) .sx-table tr:hover td {
   background: var(--color-tint);
+  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-table tr.selected td {
-  background: color-mix(in srgb, var(--color-brand) 8%, var(--color-base));
+  /* Neutral grey (slightly deeper than the hover tint) — selection is carried
+     by the checkbox, not by colour. */
+  background: color-mix(in srgb, var(--color-contrast) 9%, var(--color-base));
+  background: color-mix(in srgb, color-mix(in srgb, var(--color-contrast) 9%, var(--color-base)) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-table tr[data-table-row-action] {

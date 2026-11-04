@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from '../components/shared.mjs';
 import { escapeHTML, uid } from '../components/shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
@@ -7,10 +8,11 @@ import { controlIcon } from '../icons/controls.mjs';
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function pageHeader(options = {}) {
+function buildPageHeader(options = {}) {
   const {
     id = uid('page-header'),
     title = 'Page',
+    titleContent: customTitle = '',
     icon = 'file-text',
     description = '',
     actions = '',
@@ -43,7 +45,7 @@ export function pageHeader(options = {}) {
   const actionsHTML = actions ? `<div class="sb-header-actions">${actions}</div>` : '';
   const metaHTML = meta ? `<div class="sb-header-meta">${meta}</div>` : '';
 
-  const titleContent = `<h1>${escapeHTML(title)}</h1>${description ? `<p class="sb-header-desc">${escapeHTML(description)}</p>` : ''}${metaHTML}`;
+  const titleContent = customTitle || `<h1>${escapeHTML(title)}</h1>${description ? `<p class="sb-header-desc">${escapeHTML(description)}</p>` : ''}${metaHTML}`;
 
   let leftContent = '';
   if (breadcrumbs) {
@@ -53,4 +55,10 @@ export function pageHeader(options = {}) {
   }
 
   return `<header class="${classList}" data-sui-page-header id="${escapeHTML(id)}" ${extraAttrs.join(' ')}>${leftContent}${actionsHTML}</header>`;
+}
+
+
+export function pageHeader(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildPageHeader(...args), mode, ["@root"]);
 }

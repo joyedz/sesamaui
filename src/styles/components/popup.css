@@ -3,16 +3,18 @@
 :where(.sui-root) [popover]:not(:popover-open) {
   display: none !important;
 }
-:where(.sui-root) .sx-popup{position:fixed;inset:auto;margin:0;padding:var(--space-4);border:0;border-radius:var(--radius-md);background:var(--color-base);color:var(--text-default);box-shadow:var(--shadow-float);min-width:180px;max-width:min(360px,calc(100vw - 24px));max-height:min(360px,60dvh);overflow:auto;z-index:60;font:inherit}
+:where(.sui-root) .sx-popup{position:fixed;inset:auto;margin:0;padding:var(--space-4);border:0;border-radius:var(--radius-md);background:var(--color-base);background:color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);color:var(--text-default);box-shadow:var(--shadow-float);min-width:180px;max-width:min(360px,calc(100vw - 24px));max-height:min(360px,60dvh);overflow:auto;z-index:60;font:inherit}
 /* Thin scrollbar, pure webkit styling (no arrows; see scroll-area.css). */
 :where(.sui-root) .sx-popup::-webkit-scrollbar{width:6px;height:6px}
 :where(.sui-root) .sx-popup::-webkit-scrollbar-track{background:transparent}
-:where(.sui-root) .sx-popup::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:999px}
-:where(.sui-root) .sx-popup::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover)}
+:where(.sui-root) .sx-popup::-webkit-scrollbar-thumb{background:var(--scroll-thumb);background:color-mix(in srgb, var(--scroll-thumb) var(--sui-surface-opacity, 100%), transparent);border-radius:999px}
+:where(.sui-root) .sx-popup::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover);background:color-mix(in srgb, var(--scroll-thumb-hover) var(--sui-surface-opacity, 100%), transparent)}
 :where(.sui-root) .sx-popup::-webkit-scrollbar-button{display:none;width:0;height:0}
 :where(.sui-root) .sx-popup:popover-open{display:block}
-:where(.sui-root) .sx-menu-item{display:flex;align-items:center;gap:var(--space-8);width:100%;padding:var(--space-6) var(--space-8);min-height:28px;border-radius:var(--radius-sm);white-space:nowrap}
-:where(.sui-root) .sx-menu-item:hover,:where(.sui-root) .sx-menu-item:focus-visible{background:var(--color-tint)}
+/* flex:none: a long menu scrolls, it never squeezes its rows below their
+   natural height (a constrained column flex would crush them to min-height). */
+:where(.sui-root) .sx-menu-item{display:flex;align-items:center;gap:var(--space-8);width:100%;padding:var(--space-6) var(--space-8);min-height:28px;border-radius:var(--radius-sm);white-space:nowrap;flex:none}
+:where(.sui-root) .sx-menu-item:hover,:where(.sui-root) .sx-menu-item:focus-visible{background:var(--color-tint);background:color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent)}
 :where(.sui-root) .sx-menu-item:disabled{opacity:.5;cursor:not-allowed}
 :where(.sui-root) .sx-menu-item.danger{color:var(--color-danger)}
 :where(.sui-root) .sx-menu-label{padding:var(--space-8);font-size:11px;color:var(--text-placeholder)}
@@ -21,7 +23,7 @@
 @media(pointer:coarse){:where(.sui-root) .sx-menu-item{min-height:44px}}
 :where(.sui-root) .sx-menu-item>span{min-width:0;overflow:hidden;text-overflow:ellipsis}
 :where(.sui-root) .sx-menu-item>.sx-checkbox-control,:where(.sui-root) .sx-menu-item>.sx-radio-control{overflow:visible}
-:where(.sui-root) .sx-popup>[role=separator],:where(.sui-root) .sx-popup [role=group]+[role=separator]{height:1px;min-height:1px;background:var(--color-hairline);margin:var(--space-4) 0}
+:where(.sui-root) .sx-popup>[role=separator],:where(.sui-root) .sx-popup [role=group]+[role=separator]{height:1px;min-height:1px;background:var(--color-hairline);background:color-mix(in srgb, var(--color-hairline) var(--sui-surface-opacity, 100%), transparent);margin:var(--space-4) 0}
 :where(.sui-root) .sx-menu-item{font-size:var(--font-ui-size);font-weight:var(--font-regular)}
 :where(.sui-root) .sx-menu-item{line-height:var(--font-ui-line)}
 :where(.sui-root) .sx-menu-label{font-size:var(--font-meta-size);line-height:var(--font-meta-line);font-weight:var(--font-regular)}

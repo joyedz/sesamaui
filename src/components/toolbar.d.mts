@@ -1,3 +1,5 @@
+import type { Surface } from '../surface.d.mts';
+import type { ButtonSize } from './button.mjs';
 export type ToolbarOrientation = 'horizontal' | 'vertical';
 export type ToolbarSize = 'sm' | 'base';
 
@@ -15,7 +17,7 @@ export interface ToolbarButtonItem {
   label?: string;
   icon?: string;
   variant?: string;
-  size?: string;
+  size?: ButtonSize;
   disabled?: boolean;
   html?: string;
   attributes?: string;
@@ -25,6 +27,8 @@ export interface ToolbarButtonItem {
 export type ToolbarItem = ToolbarSeparatorItem | ToolbarGroupItem | ToolbarButtonItem | string;
 
 export interface ToolbarOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   ariaLabel?: string;
   items?: ToolbarItem[];
   orientation?: ToolbarOrientation;

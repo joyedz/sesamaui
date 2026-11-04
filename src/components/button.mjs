@@ -1,11 +1,14 @@
+import { applySurface, surfaceMode } from './shared.mjs';
+import { BUTTON_SIZES } from './shared.mjs';
 import { escapeHTML } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
+import { tooltip } from './tooltip.mjs';
 
 const VALID_VARIANTS = ['primary', 'secondary', 'outline', 'ghost', 'danger', 'dashed', 'destructive', 'secondary-destructive'];
-const VALID_SIZES = ['xs', 'sm', 'base', 'lg'];
+const VALID_SIZES = BUTTON_SIZES;
 const VALID_TYPES = ['button', 'submit', 'reset'];
 
-export function button(options = {}) {
+function buildButton(options = {}) {
   const opts = typeof options === 'string' ? { label: options } : options;
   const {
     label = '',
@@ -54,7 +57,7 @@ export function button(options = {}) {
   return `<button ${attrs}>${content}</button>`;
 }
 
-export function iconButton(nameOrOptions, options = {}, attributesArg = '', labelArg = '') {
+function buildIconButton(nameOrOptions, options = {}, attributesArg = '', labelArg = '') {
   let name = '';
   let label = '';
   let variant = '';
@@ -64,6 +67,8 @@ export function iconButton(nameOrOptions, options = {}, attributesArg = '', labe
   let attributes = '';
   let classesOpt = '';
   let id = '';
+  let tooltipText = '';
+  let tooltipPlacement = 'top';
 
   if (typeof nameOrOptions === 'object' && nameOrOptions !== null) {
     name = nameOrOptions.name || nameOrOptions.icon || '';
@@ -75,6 +80,8 @@ export function iconButton(nameOrOptions, options = {}, attributesArg = '', labe
     attributes = nameOrOptions.attributes || '';
     classesOpt = nameOrOptions.classes || nameOrOptions.class || '';
     id = nameOrOptions.id || '';
+    tooltipText = nameOrOptions.tooltip || '';
+    tooltipPlacement = nameOrOptions.tooltipPlacement || 'top';
   } else if (typeof options === 'string') {
     name = nameOrOptions;
     // Positional signature: iconButton(name, variant, attributes, label)
@@ -92,12 +99,14 @@ export function iconButton(nameOrOptions, options = {}, attributesArg = '', labe
     attributes = options.attributes || '';
     classesOpt = options.classes || options.class || '';
     id = options.id || '';
+    tooltipText = options.tooltip || '';
+    tooltipPlacement = options.tooltipPlacement || 'top';
   }
 
   if (size && !VALID_SIZES.includes(size)) throw new TypeError('Invalid icon button size');
 
   const classes = ['ibtn', variant, size ? `size-${size}` : '', classesOpt].filter(Boolean).join(' ');
-  const iconSize = size === 'lg' ? 18 : 16;
+  const iconSize = size === 'xs' ? 12 : size === 'lg' ? 18 : 16;
   const iconMarkup = controlIcon(name, iconSize);
 
   const attrs = [
@@ -111,10 +120,18 @@ export function iconButton(nameOrOptions, options = {}, attributesArg = '', labe
     attributes,
   ].filter(Boolean).join(' ');
 
-  return `<button ${attrs}>${iconMarkup}</button>`;
+  const buttonMarkup = `<button ${attrs}>${iconMarkup}</button>`;
+
+  // Every Icon Button exposes its accessible action label on hover and focus.
+  return tooltip({
+    trigger: buttonMarkup,
+    content: escapeHTML(tooltipText || label),
+    placement: tooltipPlacement,
+    attributes: tooltipText ? '' : 'data-sui-tooltip-from-label',
+  });
 }
 
-export function linkButton(labelOrOptions = '', options = {}) {
+function buildLinkButton(labelOrOptions = '', options = {}) {
   let label = '';
   let opts = options;
   if (typeof labelOrOptions === 'object' && labelOrOptions !== null) {
@@ -176,7 +193,7 @@ const SOCIAL_PROVIDERS = {
   },
 };
 
-export function socialButton(providerOrOptions, options = {}) {
+function buildSocialButton(providerOrOptions, options = {}) {
   let provider = '';
   let opts = options;
   if (typeof providerOrOptions === 'object' && providerOrOptions !== null) {
@@ -207,4 +224,25 @@ export function socialButton(providerOrOptions, options = {}) {
   ].filter(Boolean).join(' ');
 
   return `<button ${attrs}>${info.svg}<span>${escapeHTML(label)}</span></button>`;
+}
+
+
+export function button(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildButton(...args), mode, ["@button"]);
+}
+
+export function iconButton(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildIconButton(...args), mode, ["@button"]);
+}
+
+export function linkButton(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildLinkButton(...args), mode, ["@a|@button"]);
+}
+
+export function socialButton(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildSocialButton(...args), mode, ["@button"]);
 }

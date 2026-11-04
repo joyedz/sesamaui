@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from '../components/shared.mjs';
 import { contentSection } from './content-section.mjs';
 
 /**
@@ -6,7 +7,7 @@ import { contentSection } from './content-section.mjs';
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function dataSection(options = {}) {
+function buildDataSection(options = {}) {
   const {
     id,
     title = 'Records',
@@ -57,4 +58,10 @@ export function dataSection(options = {}) {
   });
 
   return markup.replace('class="sb-content-footer"', 'class="sb-content-footer sb-pagination-footer"');
+}
+
+
+export function dataSection(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildDataSection(...args), mode, ["@root"]);
 }

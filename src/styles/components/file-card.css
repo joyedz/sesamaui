@@ -2,9 +2,10 @@
 :where(.sui-root) .fcard,
 :where(.sui-root) .sx-file-card {
   width: 100%;
-  max-width: 250px;
+  max-width: var(--file-card-max-width, 250px);
   border-radius: var(--radius-md);
   background: var(--color-base);
+  background: color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);
   box-shadow: var(--shadow-ring);
   overflow: hidden;
   font-size: var(--font-ui-size);
@@ -42,7 +43,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--text-default);
+  color: var(--text-subtle);
   font-weight: 500;
 }
 
@@ -59,6 +60,7 @@
   padding: var(--space-12);
   border-top: 1px solid var(--color-hairline);
   background: var(--color-canvas);
+  background: color-mix(in srgb, var(--color-canvas) var(--sui-surface-opacity, 100%), transparent);
   min-height: 90px;
 }
 
@@ -86,3 +88,25 @@
   min-height: 120px;
   color: var(--text-placeholder);
 }
+
+
+:where(.sui-root) .sx-file-open > svg {
+  color: var(--text-placeholder);
+}
+
+/* Attachment row: file visual, stacked metadata, and trailing application actions. */
+:where(.sui-root) .sx-file-attachment {
+  width: fit-content;
+  max-width: var(--file-card-max-width, 420px);
+  background: transparent;
+  box-shadow: none;
+}
+:where(.sui-root) .sx-file-attachment .sx-file-head { gap:4px; padding:8px; border-radius:var(--radius-md); box-shadow:inset 0 0 0 1px var(--color-hairline); }
+:where(.sui-root) .sx-file-attachment .sx-file-head:hover { background:var(--color-tint); }
+:where(.sui-root) .sx-file-attachment .sx-file-open { gap:12px; padding:4px; border-radius:var(--radius-sm); }
+:where(.sui-root) .sx-file-attachment .sx-file-visual { display:grid; place-items:center; flex:0 0 36px; width:36px; height:40px; color:var(--text-subtle); }
+:where(.sui-root) .sx-file-attachment .sx-file-copy { display:grid; gap:2px; min-width:0; flex:1; }
+:where(.sui-root) .sx-file-attachment .sx-file-name { color:var(--text-default); line-height:20px; }
+:where(.sui-root) .sx-file-attachment .sx-file-size { line-height:16px; font-weight:400; }
+
+:where(.sui-root) .sx-file-actions { display:flex; align-items:center; gap:4px; flex-shrink:0; }

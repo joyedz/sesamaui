@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from '../components/shared.mjs';
 import { escapeHTML, uid } from '../components/shared.mjs';
 
 const VALID_VARIANTS = ['plain', 'bordered', 'divided'];
@@ -8,7 +9,7 @@ const VALID_VARIANTS = ['plain', 'bordered', 'divided'];
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function contentSection(options = {}) {
+function buildContentSection(options = {}) {
   const {
     id = uid('content-section'),
     title = '',
@@ -52,4 +53,10 @@ export function contentSection(options = {}) {
   const footerHTML = footer ? `<footer class="sb-content-footer">${footer}</footer>` : '';
 
   return `<section class="${classList}" data-sui-content-section id="${escapeHTML(id)}" ${extraAttrs.join(' ')}>${headingHTML}<div class="sb-content-body">${content}</div>${footerHTML}</section>`;
+}
+
+
+export function contentSection(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildContentSection(...args), mode, ["@root"]);
 }

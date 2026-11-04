@@ -3,23 +3,10 @@
  * Strictly scoped under :where(.sui-root)
  */
 
-:where(.sui-root) .sb-requirement-items {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2, 0.5rem);
-}
-
-:where(.sui-root) .sb-resource-rows {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1, 0.25rem);
-}
-
 :where(.sui-root) .sb-agent-header {
   display: flex;
   align-items: center;
-  gap: var(--space-3, 0.75rem);
-  margin-bottom: var(--space-3, 0.75rem);
+  gap: var(--space-12);
 }
 
 :where(.sui-root) .sb-agent-avatar-wrap {
@@ -35,6 +22,7 @@
 }
 
 :where(.sui-root) .sb-agent-meta {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -42,23 +30,23 @@
 
 :where(.sui-root) .sb-agent-name {
   margin: 0;
-  font-size: var(--font-size-base, 1rem);
-  font-weight: 600;
-  color: var(--color-fg-default, #18181b);
+  font-size: var(--font-ui-size);
+  font-weight: 500;
+  color: var(--text-default);
 }
 
 :where(.sui-root) .sb-agent-sub {
   display: flex;
   align-items: center;
   gap: var(--space-2, 0.5rem);
-  font-size: var(--font-size-xs, 0.75rem);
-  color: var(--color-fg-muted, #71717a);
+  font-size: var(--font-meta-size);
+  color: var(--text-subtle);
 }
 
 :where(.sui-root) .sb-agent-desc {
-  margin: 0 0 var(--space-3, 0.75rem) 0;
-  font-size: var(--font-size-sm, 0.875rem);
-  color: var(--color-fg-muted, #71717a);
+  margin: 0;
+  font-size: var(--font-ui-size);
+  color: var(--text-subtle);
   line-height: 1.5;
 }
 
@@ -66,60 +54,4 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1, 0.25rem);
-}
-
-:where(.sui-root) .sb-create-skill-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4, 1rem);
-}
-
-:where(.sui-root) .sb-recipe-field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1, 0.25rem);
-}
-
-:where(.sui-root) .sb-delete-resource-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3, 0.75rem);
-}
-
-:where(.sui-root) .sb-delete-resource-warning {
-  margin: 0;
-  font-size: var(--font-size-sm, 0.875rem);
-  color: var(--color-fg-muted, #71717a);
-  line-height: 1.5;
-}
-
-:where(.sui-root) .sb-delete-confirm-box {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2, 0.5rem);
-  margin-top: var(--space-2, 0.5rem);
-}
-
-:where(.sui-root) .sb-delete-confirm-prompt {
-  margin: 0;
-  font-size: var(--font-size-xs, 0.75rem);
-  color: var(--color-fg-muted, #71717a);
-}
-
-:where(.sui-root) .sb-dashboard-overview {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6, 1.5rem);
-}
-
-:where(.sui-root) .sb-overview-metrics {
-  margin-bottom: var(--space-2, 0.5rem);
-}
-
-:where(.sui-root) .sb-overview-main-grid {
-  margin-bottom: var(--space-2, 0.5rem);
-}
-
-:where(.sui-root) .sb-overview-table {
-  width: 100%;
 }

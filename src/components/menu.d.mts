@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 import { MenuItemOptions } from './menu-item.d.mts';
 
 export interface MenuGroup {
@@ -8,6 +9,8 @@ export interface MenuGroup {
 export type MenuItemEntry = MenuItemOptions | { type: 'separator' } | { type: 'group'; label: string; items: MenuItemOptions[] } | string;
 
 export interface MenuOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   ariaLabel?: string;
   items?: MenuItemEntry[];

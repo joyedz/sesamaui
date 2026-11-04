@@ -1,3 +1,4 @@
+export type { Surface } from './surface.d.mts';
 export type Size = 'xs' | 'sm' | 'base' | 'lg';
 
 export type {
@@ -359,15 +360,7 @@ export type {
 } from './blocks/chart-section.d.mts';
 
 export type {
-  RequirementItem,
-  RequirementGroupRecipeOptions,
-  ResourceListRecipeOptions,
   AgentCardRecipeOptions,
-  CreateSkillDialogRecipeOptions,
-  DeleteResourceRecipeOptions,
-  DashboardOverviewRecipeOptions,
-  RevenueChartRecipeOptions,
-  DataWorkspaceRecipeOptions,
 } from './blocks/recipes.d.mts';
 
 export { button, iconButton, linkButton, socialButton } from './components/button.mjs';
@@ -428,16 +421,7 @@ export { peopleList } from './blocks/people-list.mjs';
 export { activityFeed } from './blocks/activity-feed.mjs';
 export { metricCard, metricSummary } from './blocks/metric-card.mjs';
 export { chartSection } from './blocks/chart-section.mjs';
-export {
-  requirementGroupRecipe,
-  resourceListRecipe,
-  agentCardRecipe,
-  createSkillDialogRecipe,
-  deleteResourceRecipe,
-  dashboardOverviewRecipe,
-  revenueChartRecipe,
-  dataWorkspaceRecipe,
-} from './blocks/recipes.mjs';
+export {agentCardRecipe} from './blocks/recipes.mjs';
 export function controlIcon(name: string, size?: number): string;
 export function runeIcon(name: string, size?: number): string;
 export const CONTROL_ICON_NAMES: string[];

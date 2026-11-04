@@ -1,4 +1,7 @@
+import type { Surface } from '../surface.d.mts';
 export interface CollapsibleOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   trigger?: string;
   content?: string;

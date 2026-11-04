@@ -1,8 +1,13 @@
+import type { Surface } from '../surface.d.mts';
 export interface SwitchOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   name?: string;
   value?: string;
   label?: string;
+  /** Accessible name when no visible label is rendered. */
+  ariaLabel?: string;
   description?: string;
   checked?: boolean;
   disabled?: boolean;

@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 export interface PageGridItem {
   html: string;
   span?: number;
@@ -6,6 +7,8 @@ export interface PageGridItem {
 }
 
 export interface PageGridOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   compact?: boolean;
   id?: string;
   attributes?: string | Record<string, string>;

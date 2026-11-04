@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 export interface ActivityItem {
   id?: string;
   title: string;
@@ -14,6 +15,8 @@ export interface ActivityItem {
 export type ActivityFeedItem = ActivityItem;
 
 export interface ActivityFeedOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   title?: string;
   items?: ActivityItem[];

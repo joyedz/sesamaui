@@ -12,7 +12,7 @@ import { initChip } from './components/chip.mjs';
 import { initMenu } from './components/menu.mjs';
 import { initPopover } from './components/popover.mjs';
 import { initDropdownMenu } from './components/dropdown-menu.mjs';
-import { initTooltip } from './components/tooltip.mjs';
+import { initTooltip, initIconButtonTooltip } from './components/tooltip.mjs';
 import { initToastRegion } from './components/toast.mjs';
 import { initButtonGroup } from './components/button-group.mjs';
 import { initCommandPalette } from './components/command-palette.mjs';
@@ -51,6 +51,7 @@ export const controllerRegistry = new Map([
   ['[data-sui-popover]', initPopover],
   ['[data-sui-dropdown-menu]', initDropdownMenu],
   ['[data-sui-tooltip]', initTooltip],
+  ['button.ibtn[aria-label]:not([data-sui-tooltip] *):not([data-sx-tooltip])', initIconButtonTooltip],
   ['[data-sui-toast-region]', initToastRegion],
   ['[data-sui-button-group-wrapper]', initButtonGroup],
   ['dialog[data-sui-command-palette]', initCommandPalette],

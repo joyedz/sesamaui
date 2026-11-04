@@ -5,6 +5,13 @@
   flex-direction: column;
 }
 
+/* Space real rows, without adding gaps for collapsed branch containers. */
+:where(.sui-root) .sx-tree > :is(.ti, .sx-tree-action-row) ~ :is(.ti, .sx-tree-action-row),
+:where(.sui-root) [data-branch] > div > :is(.ti, .sx-tree-action-row) ~ :is(.ti, .sx-tree-action-row),
+:where(.sui-root) [data-branch][data-open] > div > :is(.ti, .sx-tree-action-row):first-child {
+  margin-top:var(--tree-item-gap, 2px);
+}
+
 :where(.sui-root) .ti {
   display: flex;
   align-items: center;
@@ -33,6 +40,7 @@
 
 :where(.sui-root) .ti:hover {
   background: var(--color-tint);
+  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .ti:focus-visible {
@@ -43,6 +51,7 @@
 :where(.sui-root) .ti.on,
 :where(.sui-root) .ti[data-active="true"] {
   background: var(--color-tint);
+  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .ti[data-fold].on {
@@ -56,6 +65,7 @@
 
 :where(.sui-root) .ti[data-fold]:hover {
   background: var(--color-tint);
+  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .ti .sp {
@@ -121,10 +131,31 @@
   color: var(--text-default);
 }
 
+/* Branch expansion animates like the Collapsible: the height slides open/closed
+   on the shared motion tokens (interpolate-size makes height:auto animatable;
+   unsupported browsers fall back to an instant toggle). */
 :where(.sui-root) .br,
 :where(.sui-root) [data-branch] {
   display: flex;
   padding-left: var(--space-8);
+  overflow: hidden;
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: height var(--motion-base) var(--ease-out), opacity var(--motion-base) var(--ease-out), visibility var(--motion-base) var(--ease-out);
+}
+
+:where(.sui-root) [data-branch][data-open] {
+  height: auto;
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.sui-root) .br,
+  :where(.sui-root) [data-branch] {
+    transition: none;
+  }
 }
 
 :where(.sui-root) .br > i,
@@ -141,6 +172,7 @@
   content: "";
   width: 1px;
   background: var(--color-hairline);
+  background: color-mix(in srgb, var(--color-hairline) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .br > div,
@@ -193,6 +225,11 @@
 }
 
 /* Tree section */
+:where(.sui-root) .ti.sx-tree-section-item { padding-inline:0; }
+:where(.sui-root) .ti.sx-tree-section-item > .sx-tree-label { font-weight:500; }
+:where(.sui-root) .br.sx-tree-section-branch { padding-left:0; }
+:where(.sui-root) .sx-tree-section-branch > i { display:none; }
+:where(.sui-root) .sx-tree-section-branch > div { width:100%; min-width:0; }
 :where(.sui-root) .sx-tree-section {
   width: 100%;
   min-width: 0;
@@ -218,7 +255,8 @@
   margin-left: var(--space-8);
 }
 
-:where(.sui-root) .sx-tree-section-header > .ibtn {
+:where(.sui-root) .sx-tree-section-header > .ibtn,
+:where(.sui-root) .sx-tree-section-header > .sx-tooltip-wrap > .ibtn {
   flex: none;
   width: 20px;
   height: 20px;

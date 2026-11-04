@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 export type ToastTone = 'neutral' | 'informative' | 'success' | 'warning' | 'error' | 'loading';
 
 export interface ToastAction {
@@ -7,6 +8,7 @@ export interface ToastAction {
 }
 
 export interface ToastOptions {
+  surface?: Surface;
   message: string;
   title?: string;
   tone?: ToastTone;

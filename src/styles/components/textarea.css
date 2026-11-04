@@ -36,11 +36,13 @@
 
 :where(.sui-root) .sx-textarea::-webkit-scrollbar-thumb {
   background: var(--scroll-thumb);
+  background: color-mix(in srgb, var(--scroll-thumb) var(--sui-surface-opacity, 100%), transparent);
   border-radius: 999px;
 }
 
 :where(.sui-root) .sx-textarea::-webkit-scrollbar-thumb:hover {
   background: var(--scroll-thumb-hover);
+  background: color-mix(in srgb, var(--scroll-thumb-hover) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-textarea::-webkit-scrollbar-corner {
@@ -58,6 +60,7 @@
   font: inherit;
   color: var(--text-default);
   background: var(--color-base);
+  background: color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);
   padding: var(--space-8);
   border: 1px solid var(--color-control-edge, var(--color-hairline));
   border-radius: var(--radius-md);
@@ -80,6 +83,7 @@
 
 :where(.sui-root) .sx-textarea:not(:disabled):hover {
   background: color-mix(in srgb, var(--color-base), var(--color-contrast) 3%);
+  background: color-mix(in srgb, color-mix(in srgb, var(--color-base), var(--color-contrast) 3%) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-textarea:disabled {

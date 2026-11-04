@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML, uid as uniqueId } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
@@ -7,7 +8,7 @@ import { controlIcon } from '../icons/controls.mjs';
  * @param {object} [options]
  * @returns {string} HTML string
  */
-export function collapsible(options = {}) {
+function buildCollapsible(options = {}) {
   const {
     id = uniqueId('sui-collapsible'),
     trigger = 'Details',
@@ -160,4 +161,10 @@ export function initCollapsible(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function collapsible(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildCollapsible(...args), mode, ["@root"]);
 }

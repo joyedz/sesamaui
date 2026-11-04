@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML, uid as uniqueId } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
@@ -9,10 +10,11 @@ const VALID_VARIANTS = new Set(['segmented', 'pill', 'line']);
  * @param {object} [options]
  * @returns {string} HTML string
  */
-export function tabs(options = {}) {
+function buildTabs(options = {}) {
   const {
     id = uniqueId('sui-tabs'),
     ariaLabel = 'Tabs',
+    panelId: externalPanelId = '',
     variant = 'segmented',
     tabs: rawTabs = [],
     activeTabId: userActiveTabId,
@@ -30,6 +32,7 @@ export function tabs(options = {}) {
       id: t.id ? String(t.id) : `tab-${idx}`,
       label: t.label || '',
       icon: t.icon || '',
+      leading: t.leading || '',
       disabled: Boolean(t.disabled),
       content: t.content || '',
     };
@@ -45,24 +48,26 @@ export function tabs(options = {}) {
   const buttonsHtml = normalizedTabs.map(t => {
     const isSelected = t.id === activeId;
     const tabBtnId = `${id}-tab-${t.id}`;
-    const panelId = `${id}-panel-${t.id}`;
-    const iconHtml = t.icon ? `<span class="sx-tab-icon" aria-hidden="true">${controlIcon(t.icon, 14)}</span>` : '';
+    const panelId = externalPanelId || `${id}-panel-${t.id}`;
+    const iconHtml = t.leading ? `<span class="sx-tab-icon" aria-hidden="true">${t.leading}</span>` : t.icon ? `<span class="sx-tab-icon" aria-hidden="true">${controlIcon(t.icon, 14)}</span>` : '';
     const disabledAttr = t.disabled ? ' disabled aria-disabled="true"' : '';
     const selectedClass = isSelected ? ' on' : '';
 
     return `<button type="button" role="tab" id="${escapeHTML(tabBtnId)}" class="sx-tab${selectedClass}" aria-controls="${escapeHTML(panelId)}" aria-selected="${isSelected ? 'true' : 'false'}" tabindex="${isSelected ? '0' : '-1'}" data-tab-id="${escapeHTML(t.id)}"${disabledAttr}>${iconHtml}<span class="sx-tab-label">${escapeHTML(t.label)}</span></button>`;
   }).join('');
 
-  const panelsHtml = normalizedTabs.map(t => {
+  const panelsHtml = externalPanelId ? '' : normalizedTabs.map(t => {
     const isSelected = t.id === activeId;
     const tabBtnId = `${id}-tab-${t.id}`;
-    const panelId = `${id}-panel-${t.id}`;
+    const panelId = externalPanelId || `${id}-panel-${t.id}`;
     const hiddenAttr = isSelected ? '' : ' hidden';
 
     return `<div role="tabpanel" id="${escapeHTML(panelId)}" aria-labelledby="${escapeHTML(tabBtnId)}" tabindex="0" class="sx-tabpanel" data-panel-id="${escapeHTML(t.id)}"${hiddenAttr}>${t.content}</div>`;
   }).join('');
 
-  return `<div class="sx-tabs sx-tabs-${validVariant}" data-sui-tabs data-variant="${validVariant}" id="${escapeHTML(id)}"${attributes ? ` ${attributes}` : ''}><div class="sx-tablist ${tablistClass}" role="tablist" aria-label="${escapeHTML(ariaLabel)}">${buttonsHtml}</div><div class="sx-tabpanels">${panelsHtml}</div></div>`;
+  // All variants share an active indicator; line renders it as an underline.
+  const thumbHtml = '<span class="sx-tab-thumb" aria-hidden="true"></span>';
+  return `<div class="sx-tabs sx-tabs-${validVariant}" data-sui-tabs data-variant="${validVariant}" id="${escapeHTML(id)}"${attributes ? ` ${attributes}` : ''}><div class="sx-tablist ${tablistClass}" role="tablist" aria-label="${escapeHTML(ariaLabel)}">${thumbHtml}${buttonsHtml}</div>${externalPanelId ? '' : `<div class="sx-tabpanels">${panelsHtml}</div>`}</div>`;
 }
 
 const mounted = new WeakMap();
@@ -89,6 +94,26 @@ export function initTabs(element) {
   let currentActiveId = element.querySelector('[role="tab"][aria-selected="true"]')?.dataset.tabId || '';
   let destroyed = false;
 
+  // Sliding indicator: one surface glides behind the active tab.
+  const thumb = element.querySelector('.sx-tab-thumb');
+  function positionThumb() {
+    if (!thumb) return;
+    const active = tablist.querySelector('[role="tab"][aria-selected="true"]');
+    if (!active) return;
+    if (element.dataset.variant === 'line') {
+      thumb.style.transform = `translateX(${active.offsetLeft}px) scaleX(${active.offsetWidth})`;
+      return;
+    }
+    thumb.style.left = `${active.offsetLeft}px`;
+    thumb.style.width = `${active.offsetWidth}px`;
+  }
+  positionThumb();
+  const resizeObserver = view.ResizeObserver ? new view.ResizeObserver(positionThumb) : null;
+  resizeObserver?.observe(tablist);
+  view.addEventListener?.('resize', positionThumb);
+  // Re-measure once webfonts settle so the thumb matches the final metrics.
+  element.ownerDocument?.fonts?.ready?.then(positionThumb).catch(() => {});
+
   function activateTab(tabEl, shouldFocus = false) {
     if (destroyed || !tabEl || tabEl.disabled || tabEl.getAttribute('aria-disabled') === 'true') return;
 
@@ -112,6 +137,8 @@ export function initTabs(element) {
       p.hidden = !isMatching;
     }
 
+    positionThumb();
+
     if (shouldFocus) {
       tabEl.focus();
     }
@@ -123,6 +150,7 @@ export function initTabs(element) {
   }
 
   function onTabClick(event) {
+    element.removeAttribute('data-keyboard');
     const tabEl = event.target.closest('[role="tab"]');
     if (!tabEl || !tablist.contains(tabEl)) return;
     activateTab(tabEl, false);
@@ -164,6 +192,7 @@ export function initTabs(element) {
     }
 
     if (targetIdx >= 0 && enabled[targetIdx]) {
+      element.setAttribute('data-keyboard', '');
       activateTab(enabled[targetIdx], true);
     }
   }
@@ -184,6 +213,8 @@ export function initTabs(element) {
     destroy() {
       if (destroyed) return;
       destroyed = true;
+      resizeObserver?.disconnect();
+      view.removeEventListener?.('resize', positionThumb);
       tablist.removeEventListener('click', onTabClick);
       tablist.removeEventListener('keydown', onTabKeyDown);
       mounted.delete(element);
@@ -192,4 +223,10 @@ export function initTabs(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function tabs(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildTabs(...args), mode, ["seg|pill|sx-tabs-list"]);
 }

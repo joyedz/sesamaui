@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from '../components/shared.mjs';
 import { escapeHTML, uid } from '../components/shared.mjs';
 
 /**
@@ -6,10 +7,11 @@ import { escapeHTML, uid } from '../components/shared.mjs';
  * @param {object} [options]
  * @returns {string} HTML markup
  */
-export function appShell(options = {}) {
+function buildAppShell(options = {}) {
   const {
     id = uid('shell'),
     sidebar = '',
+    rail = '',
     header = '',
     content = '',
     footer = '',
@@ -22,6 +24,7 @@ export function appShell(options = {}) {
   const classList = [
     'sb-app-shell',
     'sx-app-shell',
+    rail ? 'sx-shell-with-rail' : '',
     collapsed ? 'is-collapsed' : '',
     classes
   ].filter(Boolean).join(' ');
@@ -37,7 +40,7 @@ export function appShell(options = {}) {
     }
   }
 
-  return `<div class="${classList}" data-sui-app-shell id="${escapeHTML(id)}" ${extraAttrs.join(' ')}>${sidebar}<main class="sb-main sx-shell-main">${header}<div class="sb-page-scroll sx-scroll-area">${content}</div>${footer ? `<div class="sb-page-footer">${footer}</div>` : ''}</main>${detail ? `<aside class="sb-detail sx-scroll-area" data-shell-detail>${detail}</aside>` : ''}</div>`;
+  return `<div class="${classList}" data-sui-app-shell id="${escapeHTML(id)}" ${extraAttrs.join(' ')}>${rail ? `<nav class="sx-shell-rail" aria-label="App navigation">${rail}</nav>` : ''}${sidebar}<main class="sb-main sx-shell-main">${header}<div class="sb-page-scroll sx-scroll-area">${content}</div>${footer ? `<div class="sb-page-footer">${footer}</div>` : ''}</main>${detail ? `<aside class="sb-detail sx-scroll-area" data-shell-detail>${detail}</aside>` : ''}</div>`;
 }
 
 const instances = new WeakMap();
@@ -55,6 +58,8 @@ export function initAppShell(element) {
   let hoverTimer = null;
   let closeTimer = null;
   let hoverReady = true;
+  let detailMotion = null;
+  let finishDetailMotion = null;
 
   function isCollapsed() {
     return element.classList.contains('is-collapsed');
@@ -72,10 +77,9 @@ export function initAppShell(element) {
     element.classList.remove('is-peeking');
     hoverReady = !next;
 
-    const toggleBtn = element.querySelector('[data-shell-toggle]');
-    if (toggleBtn) {
+    for (const toggleBtn of element.querySelectorAll('[data-shell-toggle]')) {
       toggleBtn.setAttribute('aria-expanded', String(!next));
-      toggleBtn.setAttribute('aria-label', next ? 'Show sidebar' : 'Hide sidebar');
+      toggleBtn.setAttribute('aria-label', next ? (toggleBtn.dataset?.shellShowLabel || 'Show sidebar') : (toggleBtn.dataset?.shellHideLabel || 'Hide sidebar'));
     }
 
     element.dispatchEvent(new CustomEvent('sui:shell:toggle', {
@@ -93,8 +97,9 @@ export function initAppShell(element) {
   function handleClick(e) {
     const toggle = e.target.closest('[data-shell-toggle]');
     if (toggle) {
+      element.toggleAttribute('data-sidebar-keyboard', e.detail === 0);
       setCollapsed(!isCollapsed());
-      toggle.blur();
+      if (e.detail !== 0) toggle.blur();
       return;
     }
 
@@ -118,40 +123,71 @@ export function initAppShell(element) {
   }
 
   function handlePointerEnter(e) {
+    if (e.target.closest('[data-sidebar-compact]')) return;
+    element.removeAttribute('data-sidebar-keyboard');
     const sidebar = e.target.closest('.sb-sidebar, [data-sui-workspace-sidebar]');
     if (!sidebar || !element.contains(sidebar) || sidebar.contains(e.relatedTarget)) return;
     clearTimeout(closeTimer);
-    if (isCollapsed()) {
-      hoverTimer = setTimeout(() => {
-        if (isCollapsed()) {
+    clearTimeout(hoverTimer);
+    if (isCollapsed() && !hoverReady) return;
+    hoverTimer = setTimeout(() => {
+        element.classList.add('is-sidebar-hovered');
+        if (isCollapsed() && hoverReady) {
           element.classList.add('is-peeking');
         }
       }, 200);
-    }
   }
 
   function handlePointerLeave(e) {
+    if (e.target.closest('[data-sidebar-compact]')) return;
     const sidebar = e.target.closest('.sb-sidebar, [data-sui-workspace-sidebar]');
     if (!sidebar || !element.contains(sidebar) || sidebar.contains(e.relatedTarget)) return;
     clearTimeout(hoverTimer);
-    if (isPeeking()) {
-      closeTimer = setTimeout(() => {
-        element.classList.remove('is-peeking');
-      }, 200);
-    }
+    hoverReady = true;
+    clearTimeout(closeTimer);
+    closeTimer = setTimeout(() => {
+      element.classList.remove('is-sidebar-hovered');
+      element.classList.remove('is-peeking');
+    }, 200);
   }
 
   function handleFocusIn(e) {
+    if (e.target.closest('[data-sidebar-compact]')) return;
     const sidebar = e.target.closest('.sb-sidebar, [data-sui-workspace-sidebar]');
-    if (sidebar && isCollapsed() && !e.target.closest('[data-shell-toggle]')) {
+    if (sidebar && isCollapsed() && e.target.matches(':focus-visible') && !e.target.closest('[data-shell-toggle]')) {
       element.classList.add('is-peeking');
     }
+  }
+
+  function handleFocusOut(e) {
+    if (e.target.closest('[data-sidebar-compact]')) return;
+    const sidebar = e.target.closest('.sb-sidebar, [data-sui-workspace-sidebar]');
+    if (!sidebar || sidebar.contains(e.relatedTarget)) return;
+    if (!sidebar.matches(':hover')) setPeeking(false);
   }
 
   element.addEventListener('click', handleClick);
   element.addEventListener('pointerover', handlePointerEnter);
   element.addEventListener('pointerout', handlePointerLeave);
   element.addEventListener('focusin', handleFocusIn);
+  element.addEventListener('focusout', handleFocusOut);
+
+  const narrowViewport = element.ownerDocument?.defaultView?.matchMedia?.('(max-width: 760px)');
+  let desktopCollapsed = isCollapsed();
+  let wasNarrow = false;
+  function syncViewport() {
+    const narrow = Boolean(narrowViewport?.matches);
+    if (narrow === wasNarrow) return;
+    if (narrow) {
+      desktopCollapsed = isCollapsed();
+      setCollapsed(true);
+    } else {
+      setCollapsed(desktopCollapsed);
+    }
+    wasNarrow = narrow;
+  }
+  narrowViewport?.addEventListener?.('change', syncViewport);
+  syncViewport();
 
   const controller = {
     element,
@@ -159,31 +195,71 @@ export function initAppShell(element) {
     setCollapsed,
     isPeeking,
     setPeeking,
-    setDetail(detailHtml) {
+    setDetail(detailHtml, { animate = false } = {}) {
       let detailEl = element.querySelector('[data-shell-detail]');
-      if (!detailHtml) {
-        detailEl?.remove();
-      } else {
+      const interruptedStyle = detailMotion && detailEl ? element.ownerDocument.defaultView.getComputedStyle(detailEl) : null;
+      const interruptedFrame = interruptedStyle ? { opacity: interruptedStyle.opacity, transform: interruptedStyle.transform } : null;
+      // Settle an interrupted exit before reusing or removing its element.
+      if (detailMotion) { detailMotion.cancel(); detailMotion = null; }
+      finishDetailMotion?.(); finishDetailMotion = null;
+      if (!detailHtml && !detailEl) return;
+      if (detailHtml) {
         if (!detailEl) {
           detailEl = document.createElement('aside');
           detailEl.className = 'sb-detail sx-scroll-area';
           detailEl.dataset.shellDetail = '';
           element.append(detailEl);
         }
+        detailEl.inert = false;
         detailEl.innerHTML = detailHtml;
       }
+      const view = element.ownerDocument?.defaultView;
+      const reduce = view?.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      if (!animate || reduce || !detailEl.animate) {
+        if (!detailHtml) detailEl.remove();
+        return;
+      }
+      const style = view.getComputedStyle(element);
+      const token = style.getPropertyValue(detailHtml ? '--motion-base' : '--motion-fast').trim();
+      const duration = token ? parseFloat(token) * (token.endsWith('ms') ? 1 : 1000) : (detailHtml ? 200 : 140);
+      const easing = style.getPropertyValue('--ease-out').trim() || 'ease-out';
+      const hidden = { opacity: 0, transform: 'translateX(24px)' };
+      const visible = { opacity: 1, transform: 'translateX(0)' };
+      const frames = detailHtml ? [interruptedFrame || hidden, visible] : [interruptedFrame || visible, hidden];
+      if (!detailHtml) detailEl.inert = true;
+      detailMotion = detailEl.animate(frames, { duration, easing, fill: 'both' });
+      const animation = detailMotion;
+      return new Promise(resolve => {
+        finishDetailMotion = resolve;
+        animation.onfinish = () => {
+          if (detailMotion !== animation) return;
+          if (!detailHtml) detailEl.remove();
+          animation.cancel(); detailMotion = null;
+          finishDetailMotion = null; resolve();
+        };
+      });
     },
     destroy() {
+      if (detailMotion) { detailMotion.cancel(); detailMotion = null; }
+      finishDetailMotion?.(); finishDetailMotion = null;
+      narrowViewport?.removeEventListener?.('change', syncViewport);
       clearTimeout(hoverTimer);
       clearTimeout(closeTimer);
       element.removeEventListener('click', handleClick);
       element.removeEventListener('pointerover', handlePointerEnter);
       element.removeEventListener('pointerout', handlePointerLeave);
       element.removeEventListener('focusin', handleFocusIn);
+      element.removeEventListener('focusout', handleFocusOut);
       instances.delete(element);
     }
   };
 
   instances.set(element, controller);
   return controller;
+}
+
+
+export function appShell(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildAppShell(...args), mode, ["sb-app-shell", "sb-main"]);
 }

@@ -2,8 +2,8 @@
 @import url("button.css");
 @import url("icon-button.css");
 /* Canonical Sesama modal styles. Legacy compatibility is generated. */
-:where(.sui-root) .ds-modal{border:0;color:var(--text-default);width:min(400px,calc(100vw - 32px));padding:var(--space-16);border-radius:var(--radius-lg);background:var(--color-base);box-shadow:var(--shadow-dialog)}
-:where(.sui-root) .ds-modal::backdrop{background:color-mix(in srgb,var(--color-contrast) 35%,transparent)}
+:where(.sui-root) .ds-modal{border:0;color:var(--text-default);width:min(400px,calc(100vw - 32px));padding:var(--space-16);border-radius:var(--radius-lg);background:var(--color-base);background:color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);box-shadow:var(--shadow-dialog)}
+:where(.sui-root) .ds-modal::backdrop{background:var(--color-overlay);background:color-mix(in srgb, var(--color-overlay) var(--sui-surface-opacity, 100%), transparent)}
 :where(.sui-root) .ds-modal h2{font-size:16px;line-height:24px;font-weight:500;margin:0 0 var(--space-8)}
 :where(.sui-root) .ds-modal p{color:var(--text-subtle);margin:0 0 var(--space-16)}
 :where(.sui-root) .ds-modal .actions{display:flex;justify-content:flex-end;gap:var(--space-8);margin-top:var(--space-16)}
@@ -14,7 +14,7 @@
 :where(.sui-root) .ds-modal .sx-modal-header h2{margin:0;min-width:0}
 :where(.sui-root) .ds-modal .sx-modal-header h2{overflow-wrap:anywhere}
 :where(.sui-root) .ds-modal .sx-modal-close{display:grid;place-items:center;flex:none;width:24px;height:24px;padding:0;border-radius:var(--radius-sm);color:var(--text-subtle)}
-:where(.sui-root) .ds-modal .sx-modal-close:hover{background:var(--color-tint)}
+:where(.sui-root) .ds-modal .sx-modal-close:hover{background:var(--color-tint);background:color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent)}
 :where(.sui-root) .ds-modal[data-size=sm]{width:min(288px,calc(100vw - 32px))}
 :where(.sui-root) .ds-modal[data-size=lg]{width:min(512px,calc(100vw - 32px))}
 :where(.sui-root) .ds-modal[data-size=xl]{width:min(768px,calc(100vw - 32px))}
@@ -27,7 +27,7 @@
 :where(.sui-root) .ds-modal[open]{opacity:1;transform:none}
 :where(.sui-root) .ds-modal::backdrop{background:transparent}
 :where(.sui-root) .ds-modal:not(.sx-command)::backdrop{transition:background-color var(--motion-base) var(--ease-standard),display var(--motion-base) allow-discrete,overlay var(--motion-base) allow-discrete}
-:where(.sui-root) .ds-modal[open]:not(.sx-command)::backdrop{background:color-mix(in srgb,var(--color-contrast) 35%,transparent)}
+:where(.sui-root) .ds-modal[open]:not(.sx-command)::backdrop{background:var(--color-overlay);background:color-mix(in srgb, var(--color-overlay) var(--sui-surface-opacity, 100%), transparent)}
 @starting-style{:where(.sui-root) .ds-modal[open]:not(.sx-command){opacity:0;transform:translateY(4px) scale(.97)}}
 @media(prefers-reduced-motion:reduce){:where(.sui-root) .ds-modal:not(.sx-command){transition:opacity var(--motion-base) var(--ease-standard);transform:none}
 @starting-style{:where(.sui-root) .ds-modal[open]:not(.sx-command){transform:none}}}

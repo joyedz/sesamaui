@@ -1,6 +1,10 @@
+import type { Surface } from '../surface.d.mts';
+import type { InputSize } from './input.mjs';
 export type DatePickerMode = 'single' | 'range';
 
 export interface DatePickerOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   name?: string;
   label?: string;
@@ -14,7 +18,7 @@ export interface DatePickerOptions {
   invalid?: boolean;
   helper?: string;
   error?: string;
-  size?: 'sm' | 'base' | 'lg';
+  size?: InputSize;
   attributes?: string;
 }
 

@@ -1,7 +1,10 @@
+import type { Surface } from '../surface.d.mts';
 import type { ContentSectionVariant } from './content-section.mjs';
 import type { MetricCardOptions } from './metric-card.mjs';
 
 export interface ChartSectionOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   title?: string;
   description?: string;

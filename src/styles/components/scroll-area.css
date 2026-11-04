@@ -17,11 +17,13 @@
 
 :where(.sui-root) .sx-scroll-area::-webkit-scrollbar-thumb {
   background: var(--scroll-thumb);
+  background: color-mix(in srgb, var(--scroll-thumb) var(--sui-surface-opacity, 100%), transparent);
   border-radius: 999px;
 }
 
 :where(.sui-root) .sx-scroll-area::-webkit-scrollbar-thumb:hover {
   background: var(--scroll-thumb-hover);
+  background: color-mix(in srgb, var(--scroll-thumb-hover) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-scroll-area::-webkit-scrollbar-corner {

@@ -1,3 +1,4 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML, uid } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
@@ -15,7 +16,7 @@ function getRowKey(row, keyProp) {
  * @param {object} [options]
  * @returns {string} HTML string
  */
-export function table(options = {}) {
+function buildTable(options = {}) {
   const {
     id = uid('sui-table'),
     columns = [],
@@ -25,7 +26,8 @@ export function table(options = {}) {
     selectedKeys: rawSelectedKeys = [],
     sortColumn = '',
     sortDirection = 'none',
-    stickyHeader = true,
+    stickyHeader = false,
+    stickyFirstColumn = false,
     compact = false,
     fixed = false,
     minWidth = 0,
@@ -60,10 +62,11 @@ export function table(options = {}) {
     selectHeader = '<th scope="col" class="sx-table-select-col"><span class="sr-only">Select</span></th>';
   }
 
-  const thHtml = columns.map(col => {
+  const thHtml = columns.map((col, colIdx) => {
     const label = col.label || col.header || col.key || '';
     const isSorted = sortColumn === col.key && normSortDirection !== 'none';
     const sortAttr = col.sortable ? ` aria-sort="${isSorted ? normSortDirection : 'none'}"` : '';
+    const stickyClass = stickyFirstColumn && colIdx === 0 ? ' class="sticky-left"' : '';
 
     let content = escapeHTML(label);
     if (col.sortable) {
@@ -71,7 +74,7 @@ export function table(options = {}) {
       content = `<button type="button" class="sx-sort" data-table-sort="${escapeHTML(col.key)}">${content} ${controlIcon(iconName, 12)}</button>`;
     }
 
-    return `<th scope="col" style="${cellStyle(col)}"${sortAttr}>${content}</th>`;
+    return `<th scope="col"${stickyClass} style="${cellStyle(col)}"${sortAttr}>${content}</th>`;
   }).join('');
 
   const theadHtml = `<thead class="${stickyHeader ? 'sticky' : ''}"><tr>${selectHeader}${thHtml}</tr></thead>`;
@@ -95,10 +98,11 @@ export function table(options = {}) {
         selectCell = `<td class="sx-table-select-col"><input type="radio" name="${escapeHTML(id)}-select" data-table-select-row data-row-key="${escapeHTML(key)}" aria-label="Select row"${isSelected ? ' checked' : ''}></td>`;
       }
 
-      const cellsHtml = columns.map(col => {
+      const cellsHtml = columns.map((col, colIdx) => {
         const val = r[col.key];
         const rendered = col.render ? col.render(val, r) : escapeHTML(val !== undefined && val !== null ? String(val) : '');
-        return `<td style="${cellStyle(col)}">${rendered}</td>`;
+        const stickyClass = stickyFirstColumn && colIdx === 0 ? ' class="sticky-left"' : '';
+        return `<td${stickyClass} style="${cellStyle(col)}">${rendered}</td>`;
       }).join('');
 
       return `<tr data-row-key="${escapeHTML(key)}"${classAttr}${actionAttr} data-row-id="${escapeHTML(key)}">${selectCell}${cellsHtml}</tr>`;
@@ -332,4 +336,10 @@ export function initTable(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function table(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildTable(...args), mode, ["sx-table-wrap"]);
 }

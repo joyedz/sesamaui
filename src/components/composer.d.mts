@@ -1,3 +1,4 @@
+import type { Surface } from '../surface.d.mts';
 import { FileCardOptions } from './file-card.mjs';
 
 export type ComposerState = 'empty' | 'ready' | 'thinking';
@@ -18,6 +19,8 @@ export interface ComposerSendPayload {
 }
 
 export interface ComposerOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   placeholder?: string;
   value?: string;
@@ -28,6 +31,11 @@ export interface ComposerOptions {
   modelValue?: string;
   state?: ComposerState;
   rows?: number;
+  compact?: boolean;
+  showContext?: boolean;
+  showModel?: boolean;
+  /** Trusted HTML for a leading control, especially in compact layout. */
+  leading?: string;
   showMic?: boolean;
   showAttach?: boolean;
   attributes?: string | Record<string, string>;

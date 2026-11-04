@@ -2,6 +2,7 @@
  * Shared demo fixtures and helper utilities for Sesama UI application demos.
  */
 import { workspaceSidebar } from '../../src/index.mjs';
+import { preserveSidebar } from './state.mjs';
 
 /**
  * Currency formatter (integer USD).
@@ -97,7 +98,18 @@ export const salesProjects = [
  * @param {string} [activeKey]
  * @returns {string} HTML markup
  */
+let dashboardStateReady = false;
 export function createSalesSidebar(activeKey = 'overview') {
+  if (typeof document !== 'undefined' && !dashboardStateReady) {
+    preserveSidebar('dashboard');
+    document.addEventListener('click', event => {
+      const item = event.target.closest('[data-sui-workspace-sidebar] [data-tree-key]');
+      if (!item || item.hasAttribute('data-fold') || ['overview','revenue','orders','customers'].includes(item.dataset.treeKey)) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }, true);
+    dashboardStateReady = true;
+  }
   return workspaceSidebar({
     workspace: 'Sesama workspace',
     navigation: getSalesNavigation(activeKey),

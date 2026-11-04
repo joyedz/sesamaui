@@ -1,4 +1,8 @@
+import type { Surface } from '../surface.d.mts';
+import type { InputSize } from './input.mjs';
 export interface TagInputOptions {
+  /** Solid by default; blur keeps the existing component variant and tone. */
+  surface?: Surface;
   id?: string;
   name?: string;
   label?: string;
@@ -10,6 +14,8 @@ export interface TagInputOptions {
   invalid?: boolean;
   helper?: string;
   error?: string;
+  /** Control height: sm 26 / base 30 / lg 34, matching Input Field. */
+  size?: InputSize;
   attributes?: string;
 }
 

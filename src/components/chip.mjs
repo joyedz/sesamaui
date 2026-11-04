@@ -1,10 +1,11 @@
+import { applySurface, surfaceMode } from './shared.mjs';
 import { escapeHTML } from './shared.mjs';
 import { controlIcon } from '../icons/controls.mjs';
 
 const VALID_TONES = ['neutral', 'informative', 'success', 'warning', 'error'];
 const VALID_VARIANTS = ['static', 'selectable', 'removable'];
 
-export function chip(options = {}) {
+function buildChip(options = {}) {
   const opts = typeof options === 'string' ? { label: options } : options;
   const {
     label = '',
@@ -128,4 +129,10 @@ export function initChip(element) {
 
   mounted.set(element, controller);
   return controller;
+}
+
+
+export function chip(...args) {
+  const mode = surfaceMode(args);
+  return applySurface(buildChip(...args), mode, ["@root"]);
 }
