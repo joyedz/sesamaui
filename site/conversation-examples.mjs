@@ -1,11 +1,36 @@
 import { runeIcon, appShell, workspaceSidebar, iconButton, composer, message, listRow, avatar, tree, tabs, pageHeader, uid, inputField, fileCard } from '../src/index.mjs';
 
+function tabExamples() {
+  const leading = tabs({
+    ariaLabel: 'Project members',
+    variant: 'pill',
+    tabs: [
+      { label: 'Amelia', leading: avatar({ name: 'Amelia Park', size: 18 }), content: 'Amelia Park · Product design' },
+      { label: 'Noah', leading: avatar({ name: 'Noah Ibarra', size: 18 }), content: 'Noah Ibarra · Engineering' },
+      { label: 'Team', leading: runeIcon('users', 16), content: 'Two members on this project.' }
+    ]
+  });
+  const id = uid('project-preview');
+  const panelId = id + '-content';
+  const shared = `<div data-example-shared-tabs>${tabs({
+    id, panelId, ariaLabel: 'Project details', variant: 'pill',
+    tabs: [{ id: 'summary', label: 'Summary', icon: 'file-text' }, { id: 'activity', label: 'Activity', icon: 'clock' }]
+  })}<div id="${panelId}" role="tabpanel" aria-labelledby="${id}-tab-summary" tabindex="0" style="padding:16px">
+    <div data-example-tab-content="summary"><strong>Website launch</strong><p>Design is ready for review. Engineering starts on Monday.</p></div>
+    <div data-example-tab-content="activity" hidden><strong>Recent activity</strong><p>Amelia submitted the homepage for review.</p></div>
+  </div></div>`;
+  return [['Tabs with leading content', leading], ['Tabs with a shared panel', shared]].map(([name, html]) => ({
+    name, html: `<div class="sui-root is-full" style="width:100%">${html}</div>`, code: html
+  }));
+}
+
 export function conversationExamples(name) {
+  if (name === 'Tabs') return tabExamples();
   let html = '';
-  if (name === 'Page Header' || name === 'Tabs') {
+  if (name === 'Page Header') {
     const key = uid('shared-chat');
     const tabBar = tabs({ id: key, panelId: key + '-content', ariaLabel: 'Open chats', tabs: [{ id: 'atlas', label: 'Atlas', leading: avatar({ name: 'Atlas', size: 18, image: '/assets/agent-bot/atlas-v1.png' }) }] });
-    html = (name === 'Page Header' ? pageHeader({ icon: '', titleContent: '<h1 class="sui-sr-only">Atlas</h1>' + tabBar }) : tabBar) + '<div id="' + key + '-content" role="tabpanel" aria-labelledby="' + key + '-tab-atlas" style="padding:16px">Application-managed conversation content.</div>';
+    html = pageHeader({ icon: '', titleContent: '<h1 class="sui-sr-only">Atlas</h1>' + tabBar }) + '<div id="' + key + '-content" role="tabpanel" aria-labelledby="' + key + '-tab-atlas" style="padding:16px">Application-managed conversation content.</div>';
   }
 
   if (name === 'File Card') html = fileCard({ variant: 'attachment', name: 'social-drafts.md', size: '4 KB', actions: iconButton(runeIcon('arrow-down-to-line', 16), { label: 'Download social-drafts.md' }) + iconButton('arrow-up-right', { label: 'Open social-drafts.md' }) });

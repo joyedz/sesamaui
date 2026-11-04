@@ -14,7 +14,7 @@
 :where(.sui-root) .ds-modal .sx-modal-header h2{margin:0;min-width:0}
 :where(.sui-root) .ds-modal .sx-modal-header h2{overflow-wrap:anywhere}
 :where(.sui-root) .ds-modal .sx-modal-close{display:grid;place-items:center;flex:none;width:24px;height:24px;padding:0;border-radius:var(--radius-sm);color:var(--text-subtle)}
-:where(.sui-root) .ds-modal .sx-modal-close:hover{background:var(--color-tint);background:color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent)}
+:where(.sui-root) .ds-modal .sx-modal-close:hover{background:var(--color-tint-hover, var(--color-tint));background:color-mix(in srgb, var(--color-tint-hover, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent)}
 :where(.sui-root) .ds-modal[data-size=sm]{width:min(288px,calc(100vw - 32px))}
 :where(.sui-root) .ds-modal[data-size=lg]{width:min(512px,calc(100vw - 32px))}
 :where(.sui-root) .ds-modal[data-size=xl]{width:min(768px,calc(100vw - 32px))}

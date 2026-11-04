@@ -8,6 +8,8 @@
 
 - Tabs motion fix: the sliding indicator no longer glides in from the left edge when a tablist mounts (or re-measures while hidden, resizing, or after webfonts settle) — the thumb is placed instantly and the glide is reserved for user-initiated tab switches. This removes the visible slide-in on every Issue Workspace view change.
 
+- Hover and selection tints adapt to the nearest surface: hover states read `--color-tint-hover` (falling back to `--color-tint`), selected rows/tabs skip the hover tint, and the demo palette maps tint depth per surface (shell/sidebar keep the canvas tint; cards, modals, popups, and main panels use the subtle tint). The catalog gains Tabs examples for leading avatar content and a shared external panel, and the legacy tab controller no longer double-handles `[data-sui-tabs]` elements.
+
 - Modal focus fix: opening a dialog no longer lands focus on the header close button (whose icon-button tooltip would pop every time). `showModal()` is followed by an explicit focus move — `[autofocus]` target first, then the first control that is not the close button, then the dialog element itself. Existing defaults are unchanged for dialogs with an `autofocus` target.
 
 First stable release — the `-alpha` suffix is dropped from the package version, and `npm publish` now tags `latest`. Pre-releases: [0.1.0-alpha.2](#0100-alpha2---2026-10-31), [0.1.0-alpha.1](#0100-alpha1---2026-10-31). While on 0.x, minor versions may still carry breaking changes; experimental components are labeled in the README, and the manual screen-reader review remains scheduled before 1.0 (see [docs/RELEASE.md](docs/RELEASE.md)).

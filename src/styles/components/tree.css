@@ -39,8 +39,8 @@
 }
 
 :where(.sui-root) .ti:hover {
-  background: var(--color-tint);
-  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
+  background: var(--color-tint-hover, var(--color-tint));
+  background: color-mix(in srgb, var(--color-tint-hover, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .ti:focus-visible {
@@ -64,8 +64,8 @@
 }
 
 :where(.sui-root) .ti[data-fold]:hover {
-  background: var(--color-tint);
-  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
+  background: var(--color-tint-hover, var(--color-tint));
+  background: color-mix(in srgb, var(--color-tint-hover, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .ti .sp {

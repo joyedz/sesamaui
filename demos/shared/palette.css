@@ -2,5 +2,17 @@
 :root, .sui-root {
   --color-canvas: light-dark(#ededed, #0d0d0d);
   --color-recessed: light-dark(#efefef, #242424);
-  --color-tint: light-dark(#e5e5e5, #2b2b2b);
+  --demo-canvas-tint: light-dark(#e5e5e5, #2b2b2b);
+  --color-tint: var(--demo-canvas-tint);
+}
+
+/* Hover and selection share the tint of their nearest surface. */
+:where(.sui-root) :where(.sx-shell-main, .sb-detail, .agent-main, .agent-detail,
+  .card, .ds-modal, .sx-popup),
+body.sui-root[data-demo-surface="base"] {
+  --color-tint: var(--color-tint-subtle);
+}
+
+:where(.sui-root) :where(.sx-app-shell, .sb-sidebar, .card.variant-recessed) {
+  --color-tint: var(--demo-canvas-tint);
 }

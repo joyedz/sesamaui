@@ -14,7 +14,7 @@
 /* flex:none: a long menu scrolls, it never squeezes its rows below their
    natural height (a constrained column flex would crush them to min-height). */
 :where(.sui-root) .sx-menu-item{display:flex;align-items:center;gap:var(--space-8);width:100%;padding:var(--space-6) var(--space-8);min-height:28px;border-radius:var(--radius-sm);white-space:nowrap;flex:none}
-:where(.sui-root) .sx-menu-item:hover,:where(.sui-root) .sx-menu-item:focus-visible{background:var(--color-tint);background:color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent)}
+:where(.sui-root) .sx-menu-item:hover,:where(.sui-root) .sx-menu-item:focus-visible{background:var(--color-tint-hover, var(--color-tint));background:color-mix(in srgb, var(--color-tint-hover, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent)}
 :where(.sui-root) .sx-menu-item:disabled{opacity:.5;cursor:not-allowed}
 :where(.sui-root) .sx-menu-item.danger{color:var(--color-danger)}
 :where(.sui-root) .sx-menu-label{padding:var(--space-8);font-size:11px;color:var(--text-placeholder)}
