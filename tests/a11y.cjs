@@ -10,11 +10,17 @@ let browser;const results=[];
   browser=await browserType.launch({headless:true,...(browserName==='chromium'&&process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:{})});
   const page=await browser.newPage({viewport:{width:1280,height:900}});
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
+  // Modal/popup entry transitions fade opacity in (~140-200ms). axe may sample
+  // mid-fade and compute bogus color-contrast (fg+bg both composited through the
+  // partial opacity), so wait for every open overlay to reach its settled state.
+  const settleOverlays=()=>page.waitForFunction(()=>[...document.querySelectorAll('dialog.ds-modal[open],.sx-popup')].every(el=>getComputedStyle(el).opacity==='1'),{polling:25,timeout:2000}).catch(()=>{});
   async function audit(name){
     const missing=await page.evaluate(()=>[...document.querySelectorAll('[aria-controls],[aria-labelledby],[aria-describedby],[aria-errormessage]')].flatMap(node=>['aria-controls','aria-labelledby','aria-describedby','aria-errormessage'].flatMap(attribute=>(node.getAttribute(attribute)||'').split(/\s+/).filter(Boolean).filter(id=>!document.getElementById(id)).map(id=>({attribute,id})))));
     assert.deepEqual(missing,[],'All ARIA ID references resolve, including closed popovers');
     await page.addScriptTag({path:axePath});
-    const result=await page.evaluate(()=>axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']}}));
+    // animate:false freezes remaining CSS animations during sampling; the
+    // settleOverlays() wait above is what ensures entry fades have finished.
+    const result=await page.evaluate(()=>axe.run(document,{animate:false,runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']}}));
     assert.deepEqual(result.incomplete.filter(item=>item.id!=='aria-valid-attr-value').map(item=>item.id),[],'Unexpected manual-review findings must be investigated');
     const record={name,violations:result.violations.map(({id,impact,help,nodes})=>({id,impact,help,nodes:nodes.map(({target,failureSummary})=>({target,failureSummary}))})),incomplete:result.incomplete.map(({id,nodes})=>({id,nodes:nodes.map(({target,failureSummary})=>({target,failureSummary}))})),passes:result.passes.length};
     results.push(record);console.log(JSON.stringify({...record,incomplete:record.incomplete.map(item=>({id:item.id,count:item.nodes.length}))}));
@@ -24,10 +30,10 @@ let browser;const results=[];
     await audit(`${theme}: default, error, disabled, readonly`);
     await page.locator('#fixture-name').fill('Amelia');await page.getByRole('button',{name:'Submit',exact:true}).click();
     await audit(`${theme}: required select error`);await page.getByRole('button',{name:'Reset',exact:true}).click();
-    await page.locator('[data-sui-select]').first().locator('.sx-select-trigger').click();await audit(`${theme}: grouped select open`);await page.keyboard.press('Escape');
-    await page.getByRole('button',{name:'Review changes',exact:true}).click();await audit(`${theme}: modal open`);
+    await page.locator('[data-sui-select]').first().locator('.sx-select-trigger').click();await settleOverlays();await audit(`${theme}: grouped select open`);await page.keyboard.press('Escape');
+    await page.getByRole('button',{name:'Review changes',exact:true}).click();await settleOverlays();await audit(`${theme}: modal open`);
     const dialog=page.locator('#fixture-modal');
-    await dialog.locator('.sx-select-trigger').click();await audit(`${theme}: select inside modal`);await page.keyboard.press('Escape');await page.keyboard.press('Escape');
+    await dialog.locator('.sx-select-trigger').click();await settleOverlays();await audit(`${theme}: select inside modal`);await page.keyboard.press('Escape');await page.keyboard.press('Escape');
   }
   await page.setViewportSize({width:320,height:800});await page.goto(`${base}/tests/fixtures/components.html`);await page.waitForFunction(()=>window.fixtureReady);await audit('320px reflow');
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'No horizontal document overflow at 320px');
