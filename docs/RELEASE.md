@@ -171,3 +171,13 @@ const session = mount(root);
 For projects transitioning from the pre-release global runtime (`SESAMA_UI` and `SESAMA_BLOCKS`), compatibility build tools are provided:
 - `tools/build-legacy-bridge.mjs`: Generates backward-compatible global wrappers from modern canonical modules.
 - `tools/build-legacy-css.mjs`: Builds legacy monolithic stylesheets while keeping modern component CSS strictly isolated.
+
+## 7. Release history
+
+| Version | Date | Channels | Notes |
+| :--- | :--- | :--- | :--- |
+| **0.1.0** | 2026-11-04 | npm (`latest`) · GitHub Release [`v0.1.0`](https://github.com/joyedz/sesamaui/releases/tag/v0.1.0) | First stable release; installs verified in a clean consumer project |
+| 0.1.0-alpha.2 | 2026-10-31 | npm (`alpha`) | First published version |
+| 0.1.0-alpha.1 | 2026-10-31 | tag only | Never published to npm |
+
+Release checklist: bump `version` in `package.json`, update `CHANGELOG.md`, verify `npm run check` + `npm test` + the four Playwright suites, tag `vX.Y.Z`, push the tag, create the GitHub Release, then `npm publish` (tag `latest`).
