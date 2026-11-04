@@ -312,6 +312,18 @@ function detail() {
   `;
 }
 
+function personalBody() {
+  const rows = issues.filter(issue =>
+    (issue.title + ' ' + issue.id).toLowerCase().includes(search.toLowerCase()) &&
+    (statusFilter === 'All statuses' || issue.status === statusFilter) &&
+    (myIssuesTab === 'assigned' ? issue.assignee === currentUser : myIssuesTab === 'created' ? issue.creator === currentUser : myIssuesTab === 'subscribed' ? issue.subscribers.includes(currentUser) : issue.comments.length > 0 || issue.creator === currentUser)
+  );
+  return ['In Review','In Progress','Todo','Backlog','Done'].map(status => {
+    const group = rows.filter(issue => issue.status === status);
+    return group.length ? collapsible({id:'iw-group-'+status.replaceAll(' ','-'),open:true,trigger:'<span class="sx-row">'+workflowStatusIcon(status)+'<span>'+esc(status)+'</span>'+'<span class="sx-help">'+group.length+'</span></span>',content:group.map(issue=>listRow({variant:'navigation',appearance:'plain',title:issue.id+'  '+issue.title,leading:workflowStatusIcon(status),trailing:'<span class="iw-personal-meta">'+(issue.pr?'<span class="sx-help">#'+esc(issue.pr)+'</span>':'')+badge({label:issue.label})+avatar(issue.assignee)+'<span class="sx-help">'+esc(issue.updated||'Today')+'</span></span>',href:'#issue-'+issue.id,attributes:'data-iw-open="'+issue.id+'"'})).join('')}) : '';
+  }).join('') + (rows.length ? '' : emptyState({title:'No issues',description:'No issues in this view.',icon:'file-text'}));
+}
+
 function list() {
   const rows = issues.filter(issue =>
     (issue.title + ' ' + issue.id).toLowerCase().includes(search.toLowerCase()) &&
@@ -321,10 +333,7 @@ function list() {
 
   listPage = Math.min(listPage, Math.max(1, Math.ceil(rows.length / listPageSize)));
   const pageRows = rows.slice((listPage - 1) * listPageSize, listPage * listPageSize);
-  if (activeNav === 'my-issues') return pageLayout('<div class="iw-reference-stack"><div class="iw-personal-toolbar">' + tabs({ id: 'iw-my-issues-tabs', variant: 'pill', activeTabId: myIssuesTab, tabs: [{id:'assigned',label:'Assigned'},{id:'created',label:'Created'},{id:'subscribed',label:'Subscribed'},{id:'activity',label:'Activity'}] }) + '<div class="sx-row">' + iconButton({icon:'filter',accessibleLabel:'Filter issues',attributes:'data-iw-my-filter'}) + iconButton({icon:'fields',accessibleLabel:'Display options',attributes:'data-iw-my-display'}) + iconButton({icon:'activity',accessibleLabel:'Insights',attributes:'data-iw-my-insights'}) + '</div></div>' + ['In Review','In Progress','Todo','Backlog','Done'].map(status => {
-    const group = rows.filter(issue => issue.status === status);
-    return group.length ? collapsible({id:'iw-group-'+status.replaceAll(' ','-'),open:true,trigger:'<span class="sx-row">'+workflowStatusIcon(status)+'<span>'+esc(status)+'</span>'+'<span class="sx-help">'+group.length+'</span></span>',content:group.map(issue=>listRow({variant:'navigation',appearance:'plain',title:issue.id+'  '+issue.title,leading:workflowStatusIcon(status),trailing:'<span class="iw-personal-meta">'+(issue.pr?'<span class="sx-help">#'+esc(issue.pr)+'</span>':'')+badge({label:issue.label})+avatar(issue.assignee)+'<span class="sx-help">'+esc(issue.updated||'Today')+'</span></span>',href:'#issue-'+issue.id,attributes:'data-iw-open="'+issue.id+'"'})).join('')}) : '';
-  }).join('') + (rows.length ? '' : emptyState({title:'No issues',description:'No issues in this view.',icon:'file-text'})) + '</div>', {variant:'data'});
+  if (activeNav === 'my-issues') return pageLayout('<div class="iw-reference-stack"><div class="iw-personal-toolbar">' + tabs({ id: 'iw-my-issues-tabs', variant: 'pill', activeTabId: myIssuesTab, tabs: [{id:'assigned',label:'Assigned'},{id:'created',label:'Created'},{id:'subscribed',label:'Subscribed'},{id:'activity',label:'Activity'}] }) + '<div class="sx-row">' + iconButton({icon:'filter',accessibleLabel:'Filter issues',attributes:'data-iw-my-filter'}) + iconButton({icon:'fields',accessibleLabel:'Display options',attributes:'data-iw-my-display'}) + iconButton({icon:'activity',accessibleLabel:'Insights',attributes:'data-iw-my-insights'}) + '</div></div><div id="iw-personal-body">' + personalBody() + '</div></div>', {variant:'data'});
   return `
     <div class="iw-list-layout">
       <div class="iw-list-toolbar">
@@ -361,7 +370,7 @@ function list() {
   `;
 }
 
-function inbox() {
+function inboxBody() {
   const visible = notifications.filter(item => inboxFilter === 'snoozed' ? item.snoozed : !item.snoozed && (inboxFilter !== 'unread' || !item.read));
   const current = visible.find(item => item.id === activeNotification);
   if (current) selected = current.issue;
@@ -376,7 +385,11 @@ function inbox() {
     iconButton({icon:current.read?runeIcon('mail'):'check',accessibleLabel:current.read?'Mark unread':'Mark read',attributes:'data-iw-inbox-read'}) +
     iconButton({icon:'clock',accessibleLabel:current.snoozed?'Move to inbox':'Snooze',attributes:'data-iw-inbox-snooze'})
   }) + detail() : '<div class="iw-inbox-empty">' + emptyState({title:visible.length?'Select a notification':'You’re all caught up',description:visible.length?'Choose an update to review its issue.':'No notifications in this view.',icon:runeIcon('inbox')}) + '</div>';
-  return '<div class="iw-inbox-grid"><section class="iw-inbox-list" aria-label="Inbox notifications">' + tabs({id:'iw-inbox-tabs',variant:'pill',activeTabId:inboxFilter,tabs:[{id:'all',label:'All'},{id:'unread',label:'Unread'},{id:'snoozed',label:'Snoozed'}]}) + '<div class="iw-inbox-items">' + (rows || emptyState({title:'No notifications',icon:runeIcon('inbox'),compact:true})) + '</div></section><section class="iw-inbox-preview" aria-label="Issue preview">' + preview + '</section></div>';
+  return '<div class="iw-inbox-grid"><section class="iw-inbox-list" aria-label="Inbox notifications"><div class="iw-inbox-items">' + (rows || emptyState({title:'No notifications',icon:runeIcon('inbox'),compact:true})) + '</div></section><section class="iw-inbox-preview" aria-label="Issue preview">' + preview + '</section></div>';
+}
+
+function inbox() {
+  return tabs({id:'iw-inbox-tabs',variant:'pill',activeTabId:inboxFilter,tabs:[{id:'all',label:'All'},{id:'unread',label:'Unread'},{id:'snoozed',label:'Snoozed'}]}) + '<div id="iw-inbox-body">' + inboxBody() + '</div>';
 }
 
 let shellMounted = false;
@@ -641,7 +654,16 @@ document.addEventListener('sui:composer:send', event => {
   });
 });
 
-document.addEventListener('sui:tab:change', event => { if (event.target.id !== 'iw-inbox-tabs') return; inboxFilter = event.detail.id; render(); document.querySelector('#iw-inbox-tabs [aria-selected="true"]')?.focus(); });
+function patchTabBody(containerId, html) {
+  document.getElementById(containerId).innerHTML = html;
+  pageSession.refresh();
+}
+document.addEventListener('sui:tab:change', event => {
+  if (event.target.id === 'iw-inbox-tabs') { inboxFilter = event.detail.id; patchTabBody('iw-inbox-body', inboxBody()); return; }
+  if (event.target.id === 'iw-my-issues-tabs') { myIssuesTab = event.detail.id; patchTabBody('iw-personal-body', personalBody()); return; }
+  const patched = referencePages.change(event.target.id, event.detail.id);
+  if (patched) for (const part of patched) patchTabBody(part.container, part.html);
+});
 document.addEventListener('click', event => {
   const row = event.target.closest('[data-iw-notification]');
   if (row) { event.preventDefault(); activeNotification = row.dataset.iwNotification; notifications.find(item => item.id === activeNotification).read = true; render(); return; }
@@ -658,7 +680,7 @@ document.addEventListener('sui:pagination:change', event => {
   queueMicrotask(() => { render(); document.querySelector('.sb-page-scroll')?.scrollTo({ top: 0 }); });
 });
 
-document.addEventListener('sui:tab:change', event => { if (event.target.id === 'iw-my-issues-tabs') { myIssuesTab = event.detail.id; render(); } else if (referencePages.change(event.target.id, event.detail.id)) render(); });
+
 document.addEventListener('sui:change', event => { if (event.detail?.name === 'iw-project-initiative') { referencePages.state.initiative = event.detail.value; render(); } });
 document.addEventListener('click', event => { const row = event.target.closest('[data-iw-review]'); if (!row) return; event.preventDefault(); referencePages.state.selectedReview = Number(row.dataset.iwReview); render(); });
 

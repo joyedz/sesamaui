@@ -117,7 +117,7 @@ shell.addEventListener('click', event => {
   const item = event.target.closest('[data-agent-setting]');
   if (!item) return;
   event.preventDefault();
-  showToast(item.dataset.agentSetting + ' · simulated demo.', 'informative');
+  showToast(item.dataset.agentSetting + ' ï¿½ simulated demo.', 'informative');
 });
 shell.addEventListener('keydown', ignoreExampleNavigation, true);
 shell.addEventListener('keydown', event => {
@@ -315,9 +315,16 @@ function renderChat() {
   const running = runsFor(thread).find(run => active.includes(run.state));
   state.openThreads = [...new Set([...(state.openThreads || []), thread.id])];
   const openThreads = state.openThreads.map(threadById).filter(item => item?.agentId === agent.id);
-  const tabBar = tabs({ id: 'bot-chat-tabs', ariaLabel: 'Open chats', variant: 'pill', panelId: 'bot-view', activeTabId: thread.id,
-    tabs: openThreads.map(item => ({ id: item.id, label: item.id.startsWith('main-') ? agent.name : item.title === 'New conversation' ? 'New chat' : item.title, leading: item.id.startsWith('main-') ? agentAvatar(agent, 18) : '', icon: item.id.startsWith('main-') ? '' : 'fork' })) });
-  header.innerHTML = pageHeader({ title: agent.name, icon: '', titleContent: '<h1 class="sui-sr-only">' + esc(agent.name) + '</h1><div class="bot-tab-bar"><div class="bot-header-tabs">' + tabBar + '</div>' + iconButton('plus', { label: 'New thread', attributes: 'id="bot-new-thread"' }) + '</div>', actions: titleActions() });
+  // Keep the mounted pill tabs (and their gliding indicator) when only the
+  // active thread changed; rebuild when the tab set or the agent changed.
+  const tabSignature = agent.id + ':' + openThreads.map(item => item.id).join(',');
+  const existingTabs = header.querySelector('#bot-chat-tabs');
+  if (!existingTabs || existingTabs.dataset.tabsFor !== tabSignature) {
+    const tabBar = tabs({ id: 'bot-chat-tabs', ariaLabel: 'Open chats', variant: 'pill', panelId: 'bot-view', activeTabId: thread.id,
+      tabs: openThreads.map(item => ({ id: item.id, label: item.id.startsWith('main-') ? agent.name : item.title === 'New conversation' ? 'New chat' : item.title, leading: item.id.startsWith('main-') ? agentAvatar(agent, 18) : '', icon: item.id.startsWith('main-') ? '' : 'fork' })) });
+    header.innerHTML = pageHeader({ title: agent.name, icon: '', titleContent: '<h1 class="sui-sr-only">' + esc(agent.name) + '</h1><div class="bot-tab-bar"><div class="bot-header-tabs">' + tabBar + '</div>' + iconButton('plus', { label: 'New thread', attributes: 'id="bot-new-thread"' }) + '</div>', actions: titleActions() });
+    header.querySelector('.sx-tabs')?.setAttribute('data-tabs-for', tabSignature);
+  }
   view.setAttribute('role', 'tabpanel');
   view.setAttribute('aria-labelledby', 'bot-chat-tabs-tab-' + thread.id);
   view.innerHTML = pageLayout({ variant: 'conversation', classes: 'bot-conversation-layout', content: '<div class="bot-stack"><p class="bot-date">Today</p>' +
@@ -356,6 +363,7 @@ function render(focus = false, keepScroll = false) {
   if (current.page === 'chat') composerControl = initComposer(document.getElementById('bot-composer'));
   setNavigation(); save();
   if (current.page === 'chat') header.querySelector('[role="tab"][aria-selected="true"]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  if (!header.querySelector('.bot-team-toggle')) header.querySelector('header')?.insertAdjacentHTML('afterbegin', '<div class="bot-team-toggle">' + iconButton('panel-left', { label: shell.classList.contains('is-collapsed') ? 'Show bot panel' : 'Hide bot panel', attributes: 'data-shell-toggle data-shell-show-label="Show bot panel" data-shell-hide-label="Hide bot panel"' }) + '</div>');
   if (keepScroll) scroller.scrollTop = previousScroll;
   else scroller.scrollTop = current.page === 'chat' ? current.thread.scroll ?? scroller.scrollHeight : 0;
   updateScrollFade();
