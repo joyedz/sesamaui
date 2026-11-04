@@ -3,7 +3,8 @@
     <source media="(prefers-color-scheme: dark)" srcset="docs/img/sesama-logo-dark.svg">
     <img src="assets/brand/sesama-logo-final.svg" alt="Sesama" width="240">
   </picture>
-  <p>A shared UI language for dashboards, AI workspaces, and everyday tools.</p>
+  <p><br>A shared UI language for dashboards, AI workspaces, and everyday tools.</p>
+  <br>
 </div>
 
 <p align="center">
