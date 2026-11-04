@@ -96,23 +96,33 @@ export function initTabs(element) {
 
   // Sliding indicator: one surface glides behind the active tab.
   const thumb = element.querySelector('.sx-tab-thumb');
-  function positionThumb() {
+  function positionThumb(instant = false) {
     if (!thumb) return;
     const active = tablist.querySelector('[role="tab"][aria-selected="true"]');
     if (!active) return;
+    if (instant) {
+      // First placement (and re-measures while hidden, resizing, or after webfonts
+      // settle) must not glide in from the left edge — suppress the transition for
+      // this placement only, so user-initiated switches keep the glide.
+      thumb.style.transition = 'none';
+    }
     if (element.dataset.variant === 'line') {
       thumb.style.transform = `translateX(${active.offsetLeft}px) scaleX(${active.offsetWidth})`;
-      return;
+    } else {
+      thumb.style.left = `${active.offsetLeft}px`;
+      thumb.style.width = `${active.offsetWidth}px`;
     }
-    thumb.style.left = `${active.offsetLeft}px`;
-    thumb.style.width = `${active.offsetWidth}px`;
+    if (instant) {
+      void thumb.offsetWidth;
+      thumb.style.transition = '';
+    }
   }
-  positionThumb();
-  const resizeObserver = view.ResizeObserver ? new view.ResizeObserver(positionThumb) : null;
+  positionThumb(true);
+  const resizeObserver = view.ResizeObserver ? new view.ResizeObserver(() => positionThumb(true)) : null;
   resizeObserver?.observe(tablist);
-  view.addEventListener?.('resize', positionThumb);
+  view.addEventListener?.('resize', () => positionThumb(true));
   // Re-measure once webfonts settle so the thumb matches the final metrics.
-  element.ownerDocument?.fonts?.ready?.then(positionThumb).catch(() => {});
+  element.ownerDocument?.fonts?.ready?.then(() => positionThumb(true)).catch(() => {});
 
   function activateTab(tabEl, shouldFocus = false) {
     if (destroyed || !tabEl || tabEl.disabled || tabEl.getAttribute('aria-disabled') === 'true') return;

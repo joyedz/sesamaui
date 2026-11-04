@@ -16,9 +16,16 @@
 
 :where(.sui-root) .sb-agent-status-indicator {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  transform: translate(25%, 25%);
+  inset-block-start: 85%;
+  inset-inline-start: 85%;
+  display: grid;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--color-base);
+  translate: -50% -50%;
+}
+
+:where(.sui-root) .sb-agent-status-indicator:dir(rtl) {
+  translate: 50% -50%;
 }
 
 :where(.sui-root) .sb-agent-meta {

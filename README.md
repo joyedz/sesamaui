@@ -4,7 +4,7 @@ A shared UI language for dashboards, AI workspaces, and everyday tools.
 
 Sesama UI is a dependency-free vanilla HTML/CSS/JavaScript design system. Every component is a pure ES Module builder that renders accessible, semantic HTML strings — in the browser, in Node.js, or at build time — and hydrates through a single `mount()` runtime with real lifecycles.
 
-> **Status: alpha (`0.1.0-alpha.2`).** The API may change before beta. See [CHANGELOG.md](CHANGELOG.md).
+> **Status: stable 0.x (`0.1.0`).** The API may still change in minor releases; experimental components are labeled. See [CHANGELOG.md](CHANGELOG.md).
 
 ![Sesama UI dashboard in light theme](docs/img/dashboard-light.png)
 
@@ -118,7 +118,7 @@ More examples are indexed in [demos/README.md](demos/README.md). Authentication,
 
 ## Documentation
 
-- [Alpha release guide](docs/ALPHA-RELEASE.md) — component inventory and architecture
+- [Release guide](docs/RELEASE.md) — component inventory and architecture
 - [Component API contract](docs/COMPONENT-API-PREVIEW.md)
 - [Accessibility report](docs/ACCESSIBILITY-REPORT.md)
 - [Changelog](CHANGELOG.md)

@@ -46,9 +46,9 @@
   transition: background-color 150ms ease;
 }
 
-:where(.sui-root) .sx-list-link:hover {
-  background: var(--list-row-hover-background, var(--color-tint));
-  background: color-mix(in srgb, var(--list-row-hover-background, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent);
+:where(.sui-root) .sx-list-link:hover:where(:not([aria-current="true"], [aria-current="page"])) {
+  background: var(--list-row-hover-background, var(--color-tint-hover, var(--color-tint)));
+  background: color-mix(in srgb, var(--list-row-hover-background, var(--color-tint-hover, var(--color-tint))) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-list-link:focus-visible {
@@ -108,9 +108,9 @@
 :where(.sui-root) .sx-list-link:is(:hover, :focus-visible) .sx-help {
   color: var(--list-row-hover-color, var(--text-subtle));
 }
-:where(.sui-root) .sx-list-link:focus-visible {
-  background: var(--list-row-hover-background, var(--color-tint));
-  background: color-mix(in srgb, var(--list-row-hover-background, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent);
+:where(.sui-root) .sx-list-link:focus-visible:where(:not([aria-current="true"], [aria-current="page"])) {
+  background: var(--list-row-hover-background, var(--color-tint-hover, var(--color-tint)));
+  background: color-mix(in srgb, var(--list-row-hover-background, var(--color-tint-hover, var(--color-tint))) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sx-list-copy > .sx-help { white-space:var(--list-row-description-white-space,nowrap); overflow:hidden; text-overflow:ellipsis; }

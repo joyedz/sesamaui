@@ -887,6 +887,18 @@ const stageStyle = document.createElement('style');
 stageStyle.textContent = '.stage .sui-root{display:grid;justify-items:center}.stage .sui-root.is-full{display:block}.stage .surface-comparison{display:grid;width:100%;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px;align-items:stretch}.surface-comparison-stage{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:16px;min-width:0;padding:24px;border-radius:12px;background:linear-gradient(145deg,var(--color-brand-tint),color-mix(in srgb,var(--color-brand) 48%,var(--color-base)));overflow:hidden}.surface-comparison-label{font-size:12px;color:var(--text-subtle)}';
 document.head.append(stageStyle);
 
+document.addEventListener('sui:tab:change', event => {
+  const example = event.target.closest('[data-example-shared-tabs]');
+  if (!example) return;
+  const panel = example.querySelector('[role="tabpanel"]');
+  const tab = event.target.querySelector('[role="tab"][aria-selected="true"]');
+  panel.setAttribute('aria-labelledby', tab.id);
+  panel.hidden = false;
+  panel.querySelectorAll('[data-example-tab-content]').forEach(content => {
+    content.hidden = content.dataset.exampleTabContent !== event.detail.id;
+  });
+});
+
 window.canonicalComponentExamples = name => {
   const map = canonical[name];
   if (!map) throw new Error(`Missing component examples: ${name}`);

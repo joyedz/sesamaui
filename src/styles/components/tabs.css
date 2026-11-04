@@ -119,9 +119,9 @@
   color: var(--text-placeholder);
 }
 
-:where(.sui-root) .sx-tablist.pill .sx-tab:hover:not(:disabled) {
-  background: var(--color-tint);
-  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
+:where(.sui-root) .sx-tablist.pill .sx-tab:hover:not(:disabled):where(:not(.on, [aria-selected="true"])) {
+  background: var(--color-tint-hover, var(--color-tint));
+  background: color-mix(in srgb, var(--color-tint-hover, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent);
   color: var(--text-default);
 }
 

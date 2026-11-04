@@ -1,10 +1,32 @@
 # Changelog
 
+- Add `--color-tint-subtle` (`#EEEEEE` in light mode, `#222222` in dark mode) as an opt-in surface for quieter hover and selected states.
+
+## [0.1.0] - 2026-11-04
+
+- Tab switches keep the tablist mounted: the Issue Workspace views (My issues, Inbox, Initiatives, Projects, Reviews, and the review panel) and the Agent Bot header thread tabs now patch only the tab-dependent content and keep every tablist in place, so the sliding indicator plays its glide on every switch instead of being cut by a re-render. The Inbox pill tabs sit back inside the 320px list column, and the swappable bodies reuse the 24px stack grid so spacing matches the original layout.
+
+- Tabs motion fix: the sliding indicator no longer glides in from the left edge when a tablist mounts (or re-measures while hidden, resizing, or after webfonts settle) — the thumb is placed instantly and the glide is reserved for user-initiated tab switches. This removes the visible slide-in on every Issue Workspace view change.
+
+- Hover and selection tints adapt to the nearest surface: hover states read `--color-tint-hover` (falling back to `--color-tint`), selected rows/tabs skip the hover tint, and the demo palette maps tint depth per surface (shell/sidebar keep the canvas tint; cards, modals, popups, and main panels use the subtle tint). The catalog gains Tabs examples for leading avatar content and a shared external panel, and the legacy tab controller no longer double-handles `[data-sui-tabs]` elements.
+
+- Modal focus fix: opening a dialog no longer lands focus on the header close button (whose icon-button tooltip would pop every time). `showModal()` is followed by an explicit focus move — `[autofocus]` target first, then the first control that is not the close button, then the dialog element itself. Existing defaults are unchanged for dialogs with an `autofocus` target.
+
+First stable release — the `-alpha` suffix is dropped from the package version, and `npm publish` now tags `latest`. Pre-releases: [0.1.0-alpha.2](#0100-alpha2---2026-10-31), [0.1.0-alpha.1](#0100-alpha1---2026-10-31). While on 0.x, minor versions may still carry breaking changes; experimental components are labeled in the README, and the manual screen-reader review remains scheduled before 1.0 (see [docs/RELEASE.md](docs/RELEASE.md)).
+
+- `npm run dev` now serves a generated index at `/` built with the shared list-row navigation component (the landing page menu look), reading labels and order from `demos/shared/pages.mjs` so it always mirrors the in-demo menus. Adds a Message shortcut to the long sample conversation. The landing navigation labels follow the demo sidebars too (`New chat`, `My inbox`). The project landing page is untracked (`site/Sesama landing.html` and its assets are gitignored); the browser smoke suite skips missing pages so CI works without it.
+
+- Reorganize `demos/` into category folders — `dashboard/`, `ai-agent/`, `ai-bot/` (formerly `agent-bot/`), `issue/`, `onboarding/` — with the Component API preview staying at the root; the standalone Workspace demo is removed. Demo routes in `shared/pages.mjs`, cross-page links, test paths, and docs are updated to match.
+
+- Issue Workspace demo keeps its App Shell and sidebar mounted across view changes: switching menus, opening issues, and tab/filter changes now swap only the main column (selection updates in place), removing the per-menu sidebar reload. The four category pages (Inbox, My issues, Review, All issues) also switch in page via `?page=` URLs instead of full page loads, with Back/Forward restoring the right section.
+
+- AI Agent demo opens the agent directory as an in-page overlay on both the chat and directory pages — 'All agents', 'New chat', and starting an agent no longer trigger full page loads, so the sidebar never reloads when switching menus.
+
 - Slim the design system catalog's App Shell example down to sidebar + header only, dropping the inner page layout/table composition so the preview focuses on the shell itself. App Shell height becomes configurable via `--shell-height` (default `100dvh`), fixing the preview overflowing its 420px stage.
 
 - Fix flaky axe color-contrast false positives in the accessibility suite: modal/popup entry opacity fades were still running when axe sampled colors (fg and bg both composited through partial opacity, e.g. 4.18:1 instead of the real ~6:1). The suite now waits for open overlays to reach settled opacity (plus `animate: false`) before auditing.
 
-- **Breaking (alpha):** remove the seven unused domain recipes — `requirementGroupRecipe`, `resourceListRecipe`, `createSkillDialogRecipe`, `deleteResourceRecipe`, `dashboardOverviewRecipe`, `revenueChartRecipe`, and `dataWorkspaceRecipe`. Compose the same layouts from the structural/content blocks instead. `agentCardRecipe` remains; the design system catalog drops the corresponding block entries and their example pages.
+- **Breaking:** remove the seven unused domain recipes — `requirementGroupRecipe`, `resourceListRecipe`, `createSkillDialogRecipe`, `deleteResourceRecipe`, `dashboardOverviewRecipe`, `revenueChartRecipe`, and `dataWorkspaceRecipe`. Compose the same layouts from the structural/content blocks instead. `agentCardRecipe` remains; the design system catalog drops the corresponding block entries and their example pages.
 
 - Add a Compact rail example to the design system catalog's Workspace Sidebar page, rendered by the canonical `workspaceSidebar` builder with `variant: 'compact'` and icon-button rail navigation (the pattern used by Agent Bot).
 

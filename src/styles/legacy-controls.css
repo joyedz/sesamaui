@@ -10,9 +10,9 @@
 .btn.secondary{background:var(--color-base);background:color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);box-shadow:var(--shadow-ring)}
 .btn.secondary:hover:not(:disabled){background:var(--color-recessed);background:color-mix(in srgb, var(--color-recessed) var(--sui-surface-opacity, 100%), transparent)}
 .btn.ghost{color:var(--text-subtle)}
-.btn.ghost:hover:not(:disabled){background:var(--color-tint);background:color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent)}
+.btn.ghost:hover:not(:disabled){background:var(--color-tint-hover, var(--color-tint));background:color-mix(in srgb, var(--color-tint-hover, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent)}
 .btn.dashed{padding:3px 5px;border:1px dashed var(--text-placeholder);color:var(--text-subtle)}
-.btn.dashed:hover:not(:disabled){background:var(--color-tint);background:color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent)}
+.btn.dashed:hover:not(:disabled){background:var(--color-tint-hover, var(--color-tint));background:color-mix(in srgb, var(--color-tint-hover, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent)}
 .btn .sep{align-self:stretch;width:1px;margin:0 var(--space-4);background:currentColor;opacity:.25}
 .btn:active{transform:translateY(1px)}
 .btn.lg{min-height:34px;padding:9px 13px}
@@ -21,12 +21,12 @@
 .btn.base{min-height:30px;padding:5px 9px}
 .btn.lg{min-height:34px;padding:9px 13px}
 .btn.outline{box-shadow:0 0 0 1px var(--color-hairline)}
-.btn.outline:hover:not(:disabled){background:var(--color-tint);background:color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent)}
+.btn.outline:hover:not(:disabled){background:var(--color-tint-hover, var(--color-tint));background:color-mix(in srgb, var(--color-tint-hover, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent)}
 .btn.destructive{background:var(--color-danger-fill);background:color-mix(in srgb, var(--color-danger-fill) var(--sui-surface-opacity, 100%), transparent);color:var(--text-on-brand)}
 .btn.destructive:hover:not(:disabled){filter:brightness(1.08)}
 .btn:disabled{opacity:.5;cursor:default}
 .btn.secondary-destructive{background:var(--color-base);background:color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);color:var(--color-danger);box-shadow:var(--shadow-ring)}
-.btn.secondary-destructive:hover:not(:disabled){background:var(--color-tint);background:color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent)}
+.btn.secondary-destructive:hover:not(:disabled){background:var(--color-tint-hover, var(--color-tint));background:color-mix(in srgb, var(--color-tint-hover, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent)}
 .btn{font-size:var(--font-ui-size);line-height:var(--font-control-line)}
 .btn{transition:background-color var(--motion-fast) var(--ease-standard),color var(--motion-fast) var(--ease-standard)}
 @media(prefers-reduced-motion:reduce){.btn{transition:none}}
@@ -46,7 +46,7 @@
 .btn.lg{min-height:var(--control-size-lg)}
 .btn.link{min-height:0}
 .btn.social{position:relative;gap:var(--space-8);background:var(--color-base);background:color-mix(in srgb, var(--color-base) var(--sui-surface-opacity, 100%), transparent);color:var(--text-default);box-shadow:0 0 0 1px var(--color-hairline)}
-.btn.social:hover:not(:disabled){background:var(--color-tint);background:color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent)}
+.btn.social:hover:not(:disabled){background:var(--color-tint-hover, var(--color-tint));background:color-mix(in srgb, var(--color-tint-hover, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent)}
 .sx-social-logo{display:block;width:16px;height:16px;flex:none;object-fit:contain}
 :root[data-mode=dark] .sx-social-logo.is-monochrome{filter:invert(1)}
 @media(prefers-color-scheme:dark){:root:not([data-mode=light]) .sx-social-logo.is-monochrome{filter:invert(1)}}
@@ -61,7 +61,7 @@
 /* Canonical Sesama icon-button styles. Legacy compatibility is generated. */
 .ibtn.favorite[aria-pressed="true"] { color: var(--text-default); }
 .ibtn.favorite[aria-pressed="true"] > svg { fill: currentColor; }
-.ibtn:hover:not(:disabled){background:var(--color-tint);background:color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent)}
+.ibtn:hover:not(:disabled){background:var(--color-tint-hover, var(--color-tint));background:color-mix(in srgb, var(--color-tint-hover, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent)}
 .ibtn:active{transform:translateY(1px)}
 .ibtn{display:grid;place-items:center;width:24px;height:24px;border-radius:var(--radius-sm);color:var(--text-placeholder)}
 .ibtn:hover:not(:disabled){color:var(--text-default)}
@@ -187,7 +187,7 @@
 /* flex:none: a long menu scrolls, it never squeezes its rows below their
    natural height (a constrained column flex would crush them to min-height). */
 .sx-menu-item{display:flex;align-items:center;gap:var(--space-8);width:100%;padding:var(--space-6) var(--space-8);min-height:28px;border-radius:var(--radius-sm);white-space:nowrap;flex:none}
-.sx-menu-item:hover,.sx-menu-item:focus-visible{background:var(--color-tint);background:color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent)}
+.sx-menu-item:hover,.sx-menu-item:focus-visible{background:var(--color-tint-hover, var(--color-tint));background:color-mix(in srgb, var(--color-tint-hover, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent)}
 .sx-menu-item:disabled{opacity:.5;cursor:not-allowed}
 .sx-menu-item.danger{color:var(--color-danger)}
 .sx-menu-label{padding:var(--space-8);font-size:11px;color:var(--text-placeholder)}
@@ -224,7 +224,7 @@
 .ds-modal .sx-modal-header h2{margin:0;min-width:0}
 .ds-modal .sx-modal-header h2{overflow-wrap:anywhere}
 .ds-modal .sx-modal-close{display:grid;place-items:center;flex:none;width:24px;height:24px;padding:0;border-radius:var(--radius-sm);color:var(--text-subtle)}
-.ds-modal .sx-modal-close:hover{background:var(--color-tint);background:color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent)}
+.ds-modal .sx-modal-close:hover{background:var(--color-tint-hover, var(--color-tint));background:color-mix(in srgb, var(--color-tint-hover, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent)}
 .ds-modal[data-size=sm]{width:min(288px,calc(100vw - 32px))}
 .ds-modal[data-size=lg]{width:min(512px,calc(100vw - 32px))}
 .ds-modal[data-size=xl]{width:min(768px,calc(100vw - 32px))}

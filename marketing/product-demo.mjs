@@ -4,8 +4,8 @@ const $ = selector => document.querySelector(selector);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const chapters = [
   { name: 'Components', caption: 'Thoughtful details. Ready to compose.', link: '../site/Design%20system.html', cta: 'Explore components ↗' },
-  { name: 'Dashboard', caption: 'From all your orders to the one that matters.', link: '../demos/Orders.html', cta: 'Open dashboard ↗' },
-  { name: 'AI workspace', caption: 'A conversation becomes a place to work.', link: '../demos/AI%20agents%20demo.html', cta: 'Open AI workspace ↗' }
+  { name: 'Dashboard', caption: 'From all your orders to the one that matters.', link: '../demos/dashboard/Orders.html', cta: 'Open dashboard ↗' },
+  { name: 'AI workspace', caption: 'A conversation becomes a place to work.', link: '../demos/ai-agent/AI%20agents%20demo.html', cta: 'Open AI workspace ↗' }
 ];
 $('#header-controls').innerHTML = `<a href="../site/Design%20system.html">Documentation ↗</a>${iconButton({ icon: 'sun', accessibleLabel: 'Toggle color theme', attributes: 'id="theme"' })}`;
 $('#chapters').innerHTML = chapters.map((c, i) => button({ label: `0${i + 1}  ${c.name}`, variant: i ? 'ghost' : 'secondary', attributes: `data-chapter="${i}" aria-pressed="${i === 0}"` })).join('');

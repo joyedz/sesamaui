@@ -16,5 +16,10 @@ Thumbs.db
 .*-qa.*
 *.log
 output/
+# Project landing page — lives with the product project, not in this repo.
+/site/Sesama landing.html
+/site/landing.css
+/site/landing.js
+/site/landing-navigation.mjs
 # Original local reference snapshot, not a second public catalog.
 design-system (1).html

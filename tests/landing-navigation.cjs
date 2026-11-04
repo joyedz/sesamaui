@@ -19,7 +19,7 @@ let browser;
   const page = await browser.newPage({ viewport: { width: 1440, height: 960 } });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto(base);
+  await page.goto(base + '/site/Sesama%20landing.html');
   const desktop = page.locator('#lp-header-navigation');
   const demo = desktop.getByRole('button', { name: 'Demo', exact: true });
   await demo.hover();
@@ -54,12 +54,12 @@ let browser;
 
   await page.getByRole('tab', { name: /^Agent Bot/ }).click();
   await page.frameLocator('#app-preview').locator('#bot-composer').waitFor();
-  assert.equal(await page.locator('#open-demo').getAttribute('href'), '/demos/Agent%20Bot.html');
+  assert.equal(await page.locator('#open-demo').getAttribute('href'), '/demos/ai-bot/Agent%20Bot.html');
 
   const touch = await browser.newContext({ hasTouch: true, viewport: { width: 390, height: 844 } });
   const mobile = await touch.newPage();
   mobile.on('pageerror', error => errors.push(error.message));
-  await mobile.goto(base);
+  await mobile.goto(base + '/site/Sesama%20landing.html');
   assert.equal(await mobile.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
   await mobile.locator('#lp-mobile-navigation button').tap();
   await mobile.waitForSelector('#landing-mobile-demo:popover-open');

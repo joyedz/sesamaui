@@ -1,5 +1,5 @@
-import { typingPlaceholder } from './shared/typing-placeholder.mjs';
-import { readState, writeState, preserveSidebar } from './shared/state.mjs';
+import { typingPlaceholder } from '../shared/typing-placeholder.mjs';
+import { readState, writeState, preserveSidebar } from '../shared/state.mjs';
 preserveSidebar('ai-agent');
 const aiState = readState('ai-agent');
 const directoryPage = document.body.dataset.page === 'agents';
@@ -24,9 +24,9 @@ const directoryPage = document.body.dataset.page === 'agents';
       controlIcon,
       escapeHTML,
       mount
-    } from '../src/index.mjs';
-    import { aiAgentConversations } from './shared/data.mjs';
-    import { createAgentDirectory } from './shared/agent-directory.mjs';
+    } from '../../src/index.mjs';
+    import { aiAgentConversations } from '../shared/data.mjs';
+    import { createAgentDirectory } from '../shared/agent-directory.mjs';
 
     const glyph = (name, size = 16) => controlIcon(name, size);
 
@@ -81,7 +81,6 @@ const directoryPage = document.body.dataset.page === 'agents';
       const item = event.target.closest('[data-tree-key]');
       if (!item || item.dataset.treeKey === 'new-chat') return;
       if (item.dataset.treeKey === 'all-agents') {
-        if (!directoryPage) { location.href = 'Agents.html'; return; }
         setRoute('#agents');
         agentDirectory.open();
         return;
@@ -400,7 +399,6 @@ const directoryPage = document.body.dataset.page === 'agents';
     const agentDirectory = createAgentDirectory({
       main: document.querySelector('.agent-main'),
       onStart(agent, prompt) {
-        if (directoryPage) { writeState('ai-agent', { ...aiState, draft: prompt }); location.href = 'AI%20agents%20demo.html#agent/' + encodeURIComponent(agent.id); return; }
         const previousRestoring = restoringRoute;
         restoringRoute = true;
         document.getElementById('new-chat').click();
@@ -448,9 +446,6 @@ const directoryPage = document.body.dataset.page === 'agents';
     }
     document.addEventListener('input', saveAIState);
     window.addEventListener('pagehide', saveAIState);
-    document.addEventListener('click', event => {
-      if (directoryPage && event.target.closest('#new-chat')) { event.stopImmediatePropagation(); location.href = 'AI%20agents%20demo.html#chat/new'; }
-    }, true);
 
     if (!directoryPage) typingPlaceholder(composerEl.querySelector('textarea'), {
       phrases: [

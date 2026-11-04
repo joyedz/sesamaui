@@ -3,7 +3,7 @@
 /* Canonical Sesama icon-button styles. Legacy compatibility is generated. */
 :where(.sui-root) .ibtn.favorite[aria-pressed="true"] { color: var(--text-default); }
 :where(.sui-root) .ibtn.favorite[aria-pressed="true"] > svg { fill: currentColor; }
-:where(.sui-root) .ibtn:hover:not(:disabled){background:var(--color-tint);background:color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent)}
+:where(.sui-root) .ibtn:hover:not(:disabled){background:var(--color-tint-hover, var(--color-tint));background:color-mix(in srgb, var(--color-tint-hover, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent)}
 :where(.sui-root) .ibtn:active{transform:translateY(1px)}
 :where(.sui-root) .ibtn{display:grid;place-items:center;width:24px;height:24px;border-radius:var(--radius-sm);color:var(--text-placeholder)}
 :where(.sui-root) .ibtn:hover:not(:disabled){color:var(--text-default)}

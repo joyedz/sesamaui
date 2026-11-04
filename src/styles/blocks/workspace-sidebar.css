@@ -135,8 +135,8 @@
 }
 
 :where(.sui-root) .sb-profile-trigger:hover {
-  background: var(--color-tint);
-  background: color-mix(in srgb, var(--color-tint) var(--sui-surface-opacity, 100%), transparent);
+  background: var(--color-tint-hover, var(--color-tint));
+  background: color-mix(in srgb, var(--color-tint-hover, var(--color-tint)) var(--sui-surface-opacity, 100%), transparent);
 }
 
 :where(.sui-root) .sb-profile-trigger .sx-avatar {

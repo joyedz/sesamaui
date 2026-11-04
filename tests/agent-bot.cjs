@@ -17,7 +17,7 @@ let browser;
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.clock.install();
-  await page.goto(base + '/demos/Agent%20Bot.html');
+  await page.goto(base + '/demos/ai-bot/Agent%20Bot.html');
   await page.locator('#bot-composer').waitFor();
   assert.ok(await page.locator('#bot-thread [data-sui-message]').count() >= 10, 'Long example conversation is available');
   await page.setViewportSize({ width: 1920, height: 1000 });

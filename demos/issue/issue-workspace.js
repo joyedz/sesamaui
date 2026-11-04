@@ -29,13 +29,13 @@ import {
   runeIcon,
   escapeHTML,
   mount
-} from '../src/index.mjs';
-import { readState, writeState, preserveSidebar } from './shared/state.mjs';
+} from '../../src/index.mjs';
+import { readState, writeState, preserveSidebar } from '../shared/state.mjs';
 preserveSidebar('issue-workspace');
 const savedIssueState = readState('issue-workspace');
-import { demoCategories, demoRoutes } from './shared/pages.mjs';
-import { issueSeeds } from './shared/data.mjs';
-import { createReferencePages } from './shared/issue-reference-pages.mjs';
+import { demoCategories, demoRoutes } from '../shared/pages.mjs';
+import { issueSeeds } from '../shared/data.mjs';
+import { createReferencePages } from '../shared/issue-reference-pages.mjs';
 const referencePages = createReferencePages();
 const currentUser = 'Nils Eller';
 let myIssuesTab = 'assigned';
@@ -312,6 +312,18 @@ function detail() {
   `;
 }
 
+function personalBody() {
+  const rows = issues.filter(issue =>
+    (issue.title + ' ' + issue.id).toLowerCase().includes(search.toLowerCase()) &&
+    (statusFilter === 'All statuses' || issue.status === statusFilter) &&
+    (myIssuesTab === 'assigned' ? issue.assignee === currentUser : myIssuesTab === 'created' ? issue.creator === currentUser : myIssuesTab === 'subscribed' ? issue.subscribers.includes(currentUser) : issue.comments.length > 0 || issue.creator === currentUser)
+  );
+  return ['In Review','In Progress','Todo','Backlog','Done'].map(status => {
+    const group = rows.filter(issue => issue.status === status);
+    return group.length ? collapsible({id:'iw-group-'+status.replaceAll(' ','-'),open:true,trigger:'<span class="sx-row">'+workflowStatusIcon(status)+'<span>'+esc(status)+'</span>'+'<span class="sx-help">'+group.length+'</span></span>',content:group.map(issue=>listRow({variant:'navigation',appearance:'plain',title:issue.id+'  '+issue.title,leading:workflowStatusIcon(status),trailing:'<span class="iw-personal-meta">'+(issue.pr?'<span class="sx-help">#'+esc(issue.pr)+'</span>':'')+badge({label:issue.label})+avatar(issue.assignee)+'<span class="sx-help">'+esc(issue.updated||'Today')+'</span></span>',href:'#issue-'+issue.id,attributes:'data-iw-open="'+issue.id+'"'})).join('')}) : '';
+  }).join('') + (rows.length ? '' : emptyState({title:'No issues',description:'No issues in this view.',icon:'file-text'}));
+}
+
 function list() {
   const rows = issues.filter(issue =>
     (issue.title + ' ' + issue.id).toLowerCase().includes(search.toLowerCase()) &&
@@ -321,10 +333,7 @@ function list() {
 
   listPage = Math.min(listPage, Math.max(1, Math.ceil(rows.length / listPageSize)));
   const pageRows = rows.slice((listPage - 1) * listPageSize, listPage * listPageSize);
-  if (activeNav === 'my-issues') return pageLayout('<div class="iw-reference-stack"><div class="iw-personal-toolbar">' + tabs({ id: 'iw-my-issues-tabs', variant: 'pill', activeTabId: myIssuesTab, tabs: [{id:'assigned',label:'Assigned'},{id:'created',label:'Created'},{id:'subscribed',label:'Subscribed'},{id:'activity',label:'Activity'}] }) + '<div class="sx-row">' + iconButton({icon:'filter',accessibleLabel:'Filter issues',attributes:'data-iw-my-filter'}) + iconButton({icon:'fields',accessibleLabel:'Display options',attributes:'data-iw-my-display'}) + iconButton({icon:'activity',accessibleLabel:'Insights',attributes:'data-iw-my-insights'}) + '</div></div>' + ['In Review','In Progress','Todo','Backlog','Done'].map(status => {
-    const group = rows.filter(issue => issue.status === status);
-    return group.length ? collapsible({id:'iw-group-'+status.replaceAll(' ','-'),open:true,trigger:'<span class="sx-row">'+workflowStatusIcon(status)+'<span>'+esc(status)+'</span>'+'<span class="sx-help">'+group.length+'</span></span>',content:group.map(issue=>listRow({variant:'navigation',appearance:'plain',title:issue.id+'  '+issue.title,leading:workflowStatusIcon(status),trailing:'<span class="iw-personal-meta">'+(issue.pr?'<span class="sx-help">#'+esc(issue.pr)+'</span>':'')+badge({label:issue.label})+avatar(issue.assignee)+'<span class="sx-help">'+esc(issue.updated||'Today')+'</span></span>',href:'#issue-'+issue.id,attributes:'data-iw-open="'+issue.id+'"'})).join('')}) : '';
-  }).join('') + (rows.length ? '' : emptyState({title:'No issues',description:'No issues in this view.',icon:'file-text'})) + '</div>', {variant:'data'});
+  if (activeNav === 'my-issues') return pageLayout('<div class="iw-reference-stack"><div class="iw-personal-toolbar">' + tabs({ id: 'iw-my-issues-tabs', variant: 'pill', activeTabId: myIssuesTab, tabs: [{id:'assigned',label:'Assigned'},{id:'created',label:'Created'},{id:'subscribed',label:'Subscribed'},{id:'activity',label:'Activity'}] }) + '<div class="sx-row">' + iconButton({icon:'filter',accessibleLabel:'Filter issues',attributes:'data-iw-my-filter'}) + iconButton({icon:'fields',accessibleLabel:'Display options',attributes:'data-iw-my-display'}) + iconButton({icon:'activity',accessibleLabel:'Insights',attributes:'data-iw-my-insights'}) + '</div></div><div id="iw-personal-body" class="iw-reference-stack">' + personalBody() + '</div></div>', {variant:'data'});
   return `
     <div class="iw-list-layout">
       <div class="iw-list-toolbar">
@@ -361,7 +370,7 @@ function list() {
   `;
 }
 
-function inbox() {
+function inboxParts() {
   const visible = notifications.filter(item => inboxFilter === 'snoozed' ? item.snoozed : !item.snoozed && (inboxFilter !== 'unread' || !item.read));
   const current = visible.find(item => item.id === activeNotification);
   if (current) selected = current.issue;
@@ -376,27 +385,74 @@ function inbox() {
     iconButton({icon:current.read?runeIcon('mail'):'check',accessibleLabel:current.read?'Mark unread':'Mark read',attributes:'data-iw-inbox-read'}) +
     iconButton({icon:'clock',accessibleLabel:current.snoozed?'Move to inbox':'Snooze',attributes:'data-iw-inbox-snooze'})
   }) + detail() : '<div class="iw-inbox-empty">' + emptyState({title:visible.length?'Select a notification':'You’re all caught up',description:visible.length?'Choose an update to review its issue.':'No notifications in this view.',icon:runeIcon('inbox')}) + '</div>';
-  return '<div class="iw-inbox-grid"><section class="iw-inbox-list" aria-label="Inbox notifications">' + tabs({id:'iw-inbox-tabs',variant:'pill',activeTabId:inboxFilter,tabs:[{id:'all',label:'All'},{id:'unread',label:'Unread'},{id:'snoozed',label:'Snoozed'}]}) + '<div class="iw-inbox-items">' + (rows || emptyState({title:'No notifications',icon:runeIcon('inbox'),compact:true})) + '</div></section><section class="iw-inbox-preview" aria-label="Issue preview">' + preview + '</section></div>';
+  return { items: rows || emptyState({title:'No notifications',icon:runeIcon('inbox'),compact:true}), preview };
+}
+
+function inbox() {
+  const parts = inboxParts();
+  return '<div class="iw-inbox-grid"><section class="iw-inbox-list" aria-label="Inbox notifications">' + tabs({id:'iw-inbox-tabs',variant:'pill',activeTabId:inboxFilter,tabs:[{id:'all',label:'All'},{id:'unread',label:'Unread'},{id:'snoozed',label:'Snoozed'}]}) + '<div class="iw-inbox-items" id="iw-inbox-items">' + parts.items + '</div></section><section class="iw-inbox-preview" id="iw-inbox-preview" aria-label="Issue preview">' + parts.preview + '</section></div>';
+}
+
+let shellMounted = false;
+let favoritesSignature = '';
+
+function headerMarkup() {
+  return pageHeader({
+    title: ['reviews','initiatives','projects'].includes(view) ? ({reviews:'Reviews',initiatives:'Initiatives',projects:'Projects'})[view] : view === 'inbox' ? 'My inbox' : view === 'detail' ? selected.id : activeNav === 'my-issues' ? 'My issues' : 'Issues',
+    icon: view === 'inbox' ? runeIcon('inbox') : 'file-text',
+    actions: toolbar()
+  });
+}
+
+function contentMarkup() {
+  return ['reviews','initiatives','projects'].includes(view) ? referencePages.render(view) : view === 'inbox' ? inbox() : view === 'detail' ? detail() : list();
+}
+
+function updateNavSelection() {
+  document.querySelectorAll('#issue-app [data-sui-workspace-sidebar] [data-sel]').forEach(item => {
+    const key = item.dataset.treeKey;
+    const active = key === activeNav || (view === 'detail' && selected && key === 'favorite-' + selected.id.slice(4));
+    item.classList.toggle('on', active);
+    if (active) { item.setAttribute('data-active', 'true'); item.setAttribute('aria-current', 'page'); }
+    else { item.removeAttribute('data-active'); item.removeAttribute('aria-current'); }
+  });
 }
 
 function render() {
   saveIssueState();
-  const collapsed = document.querySelector('[data-sui-app-shell]')?.classList.contains('is-collapsed') || false;
-  pageSession?.destroy();
-  document.getElementById('issue-app').innerHTML = appShell({
-    collapsed,
-    sidebar: sidebar(),
-    header: pageHeader({
-      title: ['reviews','initiatives','projects'].includes(view) ? ({reviews:'Reviews',initiatives:'Initiatives',projects:'Projects'})[view] : view === 'inbox' ? 'My inbox' : view === 'detail' ? selected.id : activeNav === 'my-issues' ? 'My issues' : 'Issues',
-      icon: view === 'inbox' ? runeIcon('inbox') : 'file-text',
-      actions: toolbar()
-    }),
-    content: ['reviews','initiatives','projects'].includes(view) ? referencePages.render(view) : view === 'inbox' ? inbox() : view === 'detail' ? detail() : list(),
-    ...(view === 'detail' ? { detail: properties() } : {})
-  });
-
+  const signature = issues.filter(issue => issue.favorite).map(issue => issue.id).join(',');
+  if (!shellMounted) {
+    // The shell and sidebar mount once; view changes swap only the main column,
+    // so switching menus never reloads the sidebar.
+    document.getElementById('issue-app').innerHTML = appShell({
+      sidebar: sidebar(),
+      header: headerMarkup(),
+      content: contentMarkup(),
+      ...(view === 'detail' ? { detail: properties() } : {})
+    });
+    shellMounted = true;
+    favoritesSignature = signature;
+  } else {
+    if (signature !== favoritesSignature) {
+      // Favorites changed: rebuild only the sidebar element, keeping the shell.
+      const template = document.createElement('template');
+      template.innerHTML = sidebar();
+      document.querySelector('#issue-app [data-sui-workspace-sidebar]').replaceWith(template.content.firstElementChild);
+      favoritesSignature = signature;
+    }
+    const shell = document.querySelector('#issue-app [data-sui-app-shell]');
+    const template = document.createElement('template');
+    template.innerHTML = `<main class="sb-main sx-shell-main">${headerMarkup()}<div class="sb-page-scroll sx-scroll-area">${contentMarkup()}</div></main>${view === 'detail' ? `<aside class="sb-detail sx-scroll-area" data-shell-detail>${properties()}</aside>` : ''}`;
+    shell.querySelector('.sb-main').replaceWith(template.content.querySelector('.sb-main'));
+    const detail = template.content.querySelector('.sb-detail');
+    const existingDetail = shell.querySelector('.sb-detail');
+    if (detail && existingDetail) existingDetail.replaceWith(detail);
+    else if (detail) shell.append(detail);
+    else existingDetail?.remove();
+  }
   pageSession = mount(document.getElementById('issue-app'));
-
+  pageSession.refresh();
+  updateNavSelection();
   const input = document.querySelector('.iw-comment-form textarea');
   if (input) {
     input.placeholder = 'Leave a comment or ask an agent…';
@@ -485,7 +541,12 @@ document.addEventListener('click', event => {
   if (issueRoutes.has(key) && key === initialIssuePage && location.search) history.pushState(null, '', location.pathname);
   if (issueRoutes.has(key) && key !== initialIssuePage) {
     event.preventDefault(); event.stopImmediatePropagation();
-    saveIssueState(); location.href = demoRoutes[key];
+    saveIssueState();
+    history.pushState(null, '', '?page=' + key);
+    activeNav = key;
+    view = ['inbox', 'reviews'].includes(key) ? key : 'list';
+    listPage = 1;
+    render();
   }
 }, true);
 function saveIssueState() {
@@ -594,7 +655,16 @@ document.addEventListener('sui:composer:send', event => {
   });
 });
 
-document.addEventListener('sui:tab:change', event => { if (event.target.id !== 'iw-inbox-tabs') return; inboxFilter = event.detail.id; render(); document.querySelector('#iw-inbox-tabs [aria-selected="true"]')?.focus(); });
+function patchTabBody(containerId, html) {
+  document.getElementById(containerId).innerHTML = html;
+  pageSession.refresh();
+}
+document.addEventListener('sui:tab:change', event => {
+  if (event.target.id === 'iw-inbox-tabs') { inboxFilter = event.detail.id; const parts = inboxParts(); patchTabBody('iw-inbox-items', parts.items); patchTabBody('iw-inbox-preview', parts.preview); return; }
+  if (event.target.id === 'iw-my-issues-tabs') { myIssuesTab = event.detail.id; patchTabBody('iw-personal-body', personalBody()); return; }
+  const patched = referencePages.change(event.target.id, event.detail.id);
+  if (patched) for (const part of patched) patchTabBody(part.container, part.html);
+});
 document.addEventListener('click', event => {
   const row = event.target.closest('[data-iw-notification]');
   if (row) { event.preventDefault(); activeNotification = row.dataset.iwNotification; notifications.find(item => item.id === activeNotification).read = true; render(); return; }
@@ -611,7 +681,7 @@ document.addEventListener('sui:pagination:change', event => {
   queueMicrotask(() => { render(); document.querySelector('.sb-page-scroll')?.scrollTo({ top: 0 }); });
 });
 
-document.addEventListener('sui:tab:change', event => { if (event.target.id === 'iw-my-issues-tabs') { myIssuesTab = event.detail.id; render(); } else if (referencePages.change(event.target.id, event.detail.id)) render(); });
+
 document.addEventListener('sui:change', event => { if (event.detail?.name === 'iw-project-initiative') { referencePages.state.initiative = event.detail.value; render(); } });
 document.addEventListener('click', event => { const row = event.target.closest('[data-iw-review]'); if (!row) return; event.preventDefault(); referencePages.state.selectedReview = Number(row.dataset.iwReview); render(); });
 
@@ -636,4 +706,8 @@ document.addEventListener('click', event => {
   event.preventDefault();
   event.stopImmediatePropagation();
 }, true);
-window.addEventListener('popstate', () => { const id = new URLSearchParams(location.search).get('issue'); const issue = issues.find(item => item.id === id); selected = issue || selected; activeNav = initialIssuePage; view = issue ? 'detail' : ['inbox','reviews'].includes(initialIssuePage) ? initialIssuePage : 'list'; render(); });
+window.addEventListener('popstate', () => {
+  const page = new URLSearchParams(location.search).get('page');
+  if (page && issueRoutes.has(page)) { activeNav = page; view = ['inbox','reviews'].includes(page) ? page : 'list'; render(); return; }
+  const id = new URLSearchParams(location.search).get('issue'); const issue = issues.find(item => item.id === id); selected = issue || selected; activeNav = initialIssuePage; view = issue ? 'detail' : ['inbox','reviews'].includes(initialIssuePage) ? initialIssuePage : 'list'; render();
+});
