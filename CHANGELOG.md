@@ -1,8 +1,10 @@
 # Changelog
 
+- Add `--color-tint-subtle` (`#EEEEEE` in light mode, `#222222` in dark mode) as an opt-in surface for quieter hover and selected states.
+
 ## [0.1.0] - 2026-11-04
 
-- Tab switches keep the tablist mounted: the Issue Workspace views (My issues, Inbox, Initiatives, Projects, Reviews, and the review panel) and the Agent Bot header thread tabs now patch only the tab-dependent content and keep every tablist in place, so the sliding indicator plays its glide on every switch instead of being cut by a re-render.
+- Tab switches keep the tablist mounted: the Issue Workspace views (My issues, Inbox, Initiatives, Projects, Reviews, and the review panel) and the Agent Bot header thread tabs now patch only the tab-dependent content and keep every tablist in place, so the sliding indicator plays its glide on every switch instead of being cut by a re-render. The Inbox pill tabs sit back inside the 320px list column, and the swappable bodies reuse the 24px stack grid so spacing matches the original layout.
 
 - Tabs motion fix: the sliding indicator no longer glides in from the left edge when a tablist mounts (or re-measures while hidden, resizing, or after webfonts settle) — the thumb is placed instantly and the glide is reserved for user-initiated tab switches. This removes the visible slide-in on every Issue Workspace view change.
 

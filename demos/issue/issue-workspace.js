@@ -333,7 +333,7 @@ function list() {
 
   listPage = Math.min(listPage, Math.max(1, Math.ceil(rows.length / listPageSize)));
   const pageRows = rows.slice((listPage - 1) * listPageSize, listPage * listPageSize);
-  if (activeNav === 'my-issues') return pageLayout('<div class="iw-reference-stack"><div class="iw-personal-toolbar">' + tabs({ id: 'iw-my-issues-tabs', variant: 'pill', activeTabId: myIssuesTab, tabs: [{id:'assigned',label:'Assigned'},{id:'created',label:'Created'},{id:'subscribed',label:'Subscribed'},{id:'activity',label:'Activity'}] }) + '<div class="sx-row">' + iconButton({icon:'filter',accessibleLabel:'Filter issues',attributes:'data-iw-my-filter'}) + iconButton({icon:'fields',accessibleLabel:'Display options',attributes:'data-iw-my-display'}) + iconButton({icon:'activity',accessibleLabel:'Insights',attributes:'data-iw-my-insights'}) + '</div></div><div id="iw-personal-body">' + personalBody() + '</div></div>', {variant:'data'});
+  if (activeNav === 'my-issues') return pageLayout('<div class="iw-reference-stack"><div class="iw-personal-toolbar">' + tabs({ id: 'iw-my-issues-tabs', variant: 'pill', activeTabId: myIssuesTab, tabs: [{id:'assigned',label:'Assigned'},{id:'created',label:'Created'},{id:'subscribed',label:'Subscribed'},{id:'activity',label:'Activity'}] }) + '<div class="sx-row">' + iconButton({icon:'filter',accessibleLabel:'Filter issues',attributes:'data-iw-my-filter'}) + iconButton({icon:'fields',accessibleLabel:'Display options',attributes:'data-iw-my-display'}) + iconButton({icon:'activity',accessibleLabel:'Insights',attributes:'data-iw-my-insights'}) + '</div></div><div id="iw-personal-body" class="iw-reference-stack">' + personalBody() + '</div></div>', {variant:'data'});
   return `
     <div class="iw-list-layout">
       <div class="iw-list-toolbar">
@@ -370,7 +370,7 @@ function list() {
   `;
 }
 
-function inboxBody() {
+function inboxParts() {
   const visible = notifications.filter(item => inboxFilter === 'snoozed' ? item.snoozed : !item.snoozed && (inboxFilter !== 'unread' || !item.read));
   const current = visible.find(item => item.id === activeNotification);
   if (current) selected = current.issue;
@@ -385,11 +385,12 @@ function inboxBody() {
     iconButton({icon:current.read?runeIcon('mail'):'check',accessibleLabel:current.read?'Mark unread':'Mark read',attributes:'data-iw-inbox-read'}) +
     iconButton({icon:'clock',accessibleLabel:current.snoozed?'Move to inbox':'Snooze',attributes:'data-iw-inbox-snooze'})
   }) + detail() : '<div class="iw-inbox-empty">' + emptyState({title:visible.length?'Select a notification':'You’re all caught up',description:visible.length?'Choose an update to review its issue.':'No notifications in this view.',icon:runeIcon('inbox')}) + '</div>';
-  return '<div class="iw-inbox-grid"><section class="iw-inbox-list" aria-label="Inbox notifications"><div class="iw-inbox-items">' + (rows || emptyState({title:'No notifications',icon:runeIcon('inbox'),compact:true})) + '</div></section><section class="iw-inbox-preview" aria-label="Issue preview">' + preview + '</section></div>';
+  return { items: rows || emptyState({title:'No notifications',icon:runeIcon('inbox'),compact:true}), preview };
 }
 
 function inbox() {
-  return tabs({id:'iw-inbox-tabs',variant:'pill',activeTabId:inboxFilter,tabs:[{id:'all',label:'All'},{id:'unread',label:'Unread'},{id:'snoozed',label:'Snoozed'}]}) + '<div id="iw-inbox-body">' + inboxBody() + '</div>';
+  const parts = inboxParts();
+  return '<div class="iw-inbox-grid"><section class="iw-inbox-list" aria-label="Inbox notifications">' + tabs({id:'iw-inbox-tabs',variant:'pill',activeTabId:inboxFilter,tabs:[{id:'all',label:'All'},{id:'unread',label:'Unread'},{id:'snoozed',label:'Snoozed'}]}) + '<div class="iw-inbox-items" id="iw-inbox-items">' + parts.items + '</div></section><section class="iw-inbox-preview" id="iw-inbox-preview" aria-label="Issue preview">' + parts.preview + '</section></div>';
 }
 
 let shellMounted = false;
@@ -659,7 +660,7 @@ function patchTabBody(containerId, html) {
   pageSession.refresh();
 }
 document.addEventListener('sui:tab:change', event => {
-  if (event.target.id === 'iw-inbox-tabs') { inboxFilter = event.detail.id; patchTabBody('iw-inbox-body', inboxBody()); return; }
+  if (event.target.id === 'iw-inbox-tabs') { inboxFilter = event.detail.id; const parts = inboxParts(); patchTabBody('iw-inbox-items', parts.items); patchTabBody('iw-inbox-preview', parts.preview); return; }
   if (event.target.id === 'iw-my-issues-tabs') { myIssuesTab = event.detail.id; patchTabBody('iw-personal-body', personalBody()); return; }
   const patched = referencePages.change(event.target.id, event.detail.id);
   if (patched) for (const part of patched) patchTabBody(part.container, part.html);

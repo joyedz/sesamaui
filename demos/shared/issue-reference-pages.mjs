@@ -85,7 +85,7 @@ export function createReferencePages() {
     return reviewHeader() + '<div class="iw-review-content">' + tab('iw-review-panel-tabs',state.reviewPanel,[['activity','Activity'],['guide','Guide'],['diff','Diff'],['preview','Preview']]) + '<div id="iw-review-pane-body">' + reviewPaneBody() + '</div></div>';
   }
   function reviewsBody() {
-    return '<div class="iw-reference-stack iw-review-list">'+tab('iw-reviews-tabs',state.reviews,[['for-me','For me'],['created','Created']])+'<div id="iw-reviews-body">'+reviewsList()+'</div></div><section class="iw-review-pane"><div id="iw-review-pane">'+reviewPane()+'</div></section>';
+    return '<div class="iw-reference-stack iw-review-list">'+tab('iw-reviews-tabs',state.reviews,[['for-me','For me'],['created','Created']])+'<div id="iw-reviews-body" class="iw-reference-stack">'+reviewsList()+'</div></div><section class="iw-review-pane"><div id="iw-review-pane">'+reviewPane()+'</div></section>';
   }
   function render(name) {
     if (name === 'initiatives') {
