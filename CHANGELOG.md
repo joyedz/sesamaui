@@ -6,7 +6,7 @@ First stable release — the `-alpha` suffix is dropped from the package version
 
 - `npm run dev` now serves a generated index at `/` listing every demo by category plus the component catalog and Component API preview links (scanned from `demos/` at request time). The project landing page is untracked (`site/Sesama landing.html` and its assets are gitignored); the browser smoke suite skips missing pages so CI works without it.
 
-- Reorganize `demos/` into category folders — `dashboard/`, `ai-agent/`, `ai-bot/` (formerly `agent-bot/`), `issue/`, `onboarding/` — with the standalone reference demos (Workspace, Component API) staying at the root. Demo routes in `shared/pages.mjs`, cross-page links, test paths, and docs are updated to match.
+- Reorganize `demos/` into category folders — `dashboard/`, `ai-agent/`, `ai-bot/` (formerly `agent-bot/`), `issue/`, `onboarding/` — with the Component API preview staying at the root; the standalone Workspace demo is removed. Demo routes in `shared/pages.mjs`, cross-page links, test paths, and docs are updated to match.
 
 - Issue Workspace demo keeps its App Shell and sidebar mounted across view changes: switching menus, opening issues, and tab/filter changes now swap only the main column (selection updates in place), removing the per-menu sidebar reload. The four category pages (Inbox, My issues, Review, All issues) also switch in page via `?page=` URLs instead of full page loads, with Back/Forward restoring the right section.
 
