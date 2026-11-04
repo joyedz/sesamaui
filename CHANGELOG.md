@@ -2,6 +2,8 @@
 
 ## [0.1.0] - 2026-11-04
 
+- Modal focus fix: opening a dialog no longer lands focus on the header close button (whose icon-button tooltip would pop every time). `showModal()` is followed by an explicit focus move — `[autofocus]` target first, then the first control that is not the close button, then the dialog element itself. Existing defaults are unchanged for dialogs with an `autofocus` target.
+
 First stable release — the `-alpha` suffix is dropped from the package version, and `npm publish` now tags `latest`. Pre-releases: [0.1.0-alpha.2](#0100-alpha2---2026-10-31), [0.1.0-alpha.1](#0100-alpha1---2026-10-31). While on 0.x, minor versions may still carry breaking changes; experimental components are labeled in the README, and the manual screen-reader review remains scheduled before 1.0 (see [docs/RELEASE.md](docs/RELEASE.md)).
 
 - `npm run dev` now serves a generated index at `/` listing every demo by category plus the component catalog and Component API preview links (scanned from `demos/` at request time). The project landing page is untracked (`site/Sesama landing.html` and its assets are gitignored); the browser smoke suite skips missing pages so CI works without it.

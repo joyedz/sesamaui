@@ -100,6 +100,12 @@ export function initModal(dialog) {
       try { dialog.showModal(); } catch (error) { session = undefined; throw error; }
       dialog.scrollTop = 0;
       dialog.querySelectorAll('.sx-modal-body').forEach(node => { node.scrollTop = 0; });
+      // showModal() lands on the first focusable — the header close button —
+      // whose tooltip would pop on every open. Prefer an explicit [autofocus]
+      // target, then the first control that is not the close button, then the
+      // dialog element itself.
+      const focusTarget = dialog.querySelector('[autofocus]') || tabStops(dialog).find(node => !node.matches('.sx-modal-close'));
+      (focusTarget || dialog).focus({ preventScroll: true });
       restore();
       emit('open', {});
     },
