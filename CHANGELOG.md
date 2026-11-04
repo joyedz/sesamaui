@@ -2,6 +2,8 @@
 
 ## [0.1.0] - 2026-11-04
 
+- Tabs motion fix: the sliding indicator no longer glides in from the left edge when a tablist mounts (or re-measures while hidden, resizing, or after webfonts settle) — the thumb is placed instantly and the glide is reserved for user-initiated tab switches. This removes the visible slide-in on every Issue Workspace view change.
+
 - Modal focus fix: opening a dialog no longer lands focus on the header close button (whose icon-button tooltip would pop every time). `showModal()` is followed by an explicit focus move — `[autofocus]` target first, then the first control that is not the close button, then the dialog element itself. Existing defaults are unchanged for dialogs with an `autofocus` target.
 
 First stable release — the `-alpha` suffix is dropped from the package version, and `npm publish` now tags `latest`. Pre-releases: [0.1.0-alpha.2](#0100-alpha2---2026-10-31), [0.1.0-alpha.1](#0100-alpha1---2026-10-31). While on 0.x, minor versions may still carry breaking changes; experimental components are labeled in the README, and the manual screen-reader review remains scheduled before 1.0 (see [docs/RELEASE.md](docs/RELEASE.md)).
