@@ -59,7 +59,7 @@ let browser;
   const touch = await browser.newContext({ hasTouch: true, viewport: { width: 390, height: 844 } });
   const mobile = await touch.newPage();
   mobile.on('pageerror', error => errors.push(error.message));
-  await mobile.goto(base);
+  await mobile.goto(base + '/site/Sesama%20landing.html');
   assert.equal(await mobile.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
   await mobile.locator('#lp-mobile-navigation button').tap();
   await mobile.waitForSelector('#landing-mobile-demo:popover-open');

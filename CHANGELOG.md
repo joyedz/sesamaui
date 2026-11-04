@@ -6,7 +6,7 @@
 
 First stable release — the `-alpha` suffix is dropped from the package version, and `npm publish` now tags `latest`. Pre-releases: [0.1.0-alpha.2](#0100-alpha2---2026-10-31), [0.1.0-alpha.1](#0100-alpha1---2026-10-31). While on 0.x, minor versions may still carry breaking changes; experimental components are labeled in the README, and the manual screen-reader review remains scheduled before 1.0 (see [docs/RELEASE.md](docs/RELEASE.md)).
 
-- `npm run dev` now serves a generated index at `/` listing every demo by category plus the component catalog and Component API preview links (scanned from `demos/` at request time). The project landing page is untracked (`site/Sesama landing.html` and its assets are gitignored); the browser smoke suite skips missing pages so CI works without it.
+- `npm run dev` now serves a generated index at `/` built with the shared list-row navigation component (the landing page menu look), reading labels and order from `demos/shared/pages.mjs` so it always mirrors the in-demo menus. Adds a Message shortcut to the long sample conversation. The landing navigation labels follow the demo sidebars too (`New chat`, `My inbox`). The project landing page is untracked (`site/Sesama landing.html` and its assets are gitignored); the browser smoke suite skips missing pages so CI works without it.
 
 - Reorganize `demos/` into category folders — `dashboard/`, `ai-agent/`, `ai-bot/` (formerly `agent-bot/`), `issue/`, `onboarding/` — with the Component API preview staying at the root; the standalone Workspace demo is removed. Demo routes in `shared/pages.mjs`, cross-page links, test paths, and docs are updated to match.
 
