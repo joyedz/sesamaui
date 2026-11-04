@@ -379,24 +379,66 @@ function inbox() {
   return '<div class="iw-inbox-grid"><section class="iw-inbox-list" aria-label="Inbox notifications">' + tabs({id:'iw-inbox-tabs',variant:'pill',activeTabId:inboxFilter,tabs:[{id:'all',label:'All'},{id:'unread',label:'Unread'},{id:'snoozed',label:'Snoozed'}]}) + '<div class="iw-inbox-items">' + (rows || emptyState({title:'No notifications',icon:runeIcon('inbox'),compact:true})) + '</div></section><section class="iw-inbox-preview" aria-label="Issue preview">' + preview + '</section></div>';
 }
 
+let shellMounted = false;
+let favoritesSignature = '';
+
+function headerMarkup() {
+  return pageHeader({
+    title: ['reviews','initiatives','projects'].includes(view) ? ({reviews:'Reviews',initiatives:'Initiatives',projects:'Projects'})[view] : view === 'inbox' ? 'My inbox' : view === 'detail' ? selected.id : activeNav === 'my-issues' ? 'My issues' : 'Issues',
+    icon: view === 'inbox' ? runeIcon('inbox') : 'file-text',
+    actions: toolbar()
+  });
+}
+
+function contentMarkup() {
+  return ['reviews','initiatives','projects'].includes(view) ? referencePages.render(view) : view === 'inbox' ? inbox() : view === 'detail' ? detail() : list();
+}
+
+function updateNavSelection() {
+  document.querySelectorAll('#issue-app [data-sui-workspace-sidebar] [data-sel]').forEach(item => {
+    const key = item.dataset.treeKey;
+    const active = key === activeNav || (view === 'detail' && selected && key === 'favorite-' + selected.id.slice(4));
+    item.classList.toggle('on', active);
+    if (active) { item.setAttribute('data-active', 'true'); item.setAttribute('aria-current', 'page'); }
+    else { item.removeAttribute('data-active'); item.removeAttribute('aria-current'); }
+  });
+}
+
 function render() {
   saveIssueState();
-  const collapsed = document.querySelector('[data-sui-app-shell]')?.classList.contains('is-collapsed') || false;
-  pageSession?.destroy();
-  document.getElementById('issue-app').innerHTML = appShell({
-    collapsed,
-    sidebar: sidebar(),
-    header: pageHeader({
-      title: ['reviews','initiatives','projects'].includes(view) ? ({reviews:'Reviews',initiatives:'Initiatives',projects:'Projects'})[view] : view === 'inbox' ? 'My inbox' : view === 'detail' ? selected.id : activeNav === 'my-issues' ? 'My issues' : 'Issues',
-      icon: view === 'inbox' ? runeIcon('inbox') : 'file-text',
-      actions: toolbar()
-    }),
-    content: ['reviews','initiatives','projects'].includes(view) ? referencePages.render(view) : view === 'inbox' ? inbox() : view === 'detail' ? detail() : list(),
-    ...(view === 'detail' ? { detail: properties() } : {})
-  });
-
+  const signature = issues.filter(issue => issue.favorite).map(issue => issue.id).join(',');
+  if (!shellMounted) {
+    // The shell and sidebar mount once; view changes swap only the main column,
+    // so switching menus never reloads the sidebar.
+    document.getElementById('issue-app').innerHTML = appShell({
+      sidebar: sidebar(),
+      header: headerMarkup(),
+      content: contentMarkup(),
+      ...(view === 'detail' ? { detail: properties() } : {})
+    });
+    shellMounted = true;
+    favoritesSignature = signature;
+  } else {
+    if (signature !== favoritesSignature) {
+      // Favorites changed: rebuild only the sidebar element, keeping the shell.
+      const template = document.createElement('template');
+      template.innerHTML = sidebar();
+      document.querySelector('#issue-app [data-sui-workspace-sidebar]').replaceWith(template.content.firstElementChild);
+      favoritesSignature = signature;
+    }
+    const shell = document.querySelector('#issue-app [data-sui-app-shell]');
+    const template = document.createElement('template');
+    template.innerHTML = `<main class="sb-main sx-shell-main">${headerMarkup()}<div class="sb-page-scroll sx-scroll-area">${contentMarkup()}</div></main>${view === 'detail' ? `<aside class="sb-detail sx-scroll-area" data-shell-detail>${properties()}</aside>` : ''}`;
+    shell.querySelector('.sb-main').replaceWith(template.content.querySelector('.sb-main'));
+    const detail = template.content.querySelector('.sb-detail');
+    const existingDetail = shell.querySelector('.sb-detail');
+    if (detail && existingDetail) existingDetail.replaceWith(detail);
+    else if (detail) shell.append(detail);
+    else existingDetail?.remove();
+  }
   pageSession = mount(document.getElementById('issue-app'));
-
+  pageSession.refresh();
+  updateNavSelection();
   const input = document.querySelector('.iw-comment-form textarea');
   if (input) {
     input.placeholder = 'Leave a comment or ask an agent…';
