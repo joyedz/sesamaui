@@ -13,7 +13,7 @@ Dashboard URLs share one persistent app shell: navigation swaps the main content
 
 Additional reference demos remain available directly: [Workspace](Workspace%20demo.html), and [Component API](Component%20API.html).
 
-Shared components are in `src/`; the catalog and landing page are in `site/`.
+Shared components are in `src/`; the component catalog is in `site/`. The project landing page (`site/Sesama landing.html` and its assets) is local-only and gitignored — it ships with the product project, not this repo.
 
 Agent Bot demonstrates three connected features: agent chat, assigned tasks, and agent settings. Responses, approval, and generated brief files use fictional local data. Threads, drafts, settings, tasks, route, and sidebar state persist locally; interrupted runs can retry. Scope and plan: `docs/AGENT-BOT-IMPLEMENTATION.md`. Verify with `node tests/agent-bot.cjs`.
 
