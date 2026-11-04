@@ -30,7 +30,7 @@ Excluded: channels, marketplace/integrations, workflow editor, routine scheduler
 
 ## Delivered and verified
 
-Entry: `demos/Agent Bot.html`, available under landing Demo → AI Agent → Agent Bot. Uses the central ESM runtime and shared component/block builders.
+Entry: `demos/ai-bot/Agent Bot.html`, available under landing Demo → AI Agent → Agent Bot. Uses the central ESM runtime and shared component/block builders.
 
 Verified: package build/check, 147 existing unit tests and 4 new scenario/recovery/API tests; Agent Bot interaction journeys in Chromium and WebKit; landing navigation in Chromium. Checked desktop, 390px and 320px layouts, light/dark, saved drafts/settings/theme/sidebar, thread history, task approval, artifact preview/download, stop/retry/interrupted work, keyboard navigation, and escaped user input. Axe found zero violations across the three default page views in light and dark; manual screen-reader review was not performed.
 

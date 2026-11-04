@@ -1,5 +1,7 @@
 # Changelog
 
+- Reorganize `demos/` into category folders — `dashboard/`, `ai-agent/`, `ai-bot/` (formerly `agent-bot/`), `issue/`, `onboarding/` — with the standalone reference demos (Workspace, Component API) staying at the root. Demo routes in `shared/pages.mjs`, cross-page links, test paths, and docs are updated to match.
+
 - Issue Workspace demo keeps its App Shell and sidebar mounted across view changes: switching menus, opening issues, and tab/filter changes now swap only the main column (selection updates in place), removing the per-menu sidebar reload.
 
 - Slim the design system catalog's App Shell example down to sidebar + header only, dropping the inner page layout/table composition so the preview focuses on the shell itself. App Shell height becomes configurable via `--shell-height` (default `100dvh`), fixing the preview overflowing its 420px stage.

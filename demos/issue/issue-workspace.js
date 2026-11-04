@@ -29,13 +29,13 @@ import {
   runeIcon,
   escapeHTML,
   mount
-} from '../src/index.mjs';
-import { readState, writeState, preserveSidebar } from './shared/state.mjs';
+} from '../../src/index.mjs';
+import { readState, writeState, preserveSidebar } from '../shared/state.mjs';
 preserveSidebar('issue-workspace');
 const savedIssueState = readState('issue-workspace');
-import { demoCategories, demoRoutes } from './shared/pages.mjs';
-import { issueSeeds } from './shared/data.mjs';
-import { createReferencePages } from './shared/issue-reference-pages.mjs';
+import { demoCategories, demoRoutes } from '../shared/pages.mjs';
+import { issueSeeds } from '../shared/data.mjs';
+import { createReferencePages } from '../shared/issue-reference-pages.mjs';
 const referencePages = createReferencePages();
 const currentUser = 'Nils Eller';
 let myIssuesTab = 'assigned';

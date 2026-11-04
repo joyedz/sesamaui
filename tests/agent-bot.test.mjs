@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { initialState, recoverState, responseFor } from '../demos/agent-bot/model.mjs';
-import { renderMessageContent } from '../demos/agent-bot/responses.mjs';
+import { initialState, recoverState, responseFor } from '../demos/ai-bot/model.mjs';
+import { renderMessageContent } from '../demos/ai-bot/responses.mjs';
 import { workspaceSidebar, appShell, composer, message, tabs, pageHeader } from '../src/index.mjs';
 
 test('Agent Bot recovers interrupted work without losing saved conversation and approval', () => {

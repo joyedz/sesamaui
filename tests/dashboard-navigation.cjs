@@ -19,7 +19,7 @@ let browser;
   const page = await browser.newPage();
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto(`${base}/demos/Dashboard%20overview.html`);
+  await page.goto(`${base}/demos/dashboard/Dashboard%20overview.html`);
   await page.waitForSelector('.sb-main');
   await page.evaluate(() => {
     window.originalSidebar = document.querySelector('[data-sui-workspace-sidebar]');
@@ -55,7 +55,7 @@ let browser;
   await page.reload();
   await page.waitForSelector('#revenue-content');
   assert.equal(await page.locator('[name="revenue-period"]').inputValue(), 'Last 7 days');
-  await page.goto(`${base}/demos/Orders.html?order=ORD-2101`);
+  await page.goto(`${base}/demos/dashboard/Orders.html?order=ORD-2101`);
   await page.waitForSelector('dialog[open]');
   await page.keyboard.press('Escape');
   for (const width of [1440, 390]) {

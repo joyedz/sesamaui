@@ -64,7 +64,7 @@ Builders escape every text option by default. A documented set of options (e.g. 
 
 ### Pages, tests, and docs
 
-- `site/Design system.html` — component catalog; `demos/*.html` — standalone app examples consuming `src/` directly; `demos/Component API.html` — interactive API preview.
+- `site/Design system.html` — component catalog; `demos/**/*.html` — standalone app examples grouped by category folders (`dashboard/`, `ai-agent/`, `ai-bot/`, `issue/`, `onboarding/`), consuming `src/` directly; `demos/Component API.html` — interactive API preview.
 - `tests/*.test.mjs` — Node unit tests without a DOM; `tests/*.cjs` — Playwright suites, each spawning `tools/serve.mjs` on its own default port (overridable via `TEST_PORT`), driving fixtures from `tests/fixtures/`.
 - `skills/sesama-ui/` — the agent skill for building UI with this system; `references/` holds per-domain guides (runtime, page blocks, content blocks, charts, agent workspace).
 - `docs/` — API contract (`COMPONENT-API-PREVIEW.md`), architecture notes (`ALPHA-RELEASE.md`), accessibility report.

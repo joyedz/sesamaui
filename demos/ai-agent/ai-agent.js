@@ -1,5 +1,5 @@
-import { typingPlaceholder } from './shared/typing-placeholder.mjs';
-import { readState, writeState, preserveSidebar } from './shared/state.mjs';
+import { typingPlaceholder } from '../shared/typing-placeholder.mjs';
+import { readState, writeState, preserveSidebar } from '../shared/state.mjs';
 preserveSidebar('ai-agent');
 const aiState = readState('ai-agent');
 const directoryPage = document.body.dataset.page === 'agents';
@@ -24,9 +24,9 @@ const directoryPage = document.body.dataset.page === 'agents';
       controlIcon,
       escapeHTML,
       mount
-    } from '../src/index.mjs';
-    import { aiAgentConversations } from './shared/data.mjs';
-    import { createAgentDirectory } from './shared/agent-directory.mjs';
+    } from '../../src/index.mjs';
+    import { aiAgentConversations } from '../shared/data.mjs';
+    import { createAgentDirectory } from '../shared/agent-directory.mjs';
 
     const glyph = (name, size = 16) => controlIcon(name, size);
 

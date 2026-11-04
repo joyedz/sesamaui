@@ -9,7 +9,7 @@ let browser;
   browser=await browserType.launch({headless:true,...(browserName==='chromium'&&process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:{})});
   const page=await browser.newPage({viewport:{width:1440,height:900}}),errors=[],failures=[];
   page.on('pageerror',error=>errors.push(error.message));page.on('response',response=>{if(response.url().startsWith(base)&&response.status()>=400)failures.push(response.url());});
-  for(const file of ['site/Sesama landing.html','site/Design system.html',...fs.readdirSync('demos').filter(name=>name.endsWith('.html')).map(name=>'demos/'+name)]){
+  for(const file of ['site/Sesama landing.html','site/Design system.html',...fs.readdirSync('demos').filter(name=>name.endsWith('.html')).map(name=>'demos/'+name),...['dashboard','ai-agent','ai-bot','issue','onboarding'].flatMap(dir=>fs.readdirSync('demos/'+dir).filter(name=>name.endsWith('.html')).map(name=>'demos/'+dir+'/'+name))]){
     const response=await page.goto(base+'/'+file);assert.equal(response.status(),200,file);await page.waitForTimeout(150);
     console.log('Loaded '+file);
   }
@@ -42,7 +42,7 @@ let browser;
     fs.mkdirSync('.qa',{recursive:true});
     await page.screenshot({path:'.qa/api-mobile.png',fullPage:true});
     await page.setViewportSize({width:1440,height:900});await page.screenshot({path:'.qa/api-desktop.png',fullPage:true});
-    await page.goto(base+'/demos/Orders.html');await page.screenshot({path:'.qa/orders-source.png'});
+    await page.goto(base+'/demos/dashboard/Orders.html');await page.screenshot({path:'.qa/orders-source.png'});
     await page.goto(base+'/Design%20system.html#components-select');await page.screenshot({path:'.qa/catalog-source.png'});
   }
   assert.deepEqual(errors,[]);assert.deepEqual(failures,[]);

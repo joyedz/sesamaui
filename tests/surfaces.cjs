@@ -50,7 +50,7 @@ let browser;
   await page.goto(base+'/site/Design%20system.html#components-card');
   await page.waitForSelector('[data-surface-comparison="Card"]');
   assert.match((await style('[data-surface-comparison="Card"] [data-sui-surface="blur"]')).filter,/blur/);
-  await page.goto(base+'/demos/AI%20agents%20demo.html#chat/new');
+  await page.goto(base+'/demos/ai-agent/AI%20agents%20demo.html#chat/new');
   await page.waitForSelector('[data-sui-composer]');
   assert.equal(await page.locator('[data-sui-composer]').getAttribute('data-sui-surface'),'blur');
   assert.deepEqual(errors,[]);

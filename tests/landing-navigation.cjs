@@ -54,7 +54,7 @@ let browser;
 
   await page.getByRole('tab', { name: /^Agent Bot/ }).click();
   await page.frameLocator('#app-preview').locator('#bot-composer').waitFor();
-  assert.equal(await page.locator('#open-demo').getAttribute('href'), '/demos/Agent%20Bot.html');
+  assert.equal(await page.locator('#open-demo').getAttribute('href'), '/demos/ai-bot/Agent%20Bot.html');
 
   const touch = await browser.newContext({ hasTouch: true, viewport: { width: 390, height: 844 } });
   const mobile = await touch.newPage();
