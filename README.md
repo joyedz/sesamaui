@@ -14,20 +14,17 @@
 </div>
 
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/img/dashboard-dark.png">
-    <img src="docs/img/dashboard-light.png" alt="Sesama Dashboard Overview with metrics and charts" width="100%">
-  </picture>
+  <img src="docs/img/sesama-overview.png" alt="Sesama Dashboard Overview with metrics and charts" width="100%">
 </p>
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/img/issue-my-inbox.png" alt="Issue Workspace My Inbox" width="100%"></td>
-    <td width="50%"><img src="docs/img/ai-agent-new-chat.png" alt="AI Agent New Chat" width="100%"></td>
+    <td width="50%"><img src="docs/img/issue-my-inbox-preview.svg" alt="Issue Workspace My Inbox" width="100%"></td>
+    <td width="50%"><img src="docs/img/ai-agent-new-chat-preview.svg" alt="AI Agent New Chat" width="100%"></td>
   </tr>
   <tr>
-    <td width="50%"><img src="docs/img/agent-bot.png" alt="Agent Bot conversation" width="100%"></td>
-    <td width="50%"><img src="docs/img/onboarding-login.png" alt="Sesama onboarding login screen" width="100%"></td>
+    <td width="50%"><img src="docs/img/agent-bot-preview.svg" alt="Agent Bot conversation" width="100%"></td>
+    <td width="50%"><img src="docs/img/onboarding-login-preview.svg" alt="Sesama onboarding login screen" width="100%"></td>
   </tr>
 </table>
 
