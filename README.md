@@ -17,16 +17,9 @@
   <img src="docs/img/sesama-overview.png" alt="Sesama Dashboard Overview with metrics and charts" width="100%">
 </p>
 
-<table>
-  <tr>
-    <td width="50%"><img src="docs/img/issue-my-inbox-preview.svg" alt="Issue Workspace My Inbox" width="100%"></td>
-    <td width="50%"><img src="docs/img/ai-agent-new-chat-preview.svg" alt="AI Agent New Chat" width="100%"></td>
-  </tr>
-  <tr>
-    <td width="50%"><img src="docs/img/agent-bot-preview.svg" alt="Agent Bot conversation" width="100%"></td>
-    <td width="50%"><img src="docs/img/onboarding-login-preview.svg" alt="Sesama onboarding login screen" width="100%"></td>
-  </tr>
-</table>
+<p align="center">
+  <img src="docs/img/demo-preview-grid.svg" alt="Four Sesama UI demos: Issue Workspace My Inbox, AI Agent New Chat, Agent Bot conversation, and onboarding login" width="100%">
+</p>
 
 Sesama UI is a dependency-free vanilla HTML/CSS/JavaScript design system. Every component is a pure ES Module builder that renders accessible, semantic HTML strings — in the browser, in Node.js, or at build time — and hydrates through a single `mount()` runtime with real lifecycles.
 
